@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Daniel Mattern, guía de montaña</title>
+<meta name="description" content="Rutas, trekkings, escalada en paredes de roca y cursos con Daniel Mattern, guía de montaña y escalada AEGM y UIMLA.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=Sofia+Sans+Extra+Condensed:wght@600;800&display=swap">
+<style>
+/* Layout: mapa de curvas de nivel en portada, tablón de salidas y rutas leídas por su perfil de altitud. */
+:root{
+  --bg:#F4F7F1; --surface:#FFFFFF; --fg:#2F434D; --muted:#5A6F79; --line:#D5E0E1; --line-strong:#8DAF97; --link:#3B5A4A; --step:#8DAF97;
+  --deep:#2F4A3A; --deep-2:#3B5A4A; --veil:#456853; --on-deep:#F6F9F8; --on-deep-muted:#E0E9EA; --contour:#8DAF97;
+  --accent:#C8E3C1; --on-accent:#2F434D; --notice:#DDE8D8; --on-notice:#2F434D;
+  --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none'%3E%3Cpath d='M1 1.5l6 6 6-6' stroke='%232F434D' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --warn:#8A9B6F; --ok:#3B5A4A; --chart:#456853; --chart-fill:#DDE8D8;
+  --f-display:"Sofia Sans Extra Condensed","Arial Narrow",Impact,sans-serif;
+  --f-body:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#18241D; --surface:#212F27; --fg:#E8EFE9; --muted:#B2C2B7; --line:#37493E; --line-strong:#8DAF97; --link:#C8E3C1; --step:#8DAF97;
+  --deep:#24392D; --deep-2:#2F4A3A; --veil:#2F4A3A; --notice:#DDE8D8; --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none'%3E%3Cpath d='M1 1.5l6 6 6-6' stroke='%23E8EFE9' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --warn:#B9C89E; --ok:#C8E3C1; --chart:#8DAF97; --chart-fill:#2F4A3A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#18241D; --surface:#212F27; --fg:#E8EFE9; --muted:#B2C2B7; --line:#37493E; --line-strong:#8DAF97; --link:#C8E3C1; --step:#8DAF97;
+  --deep:#24392D; --deep-2:#2F4A3A; --veil:#2F4A3A; --notice:#DDE8D8; --chev:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none'%3E%3Cpath d='M1 1.5l6 6 6-6' stroke='%23E8EFE9' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); --warn:#B9C89E; --ok:#C8E3C1; --chart:#8DAF97; --chart-fill:#2F4A3A; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 17px/1.55 var(--f-body)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--deep)}
+img,svg,canvas{max-width:100%;display:block}
+a{color:var(--link)}
+h1,h2,h3,p,ul,ol,figure{margin:0}
+ul,ol{padding:0;list-style:none}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--link);outline-offset:2px;border-radius:2px}
+.on-deep :focus-visible{outline-color:var(--accent)}
+.wrap{max-width:1240px;margin-inline:auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--f-mono);font-size:.8rem;letter-spacing:.01em;font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1,h2,h3.big{font-family:var(--f-display);font-weight:800;text-transform:uppercase;line-height:.92;letter-spacing:.005em;text-wrap:balance}
+h2{font-size:clamp(3rem,7vw,5.25rem)}
+section{padding-block:clamp(56px,8vw,104px)}
+.sec-head{display:grid;gap:14px;max-width:760px;margin-bottom:clamp(28px,4vw,48px)}
+.sec-head p:not(.eyebrow){color:var(--muted);max-width:62ch}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:10px 20px;border:2px solid transparent;border-radius:3px;background:var(--accent);color:var(--on-accent);font-weight:700;font-size:1rem;text-decoration:none;cursor:pointer;transition:transform .12s,background .12s}
+.btn:hover{transform:translateY(-1px)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn.ghost{background:transparent;color:inherit;border-color:currentColor}
+.btn.quiet{background:var(--deep);color:var(--on-deep)}
+:root[data-theme="dark"] .btn.quiet{background:var(--accent);color:var(--on-accent)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.quiet{background:var(--accent);color:var(--on-accent)}}
+
+/* Aviso y cabecera */
+.demo{background:var(--notice);color:var(--on-notice);font-size:.85rem;font-weight:600;text-align:center;padding:6px 16px}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--deep);color:var(--on-deep);border-bottom:1px solid var(--deep-2)}
+.top .wrap{display:flex;align-items:center;gap:24px;min-height:66px}
+.brand{color:inherit;text-decoration:none;display:grid;line-height:1}
+.brand b{font:800 1.75rem/.9 var(--f-display);text-transform:uppercase;letter-spacing:.02em}
+.brand span{font-family:var(--f-mono);font-size:.64rem;color:var(--on-deep-muted);margin-top:3px}
+.top nav{margin-left:auto;display:flex;gap:22px}
+.top nav a{color:inherit;text-decoration:none;font-weight:500;font-size:.96rem}
+.top nav a:hover{text-decoration:underline;text-underline-offset:4px}
+.top .btn{min-height:40px;padding:6px 16px}
+
+select{appearance:none;-webkit-appearance:none;background-image:var(--chev);background-repeat:no-repeat;background-position:right 12px center;background-size:14px 9px;padding-right:38px!important;cursor:pointer}
+
+/* Bandas con foto */
+.has-photo{position:relative;isolation:isolate;background:var(--deep)}
+.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+.has-photo::after{content:"";position:absolute;inset:0;z-index:-1;background:color-mix(in srgb,var(--veil) 70%,transparent)}
+
+/* Portada */
+.hero{padding:0;overflow:hidden}
+.hero.has-photo::after{background:linear-gradient(90deg,color-mix(in srgb,var(--deep) 84%,transparent) 0,color-mix(in srgb,var(--veil) 62%,transparent) 58%,color-mix(in srgb,var(--veil) 24%,transparent) 100%)}
+.hero{color:var(--on-deep)}
+.hero-copy{min-height:calc(100vh - 100px);min-height:calc(100svh - 100px);padding-block:clamp(28px,5vh,64px);display:grid;gap:clamp(14px,2.6vh,24px);justify-items:start;align-content:center}
+.hero h1{font-size:clamp(3.5rem,min(11vw,12.6vh),9.25rem);max-width:none}
+.hero h1 em{display:block}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .lead{max-width:44ch;font-size:clamp(1rem,2.1vh,1.16rem)}
+.hero .acts{display:flex;flex-wrap:wrap;gap:12px}
+.creds{display:flex;flex-wrap:wrap;gap:8px 20px}
+
+/* Tablón de salidas */
+.board{background:var(--surface);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.dep{display:grid;grid-template-columns:150px minmax(0,1fr) 180px 92px 118px;gap:20px;align-items:center;padding:16px 20px}
+.dep+.dep{border-top:1px solid var(--line)}
+.dep .date{font:800 2rem/.95 var(--f-display);text-transform:uppercase;font-variant-numeric:tabular-nums}
+.dep .date small{display:block;font:400 .74rem/1.3 var(--f-mono);text-transform:none;color:var(--muted);margin-top:3px}
+.dep .name{font-weight:700;font-size:1.08rem;line-height:1.25;background:none;border:0;padding:0;text-align:left;cursor:pointer;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:4px}
+.dep .name:hover{text-decoration-color:currentColor}
+.dep .meta{color:var(--muted);margin-top:3px}
+.seats{display:flex;gap:3px;margin-bottom:5px}
+.seats i{width:13px;height:13px;border:1.5px solid var(--fg);border-radius:2px}
+.seats i.on{background:var(--fg)}
+.seat-txt{color:var(--muted)}
+.seat-txt.low{color:var(--warn);font-weight:500}
+.dep .price{font:800 1.9rem/1 var(--f-display);text-align:right}
+.dep .price small{display:block;font:400 .7rem/1.2 var(--f-mono);color:var(--muted);margin-top:3px}
+.board-note{margin-top:14px;color:var(--muted)}
+
+/* Servicios */
+.services{color:var(--on-deep)}
+.services.has-photo::after{background:color-mix(in srgb,var(--veil) 62%,transparent)}
+.services .sec-head p:not(.eyebrow),.services .eyebrow{color:var(--on-deep-muted)}
+.svc-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.svc{background:color-mix(in srgb,var(--deep-2) 90%,transparent);border-radius:4px;padding:26px 24px 22px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.svc h3{font:800 2.5rem/.92 var(--f-display);text-transform:uppercase}
+.svc p{color:var(--on-deep-muted);font-size:.98rem}
+.svc .foot{margin-top:auto;padding-top:14px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.svc .from{color:var(--accent);font-family:var(--f-mono);font-size:.84rem}
+.svc a,.svc button.lnk{color:var(--on-deep);font-weight:600;background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:4px}
+
+/* Destinos */
+.destinos{background:var(--surface);border-bottom:1px solid var(--line)}
+.group{font-size:1.05rem;margin:0 0 12px}
+.range-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.range-grid+.group{margin-top:34px}
+.range{display:grid;gap:3px;align-content:start;padding:0 0 13px;overflow:hidden;background:var(--bg);border:1px solid var(--line);border-radius:4px;text-align:left;cursor:pointer;min-width:0;transition:border-color .12s,transform .12s}
+.range:hover{border-color:var(--fg);transform:translateY(-2px)}
+.rp{position:relative;display:block;aspect-ratio:4/3;background:var(--deep-2);margin-bottom:10px}
+.rp svg,.rp img{position:absolute;inset:0;width:100%;height:100%}
+.rp img{object-fit:cover}
+.range>span:not(.rp){padding-inline:14px}
+.rn{font:800 2rem/.95 var(--f-display);text-transform:uppercase}
+.rs{color:var(--muted);font-size:.92rem}
+.rc{color:var(--link);font-weight:600;font-size:.92rem;margin-top:5px}
+
+/* Rutas */
+.filters{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;margin-bottom:24px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{min-height:38px;padding:5px 14px;border:1.5px solid var(--line-strong);border-radius:999px;background:transparent;font-weight:600;font-size:.92rem;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.sel{display:flex;align-items:center;gap:8px}
+.sel select{min-height:38px;padding:4px 10px;border:1.5px solid var(--line-strong);border-radius:4px;background-color:var(--surface)}
+.route-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.route{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:0;text-align:left;cursor:pointer;overflow:hidden;min-width:0;transition:border-color .12s,transform .12s}
+.route:hover{border-color:var(--fg);transform:translateY(-2px)}
+.route .prof{position:relative;background:var(--bg);padding:30px 0 0}
+.route .prof .alt{position:absolute;top:9px;left:14px}
+.route .prof .grade{position:absolute;top:9px;right:14px;color:var(--muted)}
+.route .body{padding:16px 16px 14px;display:grid;gap:7px;flex:1;align-content:start}
+.route .tt{font:800 1.9rem/.98 var(--f-display);text-transform:uppercase}
+.route .zone{color:var(--muted);font-size:.93rem}
+.stats{display:flex;flex-wrap:wrap;gap:4px 14px}
+.route .foot{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 16px;border-top:1px solid var(--line)}
+.route .foot b{font:800 1.5rem/1 var(--f-display)}
+.lv{display:inline-flex;align-items:center;gap:7px;font-size:.86rem;font-weight:600}
+.lv i{display:flex;gap:2px}
+.lv i s{width:6px;height:13px;border:1.3px solid var(--fg)}
+.lv i s.on{background:var(--fg)}
+.empty{grid-column:1/-1;padding:36px;border:1px dashed var(--line);text-align:center;color:var(--muted)}
+.legend{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-top:30px;padding-top:20px;border-top:1px solid var(--line)}
+.legend p{font-size:.9rem;color:var(--muted);margin-top:5px}
+.mide-note{margin-top:18px;font-size:.9rem;color:var(--muted);max-width:76ch}
+
+/* Reserva y pago */
+.booking{background:var(--surface);border-block:1px solid var(--line)}
+.book-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(32px,6vw,80px)}
+.steps{display:grid;gap:22px;counter-reset:s}
+.steps li{display:grid;grid-template-columns:52px minmax(0,1fr);gap:10px;counter-increment:s}
+.steps li::before{content:counter(s);font:800 3rem/.85 var(--f-display);color:var(--step)}
+.steps h3{font-size:1.1rem;line-height:1.3}
+.steps p{color:var(--muted);font-size:.98rem}
+.pay h3{font-size:1.1rem;margin-bottom:10px}
+.methods{display:grid;gap:10px;margin-bottom:30px}
+.methods li{display:grid;grid-template-columns:118px minmax(0,1fr);gap:12px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.methods b{font-weight:700}
+.methods span{color:var(--muted);font-size:.95rem}
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{text-align:left;padding:9px 12px 9px 0;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:.74rem;font-weight:500;color:var(--muted)}
+td:last-child{font-variant-numeric:tabular-nums}
+
+/* Sobre Daniel */
+.about-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(32px,6vw,80px);align-items:start}
+.photo{position:sticky;top:96px;aspect-ratio:4/5;background:var(--deep);border-radius:4px;overflow:hidden;color:var(--on-deep);max-width:100%}
+.photo canvas{position:absolute;inset:0;width:100%;height:100%}
+.photo span{position:absolute;left:18px;bottom:16px}
+.about-txt{display:grid;gap:16px;max-width:64ch}
+blockquote{margin:12px 0 4px;font:800 clamp(2.1rem,4vw,3.2rem)/1 var(--f-display);text-transform:uppercase;text-wrap:balance}
+blockquote cite{display:block;margin-top:10px;font:400 .82rem/1.4 var(--f-mono);text-transform:none;color:var(--muted)}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tags li{padding:5px 11px;border:1.5px solid var(--fg);border-radius:3px;font-family:var(--f-mono);font-size:.8rem}
+
+/* Preguntas */
+.faq{background:var(--surface);border-block:1px solid var(--line)}
+.faq-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.9fr);gap:clamp(24px,6vw,80px);align-items:start}
+details{border-bottom:1px solid var(--line);padding-block:13px}
+details:first-child{padding-top:0}
+summary{cursor:pointer;font-weight:700;font-size:1.06rem}
+details p{margin-top:8px;color:var(--muted);max-width:64ch}
+
+/* Contacto */
+.contact{color:var(--on-deep)}
+.contact-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(32px,6vw,80px)}
+.contact h2{font-size:clamp(3.4rem,8vw,6.5rem);margin-bottom:18px}
+.contact p{color:var(--on-deep-muted);max-width:44ch}
+.contact-list{margin-top:22px;display:grid;gap:8px}
+.contact-list a{color:var(--accent)}
+.quote{color:var(--on-deep);padding-block:clamp(88px,13vw,170px)}
+.quote blockquote{margin:0;max-width:15em}
+.quote cite{color:var(--on-deep-muted)}
+.field{display:grid;gap:5px}
+.field label,.lab{font-size:.9rem;font-weight:600}
+.field input,.field select,.field textarea{width:100%;min-height:46px;padding:9px 11px;border:1.5px solid var(--line);border-radius:3px;background-color:var(--surface);color:var(--fg)}
+.contact form{display:grid;gap:14px}
+.contact .field input,.contact .field textarea{border-color:transparent}
+.note{min-height:1.4em;font-size:.92rem}
+footer{background:var(--deep);color:var(--on-deep-muted);border-top:1px solid var(--deep-2);padding-block:22px;font-size:.88rem}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px}
+
+/* Diálogos */
+dialog{width:min(680px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:0;border:0;border-radius:6px;background:var(--surface);color:var(--fg);box-shadow:0 24px 70px rgba(16,30,22,.45)}
+dialog::backdrop{background:rgba(18,32,24,.66)}
+.dlg-head{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 20px;background:var(--surface);border-bottom:1px solid var(--line)}
+.dlg-body{padding:20px;display:grid;gap:18px}
+.dlg-foot{position:sticky;bottom:0;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:13px 20px;background:var(--surface);border-top:1px solid var(--line)}
+.x{width:40px;height:40px;background:none;border:0;font-size:1.6rem;line-height:1;cursor:pointer}
+.dlg-title{font:800 clamp(2.2rem,6vw,3rem)/.95 var(--f-display);text-transform:uppercase}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.facts b{display:block;font:800 1.6rem/1 var(--f-display)}
+.facts span{color:var(--muted);font-size:.74rem;font-family:var(--f-mono)}
+.detail-list{display:grid;gap:4px;font-size:.96rem}
+.detail-list li{padding-left:15px;position:relative}
+.detail-list li::before{content:"";position:absolute;left:0;top:.62em;width:7px;height:7px;background:var(--link);clip-path:polygon(50% 0,100% 100%,0 100%)}
+.prog{display:flex;gap:6px;flex-wrap:wrap}
+.prog span{font-family:var(--f-mono);font-size:.76rem;color:var(--muted)}
+.prog span.now{color:var(--fg);font-weight:500}
+.opt{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:10px;align-items:start;padding:12px;border:1.5px solid var(--line);border-radius:4px;cursor:pointer}
+.opt:has(input:checked){border-color:var(--fg);background:var(--bg)}
+.opt:has(input:disabled){opacity:.5;cursor:not-allowed}
+.opt input{margin:4px 0 0;width:18px;height:18px;accent-color:var(--link)}
+.opt small{display:block;color:var(--muted);font-size:.88rem}
+.opt-list{display:grid;gap:8px}
+.stepper{display:inline-flex;align-items:center;gap:6px}
+.stepper button{width:44px;height:44px;border:1.5px solid var(--line);background:none;border-radius:3px;font-size:1.3rem;cursor:pointer}
+.stepper output{min-width:32px;text-align:center;font:800 1.7rem/1 var(--f-display)}
+.sum{display:grid;gap:4px;padding:12px;background:var(--bg);border-radius:4px;font-size:.95rem}
+.sum div{display:flex;justify-content:space-between;gap:14px}
+.sum .t{font-weight:700}
+.check{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;font-size:.94rem}
+.check input{width:18px;height:18px;margin-top:3px;accent-color:var(--link)}
+.err{color:var(--warn);font-size:.92rem;font-weight:600}
+.done{display:grid;gap:12px}
+.ref{font-family:var(--f-mono);font-size:1.05rem;color:var(--ok);font-weight:500}
+.tot{font:800 1.8rem/1 var(--f-display)}
+
+@media (max-width:1000px){
+  .top nav{display:none}.top .btn{margin-left:auto}
+  .dep{grid-template-columns:118px minmax(0,1fr) 84px;gap:8px 14px}
+  .dep .sw{grid-column:2}.dep .act{grid-column:3}.dep .pr{grid-column:3;grid-row:1}
+  .dep .pr .price{text-align:right}
+  .dep .act .btn{width:100%;padding-inline:6px}
+  .svc-grid,.route-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .legend,.range-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .book-grid,.faq-grid,.contact-grid,.about-grid{grid-template-columns:minmax(0,1fr)}
+  .photo{position:relative;top:0;aspect-ratio:16/10}
+}
+@media (max-width:760px){
+  .hero.has-photo::after{background:color-mix(in srgb,var(--veil) 72%,transparent)}
+}
+@media (max-width:560px){
+  body{font-size:16px}
+  .svc-grid,.route-grid,.two{grid-template-columns:minmax(0,1fr)}
+  .dep{grid-template-columns:minmax(0,1fr) auto;padding:15px}
+  .dep .wh,.dep .sw,.dep .ttl{grid-column:1/-1}
+  .dep .wh{grid-column:1}.dep .pr{grid-column:2;grid-row:1}
+  .dep .act{grid-column:1/-1}
+  .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .methods li{grid-template-columns:minmax(0,1fr);gap:0}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="demo">Prototipo: rutas, fechas y precios son de ejemplo. No se cobra nada.</div>
+
+<header class="top on-deep">
+  <div class="wrap">
+    <a class="brand" href="#inicio"><b>Daniel Mattern</b><span>guía de montaña y escalada</span></a>
+    <nav aria-label="Principal">
+      <a href="#salidas">Salidas</a><a href="#servicios">Servicios</a><a href="#destinos">Destinos</a><a href="#rutas">Rutas</a>
+      <a href="#reservas">Reserva y pago</a><a href="#daniel">Sobre mí</a><a href="#preguntas">Preguntas</a>
+    </nav>
+    <button class="btn" data-book="">Reservar</button>
+  </div>
+</header>
+
+<main id="inicio">
+<section class="hero has-photo on-deep" aria-labelledby="titulo">
+  <img class="bg" src="https://images.pexels.com/photos/5129/person-mountain-hiker-hiking.jpg?auto=compress&cs=tinysrgb&w=1920" alt="" style="object-position:center bottom" onerror="this.remove()">
+  <div class="wrap">
+      <div class="hero-copy">
+        <h1 id="titulo">Saber cuándo<br>avanzar. <em>Saber cuándo<br>volver.</em></h1>
+        <p class="lead">Salidas guiadas de montaña y escalada en grupos pequeños, desde tu primera cumbre hasta tu primera pared de roca.</p>
+        <div class="acts">
+          <a class="btn" href="#salidas">Ver próximas salidas</a>
+          <a class="btn ghost" href="#rutas">Explorar rutas</a>
+        </div>
+        <ul class="creds mono"><li>TD2 Montaña</li><li>TD2 Escalada</li><li>AEGM</li><li>UIMLA</li></ul>
+      </div>
+  </div>
+</section>
+
+<section id="salidas">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Con fecha cerrada</p>
+      <h2>Próximas salidas</h2>
+      <p>Súmate a una salida abierta y comparte cuerda o sendero con otras personas de tu nivel. Las plazas son pocas a propósito.</p>
+    </div>
+    <div class="board" id="board"></div>
+    <p class="board-note">¿Ninguna fecha te encaja? <button class="lnk" data-book="" style="background:none;border:0;padding:0;color:var(--link);text-decoration:underline;cursor:pointer;font-weight:600">Propón la tuya</button> en cualquier ruta.</p>
+  </div>
+</section>
+
+<section class="services has-photo on-deep" id="servicios">
+  <img class="bg" src="https://images.pexels.com/photos/15784770/pexels-photo-15784770.jpeg?auto=compress&cs=tinysrgb&w=1920" alt="" style="object-position:center" loading="lazy" onerror="this.remove()">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Qué hacemos juntos</p>
+      <h2>Servicios</h2>
+      <p>Cada salida se adapta a la meteo, al terreno y a las personas que vienen. El objetivo es volver con ganas de repetir.</p>
+    </div>
+    <div class="svc-grid">
+      <article class="svc"><h3>Rutas guiadas</h3><p>Senderismo y trekking con lectura del terreno, historia de los lugares y el ritmo que pide el grupo.</p><div class="foot"><span class="from">desde 45 € / persona</span><button class="lnk" data-filter="senderismo">Ver rutas</button></div></article>
+      <article class="svc"><h3>Paredes de roca</h3><p>De tu primer contacto con la roca a grandes paredes clásicas de varios largos, con todo el material técnico.</p><div class="foot"><span class="from">desde 85 € / persona</span><button class="lnk" data-filter="escalada">Ver escaladas</button></div></article>
+      <article class="svc"><h3>Trekkings</h3><p>Varios días de refugio en refugio, en España y por las grandes cordilleras del mundo, con la logística resuelta.</p><div class="foot"><span class="from">desde 210 € / persona</span><button class="lnk" data-filter="trekking">Ver trekkings</button></div></article>
+      <article class="svc"><h3>Raquetas de nieve</h3><p>Bosques y collados nevados sin dificultad técnica, con decisiones basadas en la previsión y el boletín de aludes.</p><div class="foot"><span class="from">desde 65 € / persona</span><button class="lnk" data-filter="invierno">Ver rutas</button></div></article>
+      <article class="svc"><h3>Cursos</h3><p>Iniciación a la escalada, nudos y maniobras, orientación y seguridad invernal para ganar autonomía.</p><div class="foot"><span class="from">desde 150 € / persona</span><button class="lnk" data-filter="curso">Ver cursos</button></div></article>
+      <article class="svc"><h3>Privados y a medida</h3><p>Una cumbre pendiente, un viaje, una jornada para tu equipo o tu club. Lo diseñamos contigo.</p><div class="foot"><span class="from">desde 260 € / jornada</span><a href="#contacto">Cuéntame tu idea</a></div></article>
+    </div>
+  </div>
+</section>
+
+<section class="destinos" id="destinos">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Por cordilleras</p>
+      <h2>¿A qué montañas vamos?</h2>
+      <p>Elige cordillera y te enseño lo que hacemos allí, en España y en el mundo.</p>
+    </div>
+    <h3 class="group">España</h3>
+    <div class="range-grid" id="ranges-es"></div>
+    <h3 class="group">El mundo</h3>
+    <div class="range-grid" id="ranges-mundo"></div>
+  </div>
+</section>
+
+<section id="rutas">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Catálogo</p>
+      <h2>Rutas y actividades</h2>
+      <p>Mira la forma de la montaña antes de elegir: cada ficha muestra su perfil de altitud.</p>
+    </div>
+    <div class="filters">
+      <div class="chips" id="chips" role="group" aria-label="Filtrar por actividad"></div>
+      <div class="sel"><label for="f-level">Nivel</label>
+        <select id="f-level"><option value="0">Todos</option><option value="1">Iniciación</option><option value="2">Medio</option><option value="3">Exigente</option><option value="4">Técnico</option></select>
+      </div>
+      <div class="sel"><label for="f-range">Cordillera</label><select id="f-range"></select></div>
+    </div>
+    <div class="route-grid" id="routes" aria-live="polite"></div>
+    <div class="legend">
+      <div><span class="lv" data-lv="1"></span><p>Sin experiencia previa. Buena forma básica y ganas de caminar.</p></div>
+      <div><span class="lv" data-lv="2"></span><p>Sales al monte con frecuencia y aguantas 6 u 8 horas de actividad.</p></div>
+      <div><span class="lv" data-lv="3"></span><p>Jornadas largas, mucho desnivel y terreno expuesto en algunos tramos.</p></div>
+      <div><span class="lv" data-lv="4"></span><p>Escalada de varios largos con cuerda. Valoramos tu experiencia antes de confirmar.</p></div>
+    </div>
+    <p class="mide-note">Las rutas de senderismo usan la escala MIDE: medio, itinerario, desplazamiento y esfuerzo, de 1 a 5. Las escaladas indican su grado de dificultad en roca.</p>
+  </div>
+</section>
+
+<section class="booking" id="reservas">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Reserva y pago</p>
+      <h2>Así reservas tu plaza</h2>
+      <p>En unos minutos tienes la plaza bloqueada. El resto lo cerramos hablando.</p>
+    </div>
+    <div class="book-grid">
+      <ol class="steps">
+        <li><div><h3>Elige salida o propón fecha</h3><p>Reserva una salida abierta, o pide una fecha para ti o tu grupo en cualquier ruta.</p></div></li>
+        <li><div><h3>Cuéntame tu experiencia</h3><p>Rellena tus datos y tu nivel. Si es una escalada de varios largos, te llamo antes de confirmar.</p></div></li>
+        <li><div><h3>Paga la señal del 30 %</h3><p>Bloqueas la plaza con la señal, o pagas el total si lo prefieres. El resto se paga 7 días antes.</p></div></li>
+        <li><div><h3>Recibe la hoja de salida</h3><p>48 horas antes te llega la previsión, el punto de encuentro, el horario y la lista de material.</p></div></li>
+      </ol>
+      <div class="pay">
+        <h3>Formas de pago</h3>
+        <ul class="methods">
+          <li><b>Tarjeta</b><span>Visa o Mastercard en pasarela bancaria segura. Confirmación inmediata.</span></li>
+          <li><b>Bizum</b><span>Pago desde el móvil. Confirmación inmediata.</span></li>
+          <li><b>Transferencia</b><span>Plaza bloqueada 48 horas hasta recibir el pago.</span></li>
+        </ul>
+        <h3>Si tienes que cancelar</h3>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th scope="col">Cuándo</th><th scope="col">Devolución</th></tr></thead>
+          <tbody>
+            <tr><td>Más de 14 días antes</td><td>100 %</td></tr>
+            <tr><td>Entre 14 y 7 días antes</td><td>50 %</td></tr>
+            <tr><td>Menos de 7 días antes</td><td>Sin devolución, cambio de plaza a otra persona</td></tr>
+            <tr><td>Si anulo yo por meteo o seguridad</td><td>100 % o cambio de fecha, tú eliges</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="quote has-photo on-deep" aria-label="Cita">
+  <img class="bg" src="https://images.pexels.com/photos/30867724/pexels-photo-30867724.jpeg?auto=compress&cs=tinysrgb&w=1920" alt="" style="object-position:center 35%" loading="lazy" onerror="this.remove()">
+  <div class="wrap"><blockquote>Persigo la felicidad y la montaña responde a mi búsqueda.<cite>Chantal Mauduit</cite></blockquote></div>
+</section>
+
+<section id="daniel">
+  <div class="wrap about-grid">
+    <figure class="photo"><canvas id="photo-map" aria-hidden="true"></canvas><span class="mono">Espacio para tu foto</span></figure>
+    <div class="about-txt">
+      <p class="eyebrow">Sobre mí</p>
+      <h2>Daniel Mattern</h2>
+      <p>La montaña forma parte de mi vida desde que tengo recuerdos. Soy guía de montaña y escalada AEGM y UIMLA, pero, antes que nada, soy un apasionado de todo lo que sucede cuando salimos de nuestra zona de confort.</p>
+      <p>He tenido la suerte de recorrer montañas y paisajes muy diferentes, desde expediciones polares hasta ambientes tropicales, y de disfrutar de multitud de disciplinas. Cada una me ha enseñado algo diferente: a leer el terreno, a adaptarme, a gestionar la incertidumbre y, sobre todo, a saber cuándo avanzar y cuándo toca parar, o darse la vuelta.</p>
+      <p>Soy curioso por naturaleza. Leo, escucho historias, viajo y hablo con la gente local, busco nuevas experiencias para seguir alimentando esa inquietud que te carcome por dentro y acaba llevándome de vuelta a las montañas.</p>
+      <p>En mis salidas intento aportar algo más, esa guinda que marca la diferencia: acompañar, transmitir lo aprendido y ayudar a que cada salida se convierta en una experiencia que merezca la pena recordar, siempre con seguridad. Una experiencia en la que también tengan cabida los conocimientos técnicos e históricos que he ido cultivando a lo largo de los años.</p>
+      <ul class="tags"><li>TD2 Montaña</li><li>TD2 Escalada</li><li>Guía AEGM</li><li>Guía UIMLA</li></ul>
+    </div>
+  </div>
+</section>
+
+<section class="faq" id="preguntas">
+  <div class="wrap faq-grid">
+    <div class="sec-head" style="margin:0"><p class="eyebrow">Antes de venir</p><h2>Preguntas</h2></div>
+    <div>
+      <details open><summary>¿Necesito experiencia previa?</summary><p>Depende de la actividad. Cada ficha indica el nivel, y las de iniciación están pensadas para quien empieza. Si dudas, escríbeme y lo vemos.</p></details>
+      <details><summary>¿Qué pasa si hace mal tiempo?</summary><p>Reviso la previsión hasta el último momento. Si no hay condiciones seguras, cambio el objetivo o anulo la salida, y tú eliges entre otra fecha o la devolución completa.</p></details>
+      <details><summary>¿Qué material necesito?</summary><p>Con la confirmación recibes una lista concreta. El material técnico colectivo está incluido, y arnés y casco se pueden prestar en las escaladas.</p></details>
+      <details><summary>¿Cuántas personas van en cada grupo?</summary><p>Hasta 8 en senderismo, 6 en raquetas y cursos, y 2 por guía en paredes de varios largos.</p></details>
+      <details><summary>¿Está incluido el seguro?</summary><p>Todas las actividades incluyen seguro de accidentes y responsabilidad civil. Si tienes licencia federativa, avísame al reservar.</p></details>
+      <details><summary>¿Cómo llego al punto de encuentro?</summary><p>Cada actividad tiene su punto de encuentro en la zona. Dos días antes te pongo en contacto con el grupo por si queréis compartir coche.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="contact has-photo on-deep" id="contacto">
+  <img class="bg" src="https://images.pexels.com/photos/14742384/pexels-photo-14742384.jpeg?auto=compress&cs=tinysrgb&w=1920" alt="" style="object-position:center 40%" loading="lazy" onerror="this.remove()">
+  <div class="wrap contact-grid">
+    <div>
+      <h2>Nos vemos en el monte</h2>
+      <p>Cuéntame qué tienes en mente, cuál es tu experiencia y qué te gustaría vivir.</p>
+      <ul class="contact-list">
+        <li>Instagram: <a href="https://www.instagram.com/mattern_guide/?hl=es" target="_blank" rel="noopener">@mattern_guide</a></li>
+      </ul>
+    </div>
+    <form id="contact-form" novalidate>
+      <div class="field"><label for="c-name">Nombre</label><input id="c-name" autocomplete="name" required></div>
+      <div class="field"><label for="c-email">Correo electrónico</label><input id="c-email" type="email" autocomplete="email" required></div>
+      <div class="field"><label for="c-msg">Qué te gustaría hacer</label><textarea id="c-msg" rows="4" required></textarea></div>
+      <div><button class="btn" type="submit">Enviar mensaje</button></div>
+      <p class="note" id="c-note" role="status"></p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer class="on-deep"><div class="wrap"><span>© 2026 Daniel Mattern. Guía de montaña y escalada AEGM · UIMLA.</span><span>Condiciones · Privacidad · Cookies · Fotos: Pexels</span></div></footer>
+
+<dialog id="dlg-route" aria-labelledby="r-title"></dialog>
+<dialog id="dlg-book" aria-labelledby="b-title"></dialog>
+
+<script>
+"use strict";
+/* ---------- Datos de ejemplo: editar aquí rutas, precios y salidas ---------- */
+const TYPES={senderismo:"Senderismo",trekking:"Trekking",escalada:"Escalada",invierno:"Raquetas",curso:"Cursos"};
+const LEVELS={1:"Iniciación",2:"Medio",3:"Exigente",4:"Técnico"};
+const ROUTES=[
+ {id:"penalara",c:"central",n:"Peñalara y Cinco Lagunas",t:"senderismo",z:"Sierra de Guadarrama",lv:2,g:"MIDE 2·2·2·3",km:15,up:820,dur:"7 h",p:55,max:8,
+  prof:[1830,1905,2020,2130,2290,2428,2300,2150,2120,2040,1930,1830],
+  d:"El techo de Guadarrama por su cuerda, con bajada entre las lagunas glaciares del macizo y la historia de los primeros montañeros madrileños.",
+  meet:"Puerto de Cotos, 8:30",inc:["Guía titulado","Seguro de accidentes y RC","Botiquín y comunicación de emergencia"],gear:["Botas de montaña","Mochila de 20 a 25 litros","Agua y comida para el día"]},
+ {id:"pedriza",c:"central",n:"Circular de La Pedriza",t:"senderismo",z:"La Pedriza",lv:2,g:"MIDE 2·3·2·3",km:13,up:750,dur:"7 h",p:50,max:8,
+  prof:[1100,1240,1380,1530,1680,1790,1720,1610,1450,1350,1210,1100],
+  d:"Un laberinto de granito entre canchos, gateras y rincones que no aparecen en los mapas. Una ruta para aprender a orientarse en terreno roto.",
+  meet:"Canto Cochino, 8:30",inc:["Guía titulado","Seguro de accidentes y RC"],gear:["Botas con buena suela","Mochila de 20 litros","Agua y comida para el día"]},
+ {id:"cuerda",c:"central",n:"Cuerda Larga integral",t:"senderismo",z:"Sierra de Guadarrama",lv:3,g:"MIDE 2·2·2·4",km:24,up:1150,dur:"9 h",p:60,max:8,
+  prof:[1860,2100,2270,2120,2180,2000,2100,2190,2040,1950,1910,1796],
+  d:"La gran cresta de Guadarrama de punta a punta: una jornada larga por encima de los 2.000 metros y con Madrid a un lado y Segovia al otro.",
+  meet:"Puerto de Navacerrada, 8:00",inc:["Guía titulado","Seguro de accidentes y RC","Coordinación del coche de vuelta"],gear:["Botas de montaña","Dos litros de agua","Cortavientos y capas"]},
+ {id:"cabrera",c:"central",n:"Bautismo de roca en La Cabrera",t:"escalada",z:"Sierra de La Cabrera",lv:1,g:"IV a V",km:3,up:220,dur:"5 h",p:85,max:6,
+  prof:[1040,1090,1150,1210,1260,1210,1140,1040],
+  d:"Tu primera jornada en roca real: encordarte, confiar en los pies y bajar en rápel sobre granito soleado.",
+  meet:"Convento de San Antonio, 9:30",inc:["Guía titulado","Casco, arnés y pies de gato","Cuerdas y material técnico","Seguro de accidentes y RC"],gear:["Ropa cómoda","Mochila pequeña","Agua y comida"]},
+ {id:"yelmo",c:"central",n:"Vía clásica al Yelmo",t:"escalada",z:"La Pedriza",lv:4,g:"V+ · varios largos",km:7,up:600,dur:"8 h",p:170,max:2,
+  prof:[1120,1260,1420,1580,1717,1570,1400,1240,1120],
+  d:"Una vía de varios largos a la cumbre más reconocible de La Pedriza, con las maniobras explicadas para que aprendas mientras subes.",
+  meet:"Canto Cochino, 8:00",inc:["Guía titulado en proporción 1:2","Material técnico colectivo","Seguro de accidentes y RC"],gear:["Pies de gato y arnés propios o prestados","Casco","Comida y agua"]},
+ {id:"almanzor",c:"central",n:"Almanzor por el Circo de Gredos",t:"trekking",z:"Sierra de Gredos",lv:3,g:"MIDE 3·3·3·4",km:27,up:1450,dur:"2 días",p:240,max:6,
+  prof:[1770,1960,2150,2000,1950,2150,2390,2591,2300,1950,2000,2150,1770],
+  d:"La cumbre del Sistema Central con noche junto a la Laguna Grande. Una travesía con pasos de trepada y uno de los circos glaciares más bonitos de la Península.",
+  meet:"Plataforma de Gredos, sábado 9:00",inc:["Guía titulado","Seguro de accidentes y RC"],gear:["Saco de dormir","Botas de montaña","Mochila de 35 litros"]},
+ {id:"raquetas",c:"central",n:"Raquetas en el Valle de la Fuenfría",t:"invierno",z:"Sierra de Guadarrama",lv:1,g:"MIDE 2·2·2·2",km:10,up:480,dur:"5 h",p:65,max:6,
+  prof:[1320,1460,1600,1750,1796,1700,1540,1420,1320],
+  d:"La forma más sencilla de disfrutar la nieve: bosque de pinos, calzadas antiguas y una introducción a leer el manto y el boletín de aludes.",
+  meet:"Cercedilla, Las Dehesas, 9:30",inc:["Guía titulado","Raquetas y bastones","Seguro de accidentes y RC"],gear:["Botas impermeables","Ropa de invierno por capas","Termo y comida"]},
+ {id:"curso",c:"central",n:"Curso de iniciación a la escalada",t:"curso",z:"La Cabrera y La Pedriza",lv:1,g:"2 jornadas",km:4,up:240,dur:"2 días",p:150,max:6,
+  prof:[1040,1110,1200,1270,1200,1130,1040],
+  d:"Dos jornadas para aprender a asegurar, moverte en roca, hacer los nudos básicos y rapelar con autonomía.",
+  meet:"Convento de San Antonio, 9:30",inc:["Guía titulado","Todo el material técnico","Manual del curso","Seguro de accidentes y RC"],gear:["Ropa cómoda","Pies de gato, si tienes","Comida para los dos días"]},
+ {id:"cares",c:"picos",n:"Ruta del Cares",t:"senderismo",z:"Picos de Europa",lv:1,g:"MIDE 2·1·1·3",km:12,up:300,dur:"5 h",p:50,max:8,
+  prof:[220,420,520,500,480,470,460,455],
+  d:"La garganta divina: un sendero excavado en la roca sobre el río, entre Poncebos y Caín.",
+  meet:"Poncebos, 9:00",inc:["Guía titulado","Seguro de accidentes y RC"],gear:["Calzado de montaña","Agua y comida","Cortavientos"]},
+ {id:"mulhacen",c:"nevada",n:"Mulhacén por la Hoya del Portillo",t:"trekking",z:"Sierra Nevada",lv:3,g:"MIDE 2·2·2·4",km:28,up:1400,dur:"2 días",p:210,max:8,
+  prof:[2150,2300,2500,2700,2900,3100,3300,3479,3100,2700,2300,2150],
+  d:"La cumbre más alta de la Península, con noche en la montaña y vistas al Mediterráneo en los días claros.",
+  meet:"Capileira, sábado 8:30",inc:["Guía titulado","Seguro de accidentes y RC"],gear:["Botas de montaña","Saco de dormir","Protección solar"]},
+ {id:"annapurna",c:"himalaya",n:"Campo base del Annapurna",t:"trekking",z:"Himalaya, Nepal",lv:3,g:"Trekking · 14 días",km:115,up:4500,dur:"14 días",p:2400,max:8,
+  prof:[1070,1800,2800,2200,2900,3200,3700,4130,3200,2300,1800,1070],
+  d:"Un trekking clásico entre pueblos gurung, bosques de rododendros y un anfiteatro de ochomiles y sietemiles.",
+  meet:"Katmandú, primer día",inc:["Guía titulado","Lodges y traslados","Permisos de trekking"],gear:["Botas de trekking","Saco de dormir","Vuelos no incluidos"]},
+ {id:"galayos",c:"central",n:"Pared de los Galayos",t:"escalada",z:"Sierra de Gredos",lv:4,g:"V · varios largos",km:12,up:950,dur:"2 días",p:340,max:2,
+  prof:[1250,1450,1680,1900,2020,2200,2020,1800,1500,1250],
+  d:"Agujas y paredes de granito en el lugar con más historia de la escalada del centro peninsular, con noche en el refugio Victory.",
+  meet:"El Arenal, sábado 8:00",inc:["Guía titulado en proporción 1:2","Material técnico colectivo","Seguro de accidentes y RC"],gear:["Pies de gato y arnés","Casco","Saco sábana"]},
+ {id:"riglos",c:"pirineos",n:"Mallos de Riglos",t:"escalada",z:"Prepirineo, Huesca",lv:4,g:"V+ · varios largos",km:3,up:360,dur:"2 días",p:360,max:2,
+  prof:[680,740,810,880,960,1040,900,760,680],
+  d:"Conglomerado vertical y mucho aire bajo los pies: una de las paredes más impresionantes de España, escalada con calma y buen ritmo.",
+  meet:"Riglos, sábado 8:30",inc:["Guía titulado en proporción 1:2","Material técnico colectivo","Seguro de accidentes y RC"],gear:["Pies de gato y arnés","Casco","Agua y comida"]},
+ {id:"carros",c:"pirineos",n:"Carros de Foc",t:"trekking",z:"Aigüestortes, Pirineo catalán",lv:3,g:"Trekking · 5 días",km:55,up:4100,dur:"5 días",p:690,max:8,
+  prof:[1900,2400,2250,2600,2300,2650,2200,2500,2350,2700,2150,1900],
+  d:"Vuelta de refugio en refugio por el parque de Aigüestortes, entre más de cien lagos y collados de alta ruta pirenaica.",
+  meet:"Espot, primer día 9:00",inc:["Guía titulado","Reservas de refugios","Seguro de accidentes y RC"],gear:["Botas de montaña","Mochila de 35 litros","Saco sábana"]},
+ {id:"naranjo",c:"picos",n:"Naranjo de Bulnes, cara sur",t:"escalada",z:"Picos de Europa",lv:4,g:"V · varios largos",km:14,up:1300,dur:"2 días",p:380,max:2,
+  prof:[1224,1450,1700,1953,2150,2519,2150,1953,1600,1224],
+  d:"La pared más famosa de España por su cara más amable, con noche al pie en el refugio de Urriellu.",
+  meet:"Pandébano, sábado 8:30",inc:["Guía titulado en proporción 1:2","Material técnico colectivo","Seguro de accidentes y RC"],gear:["Pies de gato y arnés","Casco","Saco sábana"]},
+ {id:"anillo",c:"picos",n:"Anillo de Picos",t:"trekking",z:"Picos de Europa",lv:3,g:"Trekking · 5 días",km:62,up:4300,dur:"5 días",p:640,max:8,
+  prof:[1000,1500,1950,1700,2050,1500,1250,1900,2100,1600,1000],
+  d:"Cinco días enlazando refugios por los tres macizos de Picos, con caliza, jous y vistas al Cantábrico.",
+  meet:"Sotres, primer día 9:00",inc:["Guía titulado","Reservas de refugios","Seguro de accidentes y RC"],gear:["Botas de montaña","Mochila de 35 litros","Saco sábana"]},
+ {id:"tmb",c:"alpes",n:"Tour del Mont Blanc",t:"trekking",z:"Francia, Italia y Suiza",lv:3,g:"Trekking · 7 días",km:110,up:6800,dur:"7 días",p:1290,max:8,
+  prof:[1040,2100,1500,2516,1600,2537,1300,2200,1500,2100,1040],
+  d:"El gran trekking de los Alpes: una vuelta entera al macizo a través de tres países, siempre por senderos y collados.",
+  meet:"Chamonix, primer día 9:00",inc:["Guía titulado","Refugios y media pensión","Seguro de accidentes y RC"],gear:["Botas de montaña","Mochila de 35 litros","Vuelos no incluidos"]},
+ {id:"cinquetorri",c:"alpes",n:"Paredes de Cinque Torri",t:"escalada",z:"Dolomitas, Italia",lv:4,g:"V · 4 días",km:8,up:400,dur:"4 días",p:890,max:2,
+  prof:[2150,2200,2240,2300,2361,2290,2220,2150],
+  d:"Vías clásicas sobre roca dolomítica, con mucha historia y aproximaciones cortas. Cuatro días para escalar y disfrutar de los valles.",
+  meet:"Cortina d'Ampezzo, primer día",inc:["Guía titulado en proporción 1:2","Material técnico colectivo","Seguro de accidentes y RC"],gear:["Pies de gato y arnés","Casco","Vuelos no incluidos"]},
+ {id:"toubkal",c:"atlas",n:"Toubkal y valles bereberes",t:"trekking",z:"Alto Atlas, Marruecos",lv:3,g:"Trekking · 6 días",km:48,up:3100,dur:"6 días",p:690,max:8,
+  prof:[1740,2100,2500,2200,2700,3207,3500,4167,3500,3207,2300,1740],
+  d:"Una semana entre pueblos bereberes para subir, ya sin nieve, a la cumbre más alta del norte de África.",
+  meet:"Marrakech, primer día",inc:["Guía titulado","Refugio y media pensión","Traslados desde Marrakech"],gear:["Botas de montaña","Saco de dormir","Vuelos no incluidos"]},
+ {id:"todra",c:"atlas",n:"Paredes de las Gargantas del Todra",t:"escalada",z:"Alto Atlas, Marruecos",lv:4,g:"V · 5 días",km:6,up:350,dur:"5 días",p:790,max:2,
+  prof:[1450,1520,1600,1700,1800,1680,1550,1450],
+  d:"Caliza roja y vertical en uno de los cañones más espectaculares de Marruecos, con el otoño como mejor temporada.",
+  meet:"Tinghir, primer día",inc:["Guía titulado en proporción 1:2","Alojamiento y traslados","Material técnico colectivo"],gear:["Pies de gato y arnés","Casco","Vuelos no incluidos"]},
+ {id:"santacruz",c:"andes",n:"Trekking de Santa Cruz",t:"trekking",z:"Cordillera Blanca, Perú",lv:3,g:"Trekking · 10 días",km:52,up:2900,dur:"10 días",p:1950,max:8,
+  prof:[2900,3200,3500,3750,4000,4300,4750,4200,3800,3400,2900],
+  d:"Diez días en Perú para aclimatar y cruzar el collado de Punta Unión, a los pies de los grandes nevados de la Cordillera Blanca.",
+  meet:"Huaraz, primer día",inc:["Guía titulado","Alojamiento y logística de trekking","Permisos de parque"],gear:["Botas de trekking","Saco de dormir","Vuelos no incluidos"]},
+];
+const RANGES=[
+ {id:"central",g:"es",n:"Sistema Central",sub:"Guadarrama, La Pedriza y Gredos",img:"https://images.pexels.com/photos/14959742/pexels-photo-14959742.jpeg?auto=compress&cs=tinysrgb&w=800",peak:"Almanzor",alt:2591},
+ {id:"pirineos",g:"es",n:"Pirineos",sub:"Aigüestortes y Mallos de Riglos",img:"https://images.pexels.com/photos/31312698/pexels-photo-31312698.jpeg?auto=compress&cs=tinysrgb&w=800",peak:"Aneto",alt:3404},
+ {id:"picos",g:"es",n:"Picos de Europa",sub:"Cordillera Cantábrica",img:"https://images.pexels.com/photos/19819784/pexels-photo-19819784.jpeg?auto=compress&cs=tinysrgb&w=800",peak:"Torre de Cerredo",alt:2648},
+ {id:"nevada",g:"es",n:"Sierra Nevada",sub:"Sistema Penibético",img:"https://images.pexels.com/photos/37209097/pexels-photo-37209097.jpeg?auto=compress&cs=tinysrgb&w=800",peak:"Mulhacén",alt:3479},
+ {id:"alpes",g:"mundo",n:"Alpes",sub:"Mont Blanc y Dolomitas",img:"https://images.pexels.com/photos/35224545/pexels-photo-35224545.jpeg?auto=compress&cs=tinysrgb&w=800",peak:"Mont Blanc",alt:4806},
+ {id:"atlas",g:"mundo",n:"Atlas",sub:"Marruecos",img:"https://images.pexels.com/photos/33662300/pexels-photo-33662300.jpeg?auto=compress&cs=tinysrgb&w=800",peak:"Toubkal",alt:4167},
+ {id:"andes",g:"mundo",n:"Andes",sub:"Cordillera Blanca, Perú",img:"https://images.pexels.com/photos/17044901/pexels-photo-17044901.jpeg?auto=compress&cs=tinysrgb&w=800",peak:"Aconcagua",alt:6961},
+ {id:"himalaya",g:"mundo",n:"Himalaya",sub:"Annapurna, Nepal",img:"https://images.pexels.com/photos/20768442/pexels-photo-20768442.jpeg?auto=compress&cs=tinysrgb&w=800",peak:"Everest",alt:8849},
+];
+const DEPS=[
+ {r:"cabrera",from:"2026-11-14",left:2},
+ {r:"penalara",from:"2026-11-15",left:5},
+ {r:"pedriza",from:"2026-11-21",left:8},
+ {r:"curso",from:"2026-11-28",to:"2026-11-29",left:0},
+ {r:"raquetas",from:"2026-12-12",left:4},
+ {r:"yelmo",from:"2027-01-16",left:2},
+ {r:"riglos",from:"2027-03-13",to:"2027-03-14",left:1},
+ {r:"almanzor",from:"2027-06-12",to:"2027-06-13",left:3},
+ {r:"toubkal",from:"2027-09-13",to:"2027-09-18",left:5},
+].map((d,i)=>({...d,id:"d"+i}));
+const route=id=>ROUTES.find(r=>r.id===id);
+const eur=n=>new Intl.NumberFormat("es-ES",{maximumFractionDigits:0}).format(n)+" €";
+const num=n=>new Intl.NumberFormat("es-ES",{useGrouping:"always"}).format(n);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const D=iso=>new Date(iso+"T12:00:00");
+const wd=iso=>D(iso).toLocaleDateString("es-ES",{weekday:"long"});
+const day=iso=>D(iso).getDate()+" "+D(iso).toLocaleDateString("es-ES",{month:"short"}).replace(".","");
+const depLabel=d=>d.to?`${day(d.from)} a ${day(d.to)}`:day(d.from);
+const depSub=d=>d.to?`${wd(d.from)} y ${wd(d.to)}`:wd(d.from);
+const lvHTML=l=>`<i aria-hidden="true">${[1,2,3,4].map(n=>`<s class="${n<=l?"on":""}"></s>`).join("")}</i>${LEVELS[l]}`;
+
+/* ---------- Perfil de altitud a escala ---------- */
+function profile(r,{w=320,h=92,axis=false}={}){
+  const L=axis?46:0,B=axis?24:0,T=axis?12:6,W=w-L-(axis?8:0),H=h-B-T,a=r.prof;
+  const lo=Math.floor(Math.min(...a)/100)*100,hi=Math.ceil(Math.max(...a)/100)*100;
+  const x=i=>L+i/(a.length-1)*W,y=v=>T+(hi-v)/(hi-lo)*H;
+  const line=a.map((v,i)=>`${i?"L":"M"}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(" ");
+  const peak=a.indexOf(Math.max(...a));
+  let g="";
+  if(axis){
+    const mid=Math.round((lo+hi)/200)*100;
+    [lo,mid,hi].forEach(v=>g+=`<line x1="${L}" x2="${w-8}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L-6}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--muted)" font-family="var(--f-mono)">${num(v)}</text>`);
+    [0,.5,1].forEach(f=>{const px=L+f*W,km=(r.km*f);g+=`<text x="${px}" y="${h-6}" text-anchor="${f===0?"start":f===1?"end":"middle"}" font-size="11" fill="var(--muted)" font-family="var(--f-mono)">${km%1?km.toFixed(1).replace(".",","):km} km</text>`});
+  }
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" role="img" aria-label="Perfil de altitud de ${esc(r.n)}, cota máxima ${num(Math.max(...a))} metros">${g}<path d="${line} L${x(a.length-1)} ${T+H} L${L} ${T+H}Z" fill="var(--chart-fill)"/><path d="${line}" fill="none" stroke="var(--chart)" stroke-width="2" stroke-linejoin="round"/><circle cx="${x(peak)}" cy="${y(a[peak])}" r="4" fill="var(--accent)" stroke="var(--fg)" stroke-width="1.5"/></svg>`;
+}
+
+/* ---------- Tablón de salidas ---------- */
+function renderBoard(){
+  $("#board").innerHTML=DEPS.map(d=>{
+    const r=route(d.r),taken=r.max-d.left;
+    const txt=d.left===0?"Completa":d.left<=2?`Quedan ${d.left} de ${r.max}`:`${d.left} plazas de ${r.max}`;
+    return `<article class="dep">
+      <div class="wh"><div class="date">${depLabel(d)}<small>${depSub(d)}</small></div></div>
+      <div class="ttl"><button class="name" data-route="${r.id}">${esc(r.n)}</button><div class="meta mono">${esc(r.z)} · ${LEVELS[r.lv]} · ${r.g}</div></div>
+      <div class="sw"><div class="seats" aria-hidden="true">${Array.from({length:r.max},(_,i)=>`<i class="${i<taken?"on":""}"></i>`).join("")}</div><div class="seat-txt mono ${d.left<=2?"low":""}">${txt}</div></div>
+      <div class="pr"><div class="price">${eur(r.p)}<small>por persona</small></div></div>
+      <div class="act"><button class="btn quiet" data-book="${r.id}" data-dep="${d.id}" ${d.left?"":"disabled"}>${d.left?"Reservar":"Completa"}</button></div>
+    </article>`}).join("");
+}
+
+/* ---------- Rutas ---------- */
+const F={type:"all",level:0,range:"all"};
+function renderRanges(){
+  const card=r=>{const n=ROUTES.filter(x=>x.c===r.id).length,top=120-r.alt/8849*116;
+    return `<button class="range" data-range="${r.id}"><span class="rp"><svg viewBox="0 0 200 120" preserveAspectRatio="none" aria-hidden="true"><polygon points="24,120 100,${top.toFixed(1)} 176,120" fill="var(--chart-fill)" stroke="var(--chart)" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg><img src="${r.img}" alt="Montañas de ${esc(r.n)}" loading="lazy" onerror="this.remove()"></span>
+    <span class="rn">${esc(r.n)}</span><span class="rs">${esc(r.sub)}</span><span class="mono">${esc(r.peak)} · ${num(r.alt)} m</span><span class="rc">${n} ${n>1?"actividades":"actividad"}</span></button>`};
+  ["es","mundo"].forEach(g=>$("#ranges-"+g).innerHTML=RANGES.filter(r=>r.g===g).map(card).join(""));
+  $("#f-range").innerHTML=`<option value="all">Todas</option>`+RANGES.map(r=>`<option value="${r.id}" ${F.range===r.id?"selected":""}>${esc(r.n)}</option>`).join("");
+}
+function renderChips(){
+  $("#chips").innerHTML=[["all","Todas"],...Object.entries(TYPES)].map(([k,v])=>`<button class="chip" data-chip="${k}" aria-pressed="${F.type===k}">${v}</button>`).join("");
+}
+function renderRoutes(){
+  const list=ROUTES.filter(r=>(F.type==="all"||r.t===F.type)&&(!F.level||r.lv===F.level)&&(F.range==="all"||r.c===F.range));
+  $("#routes").innerHTML=list.length?list.map(r=>`<button class="route" data-route="${r.id}">
+    <span class="prof"><span class="alt mono">${num(Math.max(...r.prof))} m</span><span class="grade mono">${r.g}</span>${profile(r)}</span>
+    <span class="body"><span class="tt">${esc(r.n)}</span><span class="zone">${esc(r.z)}</span>
+      <span class="stats mono"><span>${String(r.km).replace(".",",")} km</span><span>+${num(r.up)} m</span><span>${r.dur}</span></span></span>
+    <span class="foot"><span class="lv">${lvHTML(r.lv)}</span><b>${eur(r.p)}</b></span></button>`).join("")
+   :`<p class="empty">No hay actividades con esos filtros. Prueba con otro nivel o escríbeme para diseñar una a medida.</p>`;
+}
+$$(".lv[data-lv]").forEach(e=>e.innerHTML=lvHTML(+e.dataset.lv));
+
+/* ---------- Ficha de ruta ---------- */
+const dlgR=$("#dlg-route");
+function openRoute(id){
+  const r=route(id),deps=DEPS.filter(d=>d.r===id&&d.left);
+  dlgR.innerHTML=`<div class="dlg-head"><span class="eyebrow">${TYPES[r.t]} · ${esc(r.z)}</span><button class="x" data-close aria-label="Cerrar">×</button></div>
+  <div class="dlg-body">
+    <h2 class="dlg-title" id="r-title">${esc(r.n)}</h2>
+    ${profile(r,{w:620,h:170,axis:true})}
+    <div class="facts"><div><b>${String(r.km).replace(".",",")} km</b><span>distancia</span></div><div><b>+${num(r.up)} m</b><span>desnivel</span></div><div><b>${r.dur}</b><span>duración</span></div><div><b>${num(Math.max(...r.prof))} m</b><span>cota máxima</span></div></div>
+    <p>${esc(r.d)}</p>
+    <p class="mono">Nivel ${LEVELS[r.lv]} · ${r.g} · Máximo ${r.max} personas</p>
+    <div class="two">
+      <div><p class="lab">Incluye</p><ul class="detail-list">${r.inc.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+      <div><p class="lab">Qué traer</p><ul class="detail-list">${r.gear.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+    </div>
+    <p><span class="lab">Punto de encuentro:</span> ${esc(r.meet)}</p>
+    <p><span class="lab">Próximas fechas:</span> ${deps.length?deps.map(depLabel).join(", "):"sin salida abierta ahora mismo, propón la tuya"}</p>
+  </div>
+  <div class="dlg-foot"><span><span class="tot">${eur(r.p)}</span> <span class="mono">por persona</span></span><button class="btn" data-book="${r.id}">Reservar</button></div>`;
+  dlgR.showModal();
+}
+
+/* ---------- Reserva ---------- */
+const dlgB=$("#dlg-book");
+let B;
+function openBook(routeId,depId){
+  const rid=routeId||ROUTES[0].id;
+  const open=DEPS.filter(d=>d.r===rid&&d.left);
+  B={step:1,route:rid,dep:depId||(open[0]?.id)||"custom",customDate:"",n:1,name:"",email:"",phone:"",exp:"",notes:"",terms:false,plan:"deposit",method:"card",ref:"",err:""};
+  if(dlgR.open)dlgR.close();
+  renderBook();dlgB.showModal();
+}
+const total=()=>route(B.route).p*B.n;
+const toPay=()=>B.plan==="deposit"?Math.round(total()*.3):total();
+const curDep=()=>DEPS.find(d=>d.id===B.dep);
+const maxN=()=>{const d=curDep();return d?d.left:route(B.route).max};
+function progress(){return `<div class="prog" aria-label="Paso ${B.step} de 4">${["Salida","Tus datos","Pago","Hecho"].map((s,i)=>`<span class="${i+1===B.step?"now":""}">${i+1}. ${s}</span>`).join("")}</div>`}
+function renderBook(){
+  const r=route(B.route);let body="",foot="";
+  if(B.step===1){
+    const deps=DEPS.filter(d=>d.r===B.route);
+    body=`<h2 class="dlg-title" id="b-title">Elige tu salida</h2>
+    <div class="field"><label for="b-route">Actividad</label><select id="b-route">${ROUTES.map(x=>`<option value="${x.id}" ${x.id===B.route?"selected":""}>${esc(x.n)}</option>`).join("")}</select></div>
+    <div class="opt-list" role="radiogroup" aria-label="Fecha">
+      ${deps.map(d=>`<label class="opt"><input type="radio" name="b-dep" id="b-dep-${d.id}" value="${d.id}" ${B.dep===d.id?"checked":""} ${d.left?"":"disabled"}><span>${depLabel(d)}<small>${depSub(d)}</small></span><span class="mono">${d.left?d.left+" libres":"Completa"}</span></label>`).join("")}
+      <label class="opt"><input type="radio" name="b-dep" id="b-dep-custom" value="custom" ${B.dep==="custom"?"checked":""}><span>Proponer otra fecha<small>Te confirmo disponibilidad antes de cobrar.</small></span><span></span></label>
+    </div>
+    ${B.dep==="custom"?`<div class="field"><label for="b-date">Fecha que prefieres</label><input id="b-date" type="date" min="2026-11-04" value="${B.customDate}"></div>`:""}
+    <div><p class="lab" id="lab-n">Personas</p><div class="stepper" role="group" aria-labelledby="lab-n"><button type="button" data-n="-1" aria-label="Quitar una persona">−</button><output id="b-n">${B.n}</output><button type="button" data-n="1" aria-label="Añadir una persona">+</button></div></div>`;
+    foot=`<span><span class="tot">${eur(total())}</span> <span class="mono">${B.n} × ${eur(r.p)}</span></span><button class="btn" data-next>Continuar</button>`;
+  }
+  if(B.step===2){
+    body=`<h2 class="dlg-title" id="b-title">Tus datos</h2>
+    <div class="two">
+      <div class="field"><label for="b-name">Nombre y apellidos</label><input id="b-name" autocomplete="name" value="${esc(B.name)}"></div>
+      <div class="field"><label for="b-phone">Teléfono</label><input id="b-phone" type="tel" autocomplete="tel" value="${esc(B.phone)}"></div>
+    </div>
+    <div class="field"><label for="b-email">Correo electrónico</label><input id="b-email" type="email" autocomplete="email" value="${esc(B.email)}"></div>
+    <div class="field"><label for="b-exp">Tu experiencia en este tipo de actividad</label><select id="b-exp"><option value="">Elige una opción</option>${["Es mi primera vez","Salgo alguna vez al año","Salgo con frecuencia","Tengo experiencia técnica"].map(x=>`<option ${B.exp===x?"selected":""}>${x}</option>`).join("")}</select></div>
+    <div class="field"><label for="b-notes">Algo que deba saber (opcional)</label><textarea id="b-notes" rows="2">${esc(B.notes)}</textarea></div>
+    <label class="check"><input type="checkbox" id="b-terms" ${B.terms?"checked":""}><span>Acepto las condiciones de reserva y el consentimiento informado de la actividad.</span></label>
+    ${B.err?`<p class="err" role="alert">${esc(B.err)}</p>`:""}`;
+    foot=`<button class="btn ghost" data-back>Atrás</button><button class="btn" data-next>Ir al pago</button>`;
+  }
+  if(B.step===3){
+    const d=curDep(),when=d?depLabel(d):(B.customDate?`Propuesta: ${day(B.customDate)}`:"Fecha por acordar");
+    const dep30=Math.round(total()*.3);
+    body=`<h2 class="dlg-title" id="b-title">Pago</h2>
+    <div class="sum"><div class="t"><span>${esc(r.n)}</span></div><div><span>${when}</span><span>${B.n} ${B.n>1?"personas":"persona"}</span></div><div><span>Total de la reserva</span><span>${eur(total())}</span></div></div>
+    <div class="opt-list" role="radiogroup" aria-label="Cuánto pagar">
+      <label class="opt"><input type="radio" name="b-plan" id="b-plan-d" value="deposit" ${B.plan==="deposit"?"checked":""}><span>Señal del 30 %<small>Pagas ${eur(total()-dep30)} hasta 7 días antes.</small></span><b>${eur(dep30)}</b></label>
+      <label class="opt"><input type="radio" name="b-plan" id="b-plan-f" value="full" ${B.plan==="full"?"checked":""}><span>Pago completo<small>Te olvidas hasta el día de la salida.</small></span><b>${eur(total())}</b></label>
+    </div>
+    <div class="opt-list" role="radiogroup" aria-label="Forma de pago">
+      <label class="opt"><input type="radio" name="b-method" id="b-m-card" value="card" ${B.method==="card"?"checked":""}><span>Tarjeta<small>Se abrirá la pasarela bancaria.</small></span><span></span></label>
+      <label class="opt"><input type="radio" name="b-method" id="b-m-bizum" value="bizum" ${B.method==="bizum"?"checked":""}><span>Bizum<small>Confirmas el pago desde tu móvil.</small></span><span></span></label>
+      <label class="opt"><input type="radio" name="b-method" id="b-m-transfer" value="transfer" ${B.method==="transfer"?"checked":""}><span>Transferencia<small>Plaza bloqueada 48 horas.</small></span><span></span></label>
+    </div>
+    <p class="mono">En la web real, el pago ocurre en la pasarela. Esta demo no pide datos de tarjeta.</p>`;
+    foot=`<button class="btn ghost" data-back>Atrás</button><button class="btn" data-next>Simular pago de ${eur(toPay())}</button>`;
+  }
+  if(B.step===4){
+    const d=curDep(),when=d?depLabel(d):"la fecha que me has propuesto";
+    const m={card:"Pago con tarjeta simulado.",bizum:"Pago con Bizum simulado.",transfer:"Tu plaza queda bloqueada 48 horas mientras llega la transferencia."}[B.method];
+    body=`<div class="done"><h2 class="dlg-title" id="b-title">Plaza reservada, ${esc(B.name.split(" ")[0])}</h2>
+    <p class="ref">${B.ref}</p>
+    <p>${esc(r.n)}, ${when}, ${B.n} ${B.n>1?"personas":"persona"}. ${m}</p>
+    <ul class="detail-list"><li>Te enviaremos la confirmación a ${esc(B.email)}.</li>${r.lv===4?"<li>Te llamaré para valorar tu experiencia antes de la salida.</li>":""}<li>48 horas antes recibirás la previsión, el horario y la lista de material.</li></ul></div>`;
+    foot=`<span class="mono">Reserva de demostración</span><button class="btn" data-close>Cerrar</button>`;
+  }
+  dlgB.innerHTML=`<div class="dlg-head">${progress()}<button class="x" data-close aria-label="Cerrar">×</button></div><div class="dlg-body">${body}</div><div class="dlg-foot">${foot}</div>`;
+}
+function saveStep2(){
+  B.name=$("#b-name").value.trim();B.phone=$("#b-phone").value.trim();B.email=$("#b-email").value.trim();
+  B.exp=$("#b-exp").value;B.notes=$("#b-notes").value;B.terms=$("#b-terms").checked;
+}
+function next(){
+  if(B.step===1&&B.dep==="custom"&&!B.customDate){
+    const f=$("#b-date");if(f&&!f.value){B.customDate="";}
+  }
+  if(B.step===2){
+    saveStep2();
+    if(!B.name||!B.phone||!B.exp)return B.err="Completa tu nombre, teléfono y experiencia para continuar.",renderBook();
+    if(!/^\S+@\S+\.\S+$/.test(B.email))return B.err="Escribe un correo válido, por ejemplo nombre@correo.es.",renderBook();
+    if(!B.terms)return B.err="Acepta las condiciones para continuar.",renderBook();
+    B.err="";
+  }
+  if(B.step===3){
+    B.ref="DEMO-"+Math.random().toString(36).slice(2,8).toUpperCase();
+    const d=curDep();if(d){d.left=Math.max(0,d.left-B.n);renderBoard()}
+  }
+  B.step++;renderBook();$(".dlg-body",dlgB).scrollIntoView({block:"start"});
+}
+
+/* ---------- Eventos ---------- */
+document.addEventListener("click",e=>{
+  const t=e.target.closest("[data-book],[data-route],[data-close],[data-next],[data-back],[data-n],[data-chip],[data-filter],[data-range]");
+  if(!t)return;
+  if(t.matches("[data-close]")){t.closest("dialog").close();return}
+  if(t.matches("[data-book]")){openBook(t.dataset.book,t.dataset.dep);return}
+  if(t.matches("[data-route]")){openRoute(t.dataset.route);return}
+  if(t.matches("[data-next]")){next();return}
+  if(t.matches("[data-back]")){if(B.step===2)saveStep2();B.err="";B.step--;renderBook();return}
+  if(t.matches("[data-n]")){B.n=Math.min(Math.max(1,B.n+ +t.dataset.n),maxN());renderBook();return}
+  if(t.matches("[data-chip]")){F.type=t.dataset.chip;renderChips();renderRoutes();return}
+  if(t.matches("[data-range]")){F.range=t.dataset.range;F.type="all";F.level=0;$("#f-level").value="0";$("#f-range").value=F.range;renderChips();renderRoutes();$("#rutas").scrollIntoView();return}
+  if(t.matches("[data-filter]")){F.type=t.dataset.filter;F.level=0;F.range="all";$("#f-level").value="0";$("#f-range").value="all";renderChips();renderRoutes();$("#rutas").scrollIntoView();return}
+});
+dlgB.addEventListener("change",e=>{
+  const t=e.target;
+  if(t.id==="b-route"){B.route=t.value;const o=DEPS.find(d=>d.r===B.route&&d.left);B.dep=o?o.id:"custom";B.n=Math.min(B.n,maxN());renderBook()}
+  if(t.name==="b-dep"){B.dep=t.value;B.n=Math.min(B.n,maxN());renderBook()}
+  if(t.id==="b-date"){B.customDate=t.value}
+  if(t.name==="b-plan"){B.plan=t.value;renderBook()}
+  if(t.name==="b-method"){B.method=t.value;renderBook()}
+});
+$$("dialog").forEach(d=>d.addEventListener("click",e=>{if(e.target===d)d.close()}));
+$("#f-level").addEventListener("change",e=>{F.level=+e.target.value;renderRoutes()});
+$("#f-range").addEventListener("change",e=>{F.range=e.target.value;renderRoutes()});
+$("#contact-form").addEventListener("submit",e=>{
+  e.preventDefault();
+  const ok=$("#c-name").value.trim()&&/^\S+@\S+\.\S+$/.test($("#c-email").value)&&$("#c-msg").value.trim();
+  $("#c-note").textContent=ok?"Mensaje de prueba registrado. En la web real llegará al correo de Daniel.":"Escribe tu nombre, un correo válido y tu mensaje.";
+});
+
+/* ---------- Mapa de curvas de nivel generativo ---------- */
+function makeNoise(seed){
+  const R=(x,y)=>{const s=Math.sin(x*127.1+y*311.7+seed)*43758.5453;return s-Math.floor(s)};
+  const S=t=>t*t*(3-2*t);
+  const n=(x,y)=>{const i=Math.floor(x),j=Math.floor(y),u=S(x-i),v=S(y-j);
+    const a=R(i,j),b=R(i+1,j),c=R(i,j+1),d=R(i+1,j+1);
+    return a+(b-a)*u+(c-a)*v+(a-b-c+d)*u*v};
+  return (x,y)=>n(x,y)*.55+n(x*2.1,y*2.1)*.27+n(x*4.3,y*4.3)*.13+n(x*8.7,y*8.7)*.05;
+}
+function contours(cv,{seed=4,peak=[.7,.38],color="#7FA6BC",step=.055}={}){
+  const box=cv.getBoundingClientRect(),W=box.width,H=box.height;if(W<2||H<2)return;
+  const dpr=Math.min(devicePixelRatio||1,2);cv.width=W*dpr;cv.height=H*dpr;
+  const c=cv.getContext("2d");c.scale(dpr,dpr);c.clearRect(0,0,W,H);
+  const noise=makeNoise(seed),G=7,cols=Math.ceil(W/G)+1,rows=Math.ceil(H/G)+1,asp=W/H;
+  const hgt=(x,y)=>{const u=x/W,v=y/H,dx=(u-peak[0])*asp,dy=v-peak[1];
+    const d=dx*dx/(.42*.42)*.9+dy*dy/(.5*.5);
+    const ridge=Math.exp(-Math.pow((v-.3-.3*(u-.6))/.17,2))*.28;
+    return Math.exp(-d)*1.05+ridge+noise(u*asp*2.6,v*2.6)*.5};
+  const f=new Float32Array(cols*rows);
+  for(let j=0;j<rows;j++)for(let i=0;i<cols;i++)f[j*cols+i]=hgt(i*G,j*G);
+  c.lineCap="round";
+  for(let k=1,l=step;l<1.9;l+=step,k++){
+    c.beginPath();c.strokeStyle=color;
+    c.globalAlpha=k%5?.3:.68;c.lineWidth=k%5?.8:1.4;
+    for(let j=0;j<rows-1;j++)for(let i=0;i<cols-1;i++){
+      const a=f[j*cols+i],b=f[j*cols+i+1],d=f[(j+1)*cols+i],e=f[(j+1)*cols+i+1];
+      const x=i*G,y=j*G,p=[];
+      if((a<l)!==(b<l))p.push([x+G*(l-a)/(b-a),y]);
+      if((b<l)!==(e<l))p.push([x+G,y+G*(l-b)/(e-b)]);
+      if((d<l)!==(e<l))p.push([x+G*(l-d)/(e-d),y+G]);
+      if((a<l)!==(d<l))p.push([x,y+G*(l-a)/(d-a)]);
+      if(p.length>=2){c.moveTo(p[0][0],p[0][1]);c.lineTo(p[1][0],p[1][1]);
+        if(p.length===4){c.moveTo(p[2][0],p[2][1]);c.lineTo(p[3][0],p[3][1])}}
+    }
+    c.stroke();
+  }
+  c.globalAlpha=1;
+}
+function drawMaps(){
+  const col=getComputedStyle(document.documentElement).getPropertyValue("--contour").trim();
+  contours($("#photo-map"),{seed:11,peak:[.5,.42],color:col,step:.07});
+}
+let rz;addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(drawMaps,150)});
+
+renderBoard();renderRanges();renderChips();renderRoutes();drawMaps();
+</script>
+</body>
+</html>
