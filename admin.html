@@ -12,11 +12,11 @@
 /* Layout: barra lateral de secciones y zona de trabajo con lista y ficha de edición. */
 :root{
   --bg:#F4F7F1; --surface:#FFFFFF; --fg:#2F434D; --muted:#5A6F79; --line:#D5E0E1; --line-strong:#8DAF97; --link:#3B5A4A;
-  --deep:#2F4A3A; --deep-2:#3B5A4A; --on-deep:#F6F9F8; --on-deep-muted:#E0E9EA; --accent:#C8E3C1; --on-accent:#2F434D; --notice:#DDE8D8; --danger:#A33A2B; --ok:#3B5A4A;
+  --deep:#2F4A3A; --deep-2:#3B5A4A; --on-deep:#F6F9F8; --on-deep-muted:#E0E9EA; --accent:#C8E3C1; --on-accent:#2F434D; --notice:#DDE8D8; --danger:#A33A2B; --ok:#3B5A4A; --chart:#456853; --chart-fill:#DDE8D8;
   --f-display:"Sofia Sans Extra Condensed","Arial Narrow",Impact,sans-serif; --f-body:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#18241D;--surface:#212F27;--fg:#E8EFE9;--muted:#B2C2B7;--line:#37493E;--link:#C8E3C1;--deep:#24392D;--deep-2:#2F4A3A;--danger:#F2A493;--ok:#C8E3C1;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#18241D;--surface:#212F27;--fg:#E8EFE9;--muted:#B2C2B7;--line:#37493E;--link:#C8E3C1;--deep:#24392D;--deep-2:#2F4A3A;--danger:#F2A493;--ok:#C8E3C1;color-scheme:dark}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#18241D;--surface:#212F27;--fg:#E8EFE9;--muted:#B2C2B7;--line:#37493E;--link:#C8E3C1;--deep:#24392D;--deep-2:#2F4A3A;--danger:#F2A493;--ok:#C8E3C1;--chart:#8DAF97;--chart-fill:#2F4A3A;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#18241D;--surface:#212F27;--fg:#E8EFE9;--muted:#B2C2B7;--line:#37493E;--link:#C8E3C1;--deep:#24392D;--deep-2:#2F4A3A;--danger:#F2A493;--ok:#C8E3C1;--chart:#8DAF97;--chart-fill:#2F4A3A;color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/1.5 var(--f-body)}
 button,input,select,textarea{font:inherit;color:inherit}
@@ -24,6 +24,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 h1,h2,h3,p,ul{margin:0;padding:0;list-style:none}
 .shell{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh}
 .side{background:var(--deep);color:var(--on-deep);padding:20px 14px;display:flex;flex-direction:column;gap:22px;position:sticky;top:0;height:100vh}
+.brand{display:block;width:100%;padding:0;background:none;border:0;color:inherit;text-align:left;cursor:pointer}
 .brand b{display:block;font:800 1.6rem/1 var(--f-display);text-transform:uppercase;padding-inline:8px}
 .brand span{display:block;padding:3px 8px 0;font:400 .72rem/1.2 var(--f-mono);color:var(--on-deep-muted)}
 .menu{display:grid;gap:2px}
@@ -75,6 +76,18 @@ input[type=checkbox]{width:20px;min-height:20px;height:20px;accent-color:var(--l
 .ph button{position:absolute;top:4px;right:4px;padding:2px 8px;border:0;border-radius:3px;background:var(--surface);font-size:.76rem;font-weight:600;cursor:pointer}
 .url-row{display:flex;gap:8px}
 .url-row input{flex:1;min-width:0}
+.perfil{touch-action:pan-y}
+.perfil svg{display:block;width:100%;height:auto;cursor:crosshair;user-select:none;-webkit-user-select:none}
+.pt{cursor:ns-resize;touch-action:none;outline:none}
+.pt .h{fill:var(--surface);stroke:var(--chart);stroke-width:2.5}
+.pt.on .h,.pt:focus-visible .h{fill:var(--accent);stroke:var(--fg)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.nums summary{cursor:pointer;color:var(--muted);font-size:.9rem}
+.nums .field{margin-top:8px}
+dialog{width:min(480px,calc(100vw - 32px));border:0;border-radius:6px;padding:22px;background:var(--surface);color:var(--fg);box-shadow:0 20px 60px rgba(16,30,22,.4)}
+dialog::backdrop{background:rgba(18,32,24,.6)}
+dialog h2{font:800 2.2rem/1 var(--f-display);text-transform:uppercase;margin-bottom:8px}
+dialog p{color:var(--muted);margin-bottom:16px}
 .savebar{position:sticky;bottom:0;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin:0 calc(-1*clamp(16px,3vw,36px));padding:11px clamp(16px,3vw,36px);background:var(--surface);border-top:1px solid var(--line)}
 .status{color:var(--ok);font-weight:600;font-size:.92rem;min-height:1.4em}
 .status.dirty{color:var(--muted);font-weight:500}
@@ -96,7 +109,7 @@ input[type=checkbox]{width:20px;min-height:20px;height:20px;accent-color:var(--l
 <body>
 <div class="shell">
   <aside class="side">
-    <div class="brand"><b>Daniel Mattern</b><span>panel de la web</span></div>
+    <button class="brand" id="logo" aria-label="Ir al inicio del panel"><b>Daniel Mattern</b><span>panel de la web</span></button>
     <nav class="menu" aria-label="Secciones del panel">
       <button aria-current="page">Rutas y salidas</button>
       <button disabled>Portada <small>próximamente</small></button>
@@ -113,6 +126,8 @@ input[type=checkbox]{width:20px;min-height:20px;height:20px;accent-color:var(--l
     <main class="work" id="work" aria-live="polite"><p class="empty">Cargando…</p></main>
   </div>
 </div>
+
+<dialog id="salir" aria-labelledby="salir-t"><h2 id="salir-t">Guarda tu progreso</h2><p>Tienes cambios sin guardar en esta ruta. Si sales ahora, se perderán.</p><div class="row"><button class="btn" id="salir-guardar">Guardar y salir</button><button class="btn ghost" id="salir-seguir">Seguir editando</button><button class="btn plain" id="salir-descartar" style="color:var(--danger)">Salir sin guardar</button></div></dialog>
 
 <script>
 "use strict";
@@ -137,7 +152,7 @@ const hoy=()=>new Date().toLocaleDateString("sv-SE");
 const proxima=r=>(r.salidas||[]).map(s=>s.inicio).filter(d=>d&&d>=hoy()).sort()[0];
 const fechaCorta=iso=>new Date(iso+"T12:00:00").toLocaleDateString("es-ES",{day:"numeric",month:"short",year:"numeric"}).replace(".","");
 const NUEVA=()=>({titulo:"",publicada:false,tipo:"Senderismo",cordillera:"Sistema Central",zona:"",nivel:"Medio",grado:"",distanciaKm:0,desnivelM:0,duracion:"",precio:0,plazasMax:8,descripcion:"",encuentro:"",incluye:[],material:[],fotos:[],altitudes:[],salidas:[]});
-const S={rutas:[],q:"",idx:null,draft:null,dirty:false,confirm:null,errors:{},msg:"",urlDraft:""};
+const S={rutas:[],q:"",idx:null,draft:null,dirty:false,confirm:null,errors:{},msg:"",urlDraft:"",punto:null,drag:null};
 const work=$("#work");
 
 function vistaLista(){
@@ -163,13 +178,71 @@ function vistaFicha(){
   <section class="card"><div class="row" style="justify-content:space-between"><h2>Fotos</h2><label class="btn ghost" for="f-foto">Subir fotos</label></div><input id="f-foto" type="file" accept="image/*" multiple hidden>
     <div class="field"><label for="f-url">Añadir por enlace</label><div class="url-row"><input id="f-url" type="url" inputmode="url" placeholder="https://…" value="${esc(S.urlDraft)}" ${S.errors.fotos?'aria-invalid="true"':""}><button class="btn ghost" type="button" data-a="add-url">Añadir</button></div><span class="help">Pega el enlace directo a una imagen.</span></div>
     ${(d.fotos||[]).length?`<div class="photos">${d.fotos.map((f,i)=>`<div class="ph"><img src="${esc(src(f))}" alt="Foto ${i+1}"><button data-a="del-foto" data-i="${i}" aria-label="Quitar foto ${i+1}">Quitar</button></div>`).join("")}</div>`:`<p class="help">Aún no hay fotos. La primera será la de la tarjeta.</p>`}${S.errors.fotos?`<p class="err">${esc(S.errors.fotos)}</p>`:""}</section>
-  <section class="card"><h2>Detalles</h2><div class="grid2"><div class="field"><label for="f-incluye">Qué incluye</label><textarea id="f-incluye" data-l="incluye">${esc((d.incluye||[]).join("\n"))}</textarea><span class="help">Una cosa por línea.</span></div><div class="field"><label for="f-material">Qué traer</label><textarea id="f-material" data-l="material">${esc((d.material||[]).join("\n"))}</textarea><span class="help">Una cosa por línea.</span></div></div>
-    <div class="field"><label for="f-altitudes">Altitudes del recorrido (m)</label><input id="f-altitudes" data-alt value="${esc((d.altitudes||[]).join(", "))}"><span class="help">Números en orden, separados por comas. Dibujan el perfil de la ruta.</span></div></section>
+  <section class="card"><h2>Detalles</h2><div class="grid2"><div class="field"><label for="f-incluye">Qué incluye</label><textarea id="f-incluye" data-l="incluye">${esc((d.incluye||[]).join("\n"))}</textarea><span class="help">Una cosa por línea.</span></div><div class="field"><label for="f-material">Qué traer</label><textarea id="f-material" data-l="material">${esc((d.material||[]).join("\n"))}</textarea><span class="help">Una cosa por línea.</span></div></div></section>
+  <section class="card"><div class="row" style="justify-content:space-between"><div><h2>Perfil de altitud</h2><p class="help">Arrastra un punto para cambiar su altura. Pulsa en el gráfico para añadir otro.</p></div><div class="row"><label class="btn ghost" for="f-gpx">Importar GPX</label><button class="btn plain" type="button" data-a="del-punto" id="quitar-punto" ${S.punto===null||(d.altitudes||[]).length<3?"disabled":""}>Quitar punto</button></div></div><input id="f-gpx" type="file" accept=".gpx,application/gpx+xml" hidden>
+    <div id="perfil" class="perfil"></div>${S.errors.perfil?`<p class="err">${esc(S.errors.perfil)}</p>`:""}
+    <details class="nums"><summary>Editar como números</summary><div class="field"><label for="f-altitudes">Altitudes en metros, en orden</label><input id="f-altitudes" data-alt value="${esc((d.altitudes||[]).join(", "))}"></div></details></section>
   ${S.idx!==null?(S.confirm==="borrar"?`<div class="confirm"><span>Se borrará esta ruta y sus fechas.</span><button class="btn danger" data-a="borrar-ok">Borrar ruta</button><button class="btn ghost" data-a="cancelar">Cancelar</button></div>`:`<div class="row"><button class="btn plain" data-a="duplicar">Duplicar ruta</button><button class="btn plain" style="color:var(--danger)" data-a="borrar">Borrar ruta</button></div>`):""}
-  ${S.confirm==="salir"?`<div class="confirm"><span>Tienes cambios sin guardar.</span><button class="btn danger" data-a="descartar">Descartar cambios</button><button class="btn ghost" data-a="cancelar">Seguir editando</button></div>`:""}
   <div class="savebar"><span class="status ${S.dirty?"dirty":""}" id="estado" role="status">${S.dirty?"Cambios sin guardar":esc(S.msg)}</span><button class="btn" data-a="guardar">Guardar cambios</button></div>`;
 }
-const pintar=()=>S.draft?vistaFicha():vistaLista();
+const pintar=()=>{if(S.draft){vistaFicha();pintarPerfil()}else vistaLista()};
+
+/* ---------- Editor visual del perfil ---------- */
+const PF={w:760,h:250,L:52,R:16,T:18,B:30};
+function dominio(a){
+  if(S.drag)return S.drag;
+  if(!a.length)return {lo:0,hi:3000};
+  const lo=Math.max(0,Math.floor((Math.min(...a)-60)/100)*100),hi=Math.ceil((Math.max(...a)+60)/100)*100;
+  return {lo,hi:Math.max(hi,lo+200)};
+}
+const pfX=(i,n)=>PF.L+(n>1?i/(n-1):.5)*(PF.w-PF.L-PF.R);
+const pfY=(v,{lo,hi})=>PF.T+(hi-v)/(hi-lo)*(PF.h-PF.T-PF.B);
+function pintarPerfil(){
+  const c=$("#perfil");if(!c)return;
+  const a=S.draft.altitudes||[],n=a.length,D=dominio(a),km=+S.draft.distanciaKm||0,base=PF.h-PF.B,mid=Math.round((D.lo+D.hi)/200)*100;
+  let g=[D.lo,mid,D.hi].map(v=>`<line x1="${PF.L}" x2="${PF.w-PF.R}" y1="${pfY(v,D)}" y2="${pfY(v,D)}" stroke="var(--line)"/><text x="${PF.L-8}" y="${pfY(v,D)+4}" text-anchor="end" font-size="12" fill="var(--muted)" font-family="var(--f-mono)">${new Intl.NumberFormat("es-ES",{useGrouping:"always"}).format(v)}</text>`).join("");
+  if(km)[[0,"start"],[.5,"middle"],[1,"end"]].forEach(([f,an])=>{const k=km*f;g+=`<text x="${PF.L+f*(PF.w-PF.L-PF.R)}" y="${PF.h-8}" text-anchor="${an}" font-size="12" fill="var(--muted)" font-family="var(--f-mono)">${String(+k.toFixed(1)).replace(".",",")} km</text>`});
+  if(n>1){const l=a.map((v,i)=>`${i?"L":"M"}${pfX(i,n).toFixed(1)} ${pfY(v,D).toFixed(1)}`).join(" ");g+=`<path d="${l} L${pfX(n-1,n)} ${base} L${pfX(0,n)} ${base}Z" fill="var(--chart-fill)"/><path d="${l}" fill="none" stroke="var(--chart)" stroke-width="2.5" stroke-linejoin="round"/>`}
+  if(!n)g+=`<text x="${(PF.L+PF.w-PF.R)/2}" y="${PF.h/2}" text-anchor="middle" font-size="15" fill="var(--muted)">Pulsa aquí para crear el primer punto</text>`;
+  g+=a.map((v,i)=>`<g class="pt ${i===S.punto?"on":""}" data-p="${i}" tabindex="0" role="slider" aria-label="Punto ${i+1} de ${n}" aria-valuemin="0" aria-valuemax="9000" aria-valuenow="${v}" aria-valuetext="${v} metros"><circle cx="${pfX(i,n)}" cy="${pfY(v,D)}" r="17" fill="transparent"/><circle class="h" cx="${pfX(i,n)}" cy="${pfY(v,D)}" r="${i===S.punto?7.5:5.5}"/></g>`).join("");
+  if(S.punto!==null&&a[S.punto]!=null){const x=pfX(S.punto,n),y=pfY(a[S.punto],D),t=`${new Intl.NumberFormat("es-ES",{useGrouping:"always"}).format(a[S.punto])} m`,tx=Math.min(Math.max(x,PF.L+30),PF.w-PF.R-30),ty=y<PF.T+30?y+28:y-16;g+=`<text x="${tx}" y="${ty}" text-anchor="middle" font-size="14" font-weight="700" fill="var(--fg)" font-family="var(--f-mono)" stroke="var(--surface)" stroke-width="4" paint-order="stroke">${t}</text>`}
+  c.innerHTML=`<svg id="perfil-svg" viewBox="0 0 ${PF.w} ${PF.h}" aria-label="Editor del perfil de altitud">${g}</svg>`;
+  const q=$("#quitar-punto");if(q)q.disabled=S.punto===null||n<3;
+  const f=$("#f-altitudes");if(f&&document.activeElement!==f)f.value=a.join(", ");
+}
+function pfPos(e){const r=$("#perfil-svg").getBoundingClientRect();return {x:(e.clientX-r.left)/r.width*PF.w,y:(e.clientY-r.top)/r.height*PF.h}}
+const pfAlt=(y,D)=>Math.max(0,Math.min(9000,Math.round((D.hi-(y-PF.T)/(PF.h-PF.T-PF.B)*(D.hi-D.lo))/10)*10));
+function foco(){const g=$(`[data-p="${S.punto}"]`);if(g)g.focus({preventScroll:true})}
+work.addEventListener("pointerdown",e=>{
+  const pt=e.target.closest(".pt");if(!pt)return;
+  e.preventDefault();S.punto=+pt.dataset.p;S.drag=dominio(S.draft.altitudes);$("#perfil-svg").setPointerCapture?.(e.pointerId);S.dragId=e.pointerId;pintarPerfil();foco();
+});
+addEventListener("pointermove",e=>{if(!S.drag||e.pointerId!==S.dragId)return;const v=pfAlt(pfPos(e).y,S.drag);if(v!==S.draft.altitudes[S.punto]){S.draft.altitudes[S.punto]=v;marcar();pintarPerfil()}});
+const soltar=()=>{if(!S.drag)return;S.drag=null;S.moved=true;pintarPerfil();foco();setTimeout(()=>S.moved=false)};
+addEventListener("pointerup",soltar);addEventListener("pointercancel",soltar);
+work.addEventListener("click",e=>{
+  const sv=e.target.closest("#perfil-svg");if(!sv||S.moved||e.target.closest(".pt"))return;
+  const a=S.draft.altitudes,D=dominio(a),p=pfPos(e),n=a.length;
+  if(p.x<PF.L-10||p.y>PF.h-PF.B+8)return;
+  const i=n<2?n:Math.max(1,Math.min(n-1,Math.ceil((p.x-PF.L)/(PF.w-PF.L-PF.R)*(n-1))));
+  a.splice(i,0,pfAlt(p.y,D));S.punto=i;marcar();pintarPerfil();foco();
+});
+work.addEventListener("keydown",e=>{
+  const pt=e.target.closest?.(".pt");if(!pt)return;const a=S.draft.altitudes,i=+pt.dataset.p;S.punto=i;
+  if(e.key==="ArrowUp"||e.key==="ArrowDown"){e.preventDefault();a[i]=Math.max(0,Math.min(9000,a[i]+(e.key==="ArrowUp"?10:-10)*(e.shiftKey?10:1)));marcar();pintarPerfil();foco()}
+  if(e.key==="ArrowLeft"||e.key==="ArrowRight"){e.preventDefault();S.punto=Math.max(0,Math.min(a.length-1,i+(e.key==="ArrowRight"?1:-1)));pintarPerfil();foco()}
+  if((e.key==="Delete"||e.key==="Backspace")&&a.length>2){e.preventDefault();a.splice(i,1);S.punto=Math.min(i,a.length-1);marcar();pintarPerfil();foco()}
+});
+function leerGPX(texto){
+  const x=new DOMParser().parseFromString(texto,"application/xml"),pts=[...x.getElementsByTagName("trkpt"),...x.getElementsByTagName("rtept")].map(p=>({la:+p.getAttribute("lat"),lo:+p.getAttribute("lon"),e:parseFloat(p.getElementsByTagName("ele")[0]?.textContent)})).filter(p=>Number.isFinite(p.e)&&Number.isFinite(p.la)&&Number.isFinite(p.lo));
+  if(pts.length<2)throw new Error("sin puntos");
+  const rad=v=>v*Math.PI/180,dist=(a,b)=>{const dA=rad(b.la-a.la),dO=rad(b.lo-a.lo),h=Math.sin(dA/2)**2+Math.cos(rad(a.la))*Math.cos(rad(b.la))*Math.sin(dO/2)**2;return 12742*Math.asin(Math.sqrt(h))};
+  const ac=[0];let gan=0,ref=pts[0].e;
+  for(let i=1;i<pts.length;i++){ac.push(ac[i-1]+dist(pts[i-1],pts[i]));const d=pts[i].e-ref;if(d>=5){gan+=d;ref=pts[i].e}else if(d<=-5)ref=pts[i].e}
+  const tot=ac[ac.length-1],N=Math.min(24,pts.length),alt=[];let j=0;
+  for(let i=0;i<N;i++){const k=tot*i/(N-1);while(j<pts.length-1&&ac[j+1]<k)j++;const a=pts[j],b=pts[Math.min(j+1,pts.length-1)],t=ac[j+1]>ac[j]?(k-ac[j])/(ac[j+1]-ac[j]):0;alt.push(Math.round(a.e+(b.e-a.e)*Math.min(1,t)))}
+  return {altitudes:alt,distanciaKm:Math.round(tot*10)/10,desnivelM:Math.round(gan)};
+}
 function marcar(){S.dirty=true;S.msg="";const e=$("#estado");if(e){e.textContent="Cambios sin guardar";e.classList.add("dirty")}}
 function validar(){
   const d=S.draft,e={};
@@ -186,18 +259,18 @@ async function guardar(){
   try{await Almacen.guardar(S.rutas);S.draft=JSON.parse(JSON.stringify(n));S.dirty=false;S.msg="Guardado";pintar()}
   catch{S.errors={fotos:"No hay espacio en este navegador para más fotos. Quita alguna y vuelve a guardar."};pintar()}
 }
-function abrir(i){S.urlDraft="";S.idx=i;S.draft=i===null?NUEVA():JSON.parse(JSON.stringify(S.rutas[i]));S.dirty=i===null;S.confirm=null;S.errors={};S.msg="";pintar();scrollTo(0,0)}
+function abrir(i){S.urlDraft="";S.punto=null;S.idx=i;S.draft=i===null?NUEVA():JSON.parse(JSON.stringify(S.rutas[i]));S.dirty=i===null;S.confirm=null;S.errors={};S.msg="";pintar();scrollTo(0,0)}
 function cerrar(){S.draft=null;S.idx=null;S.dirty=false;S.confirm=null;S.errors={};S.msg="";pintar();scrollTo(0,0)}
 
 work.addEventListener("click",async e=>{
   const t=e.target.closest("[data-a]");if(!t)return;const a=t.dataset.a,i=+t.dataset.i;
   if(a==="nueva")abrir(null);if(a==="abrir")abrir(i);
-  if(a==="volver"){if(S.dirty){S.confirm="salir";pintar()}else cerrar()}
-  if(a==="descartar")cerrar();
+  if(a==="volver")salir();
   if(a==="guardar")await guardar();
   if(a==="add-sal"){S.draft.salidas.push({inicio:"",fin:"",plazasLibres:S.draft.plazasMax});marcar();pintar()}
   if(a==="del-sal"){S.draft.salidas.splice(i,1);marcar();pintar()}
   if(a==="add-url")await anadirUrl();
+  if(a==="del-punto"&&S.punto!==null&&S.draft.altitudes.length>2){S.draft.altitudes.splice(S.punto,1);S.punto=null;marcar();pintarPerfil()}
   if(a==="del-foto"){S.draft.fotos.splice(i,1);marcar();pintar()}
   if(a==="borrar"||a==="restaurar"){S.confirm=a;pintar()}
   if(a==="cancelar"){S.confirm=null;pintar()}
@@ -212,7 +285,7 @@ work.addEventListener("input",e=>{
   if(!d)return;
   if(t.dataset.k){d[t.dataset.k]=t.type==="checkbox"?t.checked:t.value;marcar()}
   if(t.dataset.l){d[t.dataset.l]=t.value.split("\n").map(x=>x.trim()).filter(Boolean);marcar()}
-  if("alt" in t.dataset){d.altitudes=t.value.split(/[,;\s]+/).map(Number).filter(n=>Number.isFinite(n)&&n>0);marcar()}
+  if("alt" in t.dataset){d.altitudes=t.value.split(/[,;\s]+/).map(Number).filter(n=>Number.isFinite(n)&&n>0);S.punto=null;marcar();pintarPerfil()}
   if(t.dataset.s){d.salidas[+t.dataset.i][t.dataset.s]=t.value;marcar()}
 });
 work.addEventListener("keydown",e=>{if(e.target.id==="f-url"&&e.key==="Enter"){e.preventDefault();anadirUrl()}});
@@ -227,12 +300,20 @@ async function anadirUrl(){
   pintar();const f=$("#f-url");if(f)f.focus();
 }
 work.addEventListener("change",async e=>{
+  if(e.target.id==="f-gpx"){const f=e.target.files[0];if(!f)return;delete S.errors.perfil;try{Object.assign(S.draft,leerGPX(await f.text()));S.punto=null;marcar()}catch{S.errors.perfil="Este GPX no tiene puntos con altitud. Prueba con otro archivo."}pintar();return}
   if(e.target.id!=="f-foto")return;
   for(const f of e.target.files){try{S.draft.fotos.push(await reducir(f));marcar()}catch{S.errors.fotos=`No se ha podido leer ${f.name}.`}}
   pintar();
 });
 /* En modo demo la foto se reduce para caber en el navegador. Con Supabase se subirá al almacén de fotos. */
 function reducir(file){return new Promise((ok,ko)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const k=Math.min(1,1000/im.width),c=document.createElement("canvas");c.width=im.width*k;c.height=im.height*k;c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL("image/jpeg",.7))};im.onerror=ko;im.src=u})}
+
+function salir(){if(!S.draft)return;if(S.dirty)$("#salir").showModal();else cerrar()}
+$("#logo").addEventListener("click",()=>{if(S.draft)salir();else{S.q="";S.confirm=null;S.msg="";pintar();scrollTo(0,0)}});
+$("#salir-seguir").addEventListener("click",()=>$("#salir").close());
+$("#salir-descartar").addEventListener("click",()=>{$("#salir").close();cerrar()});
+$("#salir-guardar").addEventListener("click",async()=>{$("#salir").close();await guardar();if(!S.dirty)cerrar()});
+addEventListener("beforeunload",e=>{if(S.dirty)e.preventDefault()});
 
 (async()=>{try{S.rutas=await Almacen.cargar();pintar()}catch{work.innerHTML=`<p class="empty">No se han podido cargar las rutas. Recarga la página en unos segundos.</p>`}})();
 </script>
