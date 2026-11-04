@@ -31,7 +31,6 @@ La web es `index.html`, que lee su contenido de `content/*.json`. Se decidió un
 - [ ] Añadir teléfono, correo y WhatsApp reales de Daniel. No uses los datos de Subalpino.
 - [ ] Conectar una pasarela de pago real. Ahora el pago es simulado y no se piden datos de tarjeta.
 - [ ] Hacer funcionar los formularios de reserva y contacto. Las plazas no bajan solas con reservas reales todavía.
-- [ ] Añadir al panel: portada, servicios, cordilleras, reserva y pago, sobre mí, preguntas y textos.
 - [ ] Conectar Supabase: cuenta, acceso de Daniel, carga de datos y fotos. Quitar el modo demostración.
 - [ ] Elegir alojamiento y dominio, a nombre de Daniel.
 - [ ] Decidir si oscurecer `#8A9B6F` en «Quedan 2 de 6», porque tiene poco contraste sobre blanco.

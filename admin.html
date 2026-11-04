@@ -99,6 +99,21 @@ dialog p{color:var(--muted);margin-bottom:16px}
 .toast .btn{min-height:36px;padding:5px 12px;font-size:.92rem}
 .toast .btn.ghost{color:var(--on-deep);border-color:var(--on-deep-muted)}
 @keyframes sube{from{transform:translate(-50%,8px)}to{transform:translate(-50%,0)}}
+.rep{display:grid;gap:12px}
+.rep-item{display:grid;gap:10px;padding:12px;border:1px solid var(--line);border-radius:4px}
+.rep-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ico{width:38px;height:38px;border:1px solid var(--line);border-radius:3px;background:var(--surface);cursor:pointer;font-size:1rem}
+.ico:disabled{opacity:.35;cursor:not-allowed}
+.ico.del{color:var(--danger);font-size:1.3rem}
+.fila{display:flex;align-items:center;gap:6px;padding-right:10px;border-top:1px solid var(--line)}
+.fila:first-child{border-top:0}
+.item2{flex:1;min-width:0;display:flex;align-items:center;gap:12px;padding:12px 14px;background:none;border:0;text-align:left;cursor:pointer}
+.item2 b{display:block;line-height:1.25}
+.item2 small{display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;color:var(--muted);font-size:.86rem}
+.item2:hover b{text-decoration:underline}
+.thumb{flex:none;width:64px;height:48px;border-radius:3px;background:var(--notice);object-fit:cover}
+.ph.una{max-width:280px;margin-bottom:6px}
+.url-row .btn{flex:none;min-height:42px}
 .savebar{position:sticky;bottom:0;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin:0 calc(-1*clamp(16px,3vw,36px));padding:11px clamp(16px,3vw,36px);background:var(--surface);border-top:1px solid var(--line)}
 .status{color:var(--ok);font-weight:600;font-size:.92rem;min-height:1.4em}
 .status.dirty{color:var(--muted);font-weight:500}
@@ -121,15 +136,7 @@ dialog p{color:var(--muted);margin-bottom:16px}
 <div class="shell">
   <aside class="side">
     <button class="brand" id="logo" aria-label="Ir al inicio del panel"><b>Daniel Mattern</b><span>panel de la web</span></button>
-    <nav class="menu" aria-label="Secciones del panel">
-      <button aria-current="page">Rutas y salidas</button>
-      <button disabled>Portada <small>próximamente</small></button>
-      <button disabled>Servicios <small>próximamente</small></button>
-      <button disabled>Cordilleras <small>próximamente</small></button>
-      <button disabled>Reserva y pago <small>próximamente</small></button>
-      <button disabled>Sobre mí <small>próximamente</small></button>
-      <button disabled>Preguntas <small>próximamente</small></button>
-    </nav>
+    <nav class="menu" id="menu" aria-label="Secciones del panel"></nav>
     <a class="view" href="index.html" target="_blank" rel="noopener">Ver la web</a>
   </aside>
   <div class="main">
@@ -139,22 +146,39 @@ dialog p{color:var(--muted);margin-bottom:16px}
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
-<dialog id="salir" aria-labelledby="salir-t"><h2 id="salir-t">Guarda tu progreso</h2><p>Tienes cambios sin guardar en esta ruta. Si sales ahora, se perderán.</p><div class="row"><button class="btn" id="salir-guardar">Guardar y salir</button><button class="btn ghost" id="salir-seguir">Seguir editando</button><button class="btn plain" id="salir-descartar" style="color:var(--danger)">Salir sin guardar</button></div></dialog>
+<dialog id="salir" aria-labelledby="salir-t"><h2 id="salir-t">Guarda tu progreso</h2><p>Tienes cambios sin guardar. Si sales ahora, se perderán.</p><div class="row"><button class="btn" id="salir-guardar">Guardar y salir</button><button class="btn ghost" id="salir-seguir">Seguir editando</button><button class="btn plain" id="salir-descartar" style="color:var(--danger)">Salir sin guardar</button></div></dialog>
 
 <script>
 "use strict";
 /* Almacén de datos. En modo demostración usa este navegador; al conectar Supabase solo cambia este objeto. */
-const CLAVE="dm-demo-rutas";
 const Almacen={
-  async cargar(){
-    try{const g=localStorage.getItem(CLAVE);if(g)return JSON.parse(g)}catch{}
-    const r=await fetch("content/rutas.json",{cache:"no-cache"});if(!r.ok)throw new Error("rutas");return r.json();
+  clave:a=>"dm-demo-"+a,
+  async cargar(a){
+    try{const g=localStorage.getItem(this.clave(a));if(g)return JSON.parse(g)}catch{}
+    const r=await fetch(`content/${a}.json`,{cache:"no-cache"});if(!r.ok)throw new Error(a);return r.json();
   },
-  async guardar(rutas){localStorage.setItem(CLAVE,JSON.stringify(rutas))},
-  async restaurar(){try{localStorage.removeItem(CLAVE)}catch{}}
+  async guardar(a,datos){localStorage.setItem(this.clave(a),JSON.stringify(datos))},
+  async restaurar(a){try{localStorage.removeItem(this.clave(a))}catch{}}
 };
+const ARCHIVOS=["rutas","portada","servicios","cordilleras","reservas","sobre-mi","preguntas","secciones","general"];
+const DATOS={};
 const TIPOS=["Senderismo","Trekking","Escalada","Raquetas","Cursos"],NIVELES=["Iniciación","Medio","Exigente","Técnico"];
-const CORDILLERAS=["Sistema Central","Pirineos","Picos de Europa","Sierra Nevada","Alpes","Atlas","Andes","Himalaya"];
+const nombresCordillera=actual=>{const l=DATOS.cordilleras.map(c=>c.nombre);return actual&&!l.includes(actual)?[actual,...l]:l};
+const clon=o=>JSON.parse(JSON.stringify(o));
+const val=(o,p)=>p.split(".").reduce((a,k)=>a?.[k],o);
+function setv(o,p,v){const ks=p.split("."),l=ks.pop();ks.reduce((a,k,i)=>a[k]??=(/^\d+$/.test(ks[i+1]??l)?[]:{}),o)[l]=v}
+const T={k:"titulo",l:"Título"},EN={k:"entradilla",l:"Entradilla",f:"area"},AT={k:"antetitulo",l:"Antetítulo"};
+const SEC={
+  rutas:{nombre:"Rutas y salidas"},
+  portada:{nombre:"Portada",arch:"portada",grupos:[{t:"Título",c:[{k:"tituloBlanco",l:"Primera parte, en blanco",f:"area",req:1,ayuda:"Pulsa Intro para bajar de línea."},{k:"tituloColor",l:"Segunda parte, en color",f:"area",ayuda:"Pulsa Intro para bajar de línea."}]},{t:"Texto y botones",c:[{k:"entradilla",l:"Subtítulo",f:"area"},{k:"botonPrincipal",l:"Botón principal"},{k:"botonSecundario",l:"Botón secundario"},{k:"titulaciones",l:"Titulaciones",f:"lineas"}]},{t:"Foto de fondo",c:[{k:"foto",l:"Foto",f:"foto"},{k:"encuadre",l:"Parte de la foto que se ve",f:"sel",ops:["Arriba","Centro","Abajo"]}]}]},
+  servicios:{nombre:"Servicios",arch:"servicios",lista:1,clave:"titulo",sub:i=>i.precio,nuevo:()=>({titulo:"",descripcion:"",precio:"",enlace:"Ver más",destino:"Contacto"}),singular:"servicio",grupos:[{t:"Servicio",c:[{...T,req:1},{k:"descripcion",l:"Descripción",f:"area"},{k:"precio",l:"Texto del precio",ayuda:"Por ejemplo: desde 45 € / persona."},{k:"enlace",l:"Texto del enlace"},{k:"destino",l:"A dónde lleva el enlace",f:"sel",ops:["Senderismo","Trekking","Escalada","Raquetas","Cursos","Contacto"]}]}]},
+  cordilleras:{nombre:"Cordilleras",arch:"cordilleras",lista:1,clave:"nombre",foto:"foto",sub:i=>`${i.grupo} · ${i.cumbre||"Sin cumbre"}`,nuevo:()=>({nombre:"",grupo:"España",zona:"",cumbre:"",altitud:0,foto:""}),singular:"cordillera",grupos:[{t:"Cordillera",c:[{k:"nombre",l:"Nombre",req:1},{k:"grupo",l:"Grupo",f:"sel",ops:["España","El mundo"]},{k:"zona",l:"Zona"},{k:"cumbre",l:"Cumbre más alta"},{k:"altitud",l:"Altitud de la cumbre (m)",f:"num",min:0}]},{t:"Foto",c:[{k:"foto",l:"Foto de la tarjeta",f:"foto"}]}]},
+  reservas:{nombre:"Reserva y pago",arch:"reservas",grupos:[{t:"Textos",c:[AT,T,EN]},{t:"Pago",c:[{k:"senalPorcentaje",l:"Señal (%)",f:"num",min:0,max:100},{k:"diasPagoResto",l:"Días antes para pagar el resto",f:"num",min:0}]},{t:"Pasos para reservar",c:[{k:"pasos",l:"Paso",f:"rep",nuevo:{titulo:"",texto:""},c:[T,{k:"texto",l:"Texto",f:"area"}]}]},{t:"Formas de pago",c:[{k:"formasPago",l:"Forma de pago",f:"rep",nuevo:{nombre:"",descripcion:""},c:[{k:"nombre",l:"Nombre"},{k:"descripcion",l:"Descripción",f:"area"}]}]},{t:"Cancelación",c:[{k:"cancelacion",l:"Condición",f:"rep",nuevo:{cuando:"",devolucion:""},c:[{k:"cuando",l:"Cuándo"},{k:"devolucion",l:"Devolución"}]}]}]},
+  "sobre-mi":{nombre:"Sobre mí",arch:"sobre-mi",grupos:[{t:"Presentación",c:[AT,{k:"nombre",l:"Nombre"},{k:"foto",l:"Foto",f:"foto"}]},{t:"Biografía",c:[{k:"parrafos",l:"Párrafo",f:"rep",simple:1,nuevo:"",campo:{l:"Texto",f:"area"}}]},{t:"Titulaciones",c:[{k:"titulaciones",l:"Titulaciones",f:"lineas"}]}]},
+  preguntas:{nombre:"Preguntas",arch:"preguntas",lista:1,clave:"pregunta",sub:i=>i.respuesta,nuevo:()=>({pregunta:"",respuesta:""}),singular:"pregunta",grupos:[{t:"Pregunta",c:[{k:"pregunta",l:"Pregunta",req:1},{k:"respuesta",l:"Respuesta",f:"area",req:1}]}]},
+  textos:{nombre:"Textos de secciones",arch:"secciones",grupos:[{t:"Próximas salidas",c:[{k:"salidas.antetitulo",l:"Antetítulo"},{k:"salidas.titulo",l:"Título"},{k:"salidas.entradilla",l:"Entradilla",f:"area"},{k:"salidas.notaFinal",l:"Nota final"},{k:"salidas.enlaceFinal",l:"Enlace de la nota"}]},{t:"Servicios",c:[{k:"servicios.antetitulo",l:"Antetítulo"},{k:"servicios.titulo",l:"Título"},{k:"servicios.entradilla",l:"Entradilla",f:"area"},{k:"servicios.foto",l:"Foto de fondo",f:"foto"}]},{t:"Cordilleras",c:[{k:"destinos.antetitulo",l:"Antetítulo"},{k:"destinos.titulo",l:"Título"},{k:"destinos.entradilla",l:"Entradilla",f:"area"}]},{t:"Rutas",c:[{k:"rutas.antetitulo",l:"Antetítulo"},{k:"rutas.titulo",l:"Título"},{k:"rutas.entradilla",l:"Entradilla",f:"area"},{k:"rutas.notaEscalas",l:"Nota sobre escalas",f:"area"}]},{t:"Explicación de los niveles",c:[{k:"niveles.iniciacion",l:"Iniciación",f:"area"},{k:"niveles.medio",l:"Medio",f:"area"},{k:"niveles.exigente",l:"Exigente",f:"area"},{k:"niveles.tecnico",l:"Técnico",f:"area"}]},{t:"Cita",c:[{k:"cita.texto",l:"Texto",f:"area"},{k:"cita.autora",l:"Autoría"},{k:"cita.foto",l:"Foto de fondo",f:"foto"}]},{t:"Preguntas",c:[{k:"preguntas.antetitulo",l:"Antetítulo"},{k:"preguntas.titulo",l:"Título"}]},{t:"Contacto",c:[{k:"contacto.titulo",l:"Título"},{k:"contacto.texto",l:"Texto",f:"area"},{k:"contacto.botonEnviar",l:"Texto del botón"},{k:"contacto.foto",l:"Foto de fondo",f:"foto"}]}]},
+  general:{nombre:"Datos generales",arch:"general",grupos:[{t:"Google y navegador",c:[{k:"tituloPagina",l:"Título de la web",req:1},{k:"descripcion",l:"Descripción",f:"area"}]},{t:"Marca",c:[{k:"nombre",l:"Nombre"},{k:"descriptor",l:"Texto bajo el nombre"},{k:"botonReservar",l:"Texto del botón de reservar"}]},{t:"Banda de aviso",c:[{k:"mostrarAviso",l:"Mostrar la banda",f:"bool"},{k:"aviso",l:"Texto"}]},{t:"Contacto",c:[{k:"instagram",l:"Usuario de Instagram"},{k:"telefono",l:"Teléfono"},{k:"email",l:"Correo electrónico"}]},{t:"Pie de página",c:[{k:"pie",l:"Texto"},{k:"legal",l:"Enlaces legales"}]}]}
+};
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const eur=n=>new Intl.NumberFormat("es-ES",{maximumFractionDigits:2}).format(n)+" €";
@@ -164,7 +188,7 @@ const hoy=()=>new Date().toLocaleDateString("sv-SE");
 const proxima=r=>(r.salidas||[]).map(s=>s.inicio).filter(d=>d&&d>=hoy()).sort()[0];
 const fechaCorta=iso=>new Date(iso+"T12:00:00").toLocaleDateString("es-ES",{day:"numeric",month:"short",year:"numeric"}).replace(".","");
 const NUEVA=()=>({titulo:"",publicada:false,tipo:"Senderismo",cordillera:"Sistema Central",zona:"",nivel:"Medio",grado:"",distanciaKm:0,desnivelM:0,duracion:"",precio:0,plazasMax:8,descripcion:"",encuentro:"",incluye:[],material:[],fotos:[],altitudes:[],salidas:[]});
-const S={rutas:[],q:"",idx:null,draft:null,dirty:false,confirm:null,errors:{},msg:"",urlDraft:"",punto:null,drag:null};
+const S={rutas:[],q:"",idx:null,draft:null,dirty:false,confirm:null,errors:{},msg:"",urlDraft:"",punto:null,drag:null,vista:"rutas",destino:null,urlD:{}};
 const work=$("#work");
 
 function vistaLista(){
@@ -181,7 +205,7 @@ function vistaFicha(){
   work.innerHTML=`<div class="top"><div><button class="btn plain" data-a="volver">← Todas las rutas</button><h1>${esc(d.titulo||"Nueva ruta")}</h1></div></div>
   <section class="card"><h2>Información principal</h2>${campo("titulo","Título")}
     <label class="check"><input type="checkbox" id="f-publicada" data-k="publicada" ${d.publicada?"checked":""}>Visible en la web</label>
-    <div class="grid"><div class="field"><label for="f-tipo">Tipo</label><select id="f-tipo" data-k="tipo">${opts(TIPOS,d.tipo)}</select></div><div class="field"><label for="f-nivel">Dificultad</label><select id="f-nivel" data-k="nivel">${opts(NIVELES,d.nivel)}</select></div><div class="field"><label for="f-cordillera">Cordillera</label><select id="f-cordillera" data-k="cordillera">${opts(CORDILLERAS,d.cordillera)}</select></div></div>
+    <div class="grid"><div class="field"><label for="f-tipo">Tipo</label><select id="f-tipo" data-k="tipo">${opts(TIPOS,d.tipo)}</select></div><div class="field"><label for="f-nivel">Dificultad</label><select id="f-nivel" data-k="nivel">${opts(NIVELES,d.nivel)}</select></div><div class="field"><label for="f-cordillera">Cordillera</label><select id="f-cordillera" data-k="cordillera">${opts(nombresCordillera(d.cordillera),d.cordillera)}</select></div></div>
     <div class="grid2">${campo("zona","Zona")}${campo("grado","Grado o escala")}</div>
     <div class="field"><label for="f-descripcion">Descripción</label><textarea id="f-descripcion" data-k="descripcion">${esc(d.descripcion)}</textarea></div></section>
   <section class="card"><h2>Datos y precio</h2><div class="grid">${campo("precio","Precio por persona (€)","number",'min="0" step="1"')}${campo("plazasMax","Plazas por salida","number",'min="1" step="1"')}${campo("duracion","Duración")}${campo("distanciaKm","Distancia (km)","number",'min="0" step="0.1"')}${campo("desnivelM","Desnivel (m)","number",'min="0" step="1"')}${campo("encuentro","Punto de encuentro")}</div></section>
@@ -199,10 +223,54 @@ function vistaFicha(){
 }
 let toastT;
 function aviso(msg,error=false,acciones=""){const t=$("#toast");t.className="toast"+(error?" error":"")+(acciones?" acciones":"");t.innerHTML=(error?"":`<svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M3.5 9.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`)+`<span>${esc(msg)}</span>`+acciones;t.hidden=false;clearTimeout(toastT);if(!acciones)toastT=setTimeout(()=>t.hidden=true,error?6000:3500)}
-const SECCION="Rutas y salidas";
 const cerrarAviso=()=>{clearTimeout(toastT);$("#toast").hidden=true};
-function exitoGuardado(){aviso("Cambios guardados",false,`<button class="btn ghost" data-t="seguir">Seguir editando</button><button class="btn" data-t="volver">Volver a ${SECCION}</button>`);$('#toast [data-t="volver"]').focus()}
-const pintar=()=>{if(S.draft){vistaFicha();pintarPerfil()}else vistaLista()};
+function exitoGuardado(){aviso("Cambios guardados",false,`<button class="btn ghost" data-t="seguir">Seguir editando</button><button class="btn" data-t="volver">Volver a ${esc(SEC[S.vista].nombre)}</button>`);$('#toast [data-t="volver"]').focus()}
+const pintar=()=>{if(S.vista!=="rutas")return vistaSeccion();if(S.draft){vistaFicha();pintarPerfil()}else vistaLista()};
+function pintarMenu(){$("#menu").innerHTML=Object.entries(SEC).map(([k,v])=>`<button data-v="${k}" ${k===S.vista?'aria-current="page"':""}>${esc(v.nombre)}</button>`).join("")}
+
+/* ---------- Secciones generadas desde su definición ---------- */
+function campoHTML(c,base=""){
+  const p=base?`${base}.${c.k}`:c.k,v=val(S.draft,p),e=S.errors[p],id="c-"+p.replace(/\./g,"-"),err=e?`<span class="err">${esc(e)}</span>`:"",ay=c.ayuda?`<span class="help">${esc(c.ayuda)}</span>`:"",inv=e?'aria-invalid="true"':"";
+  if(c.f==="bool")return `<label class="check"><input type="checkbox" id="${id}" data-c="${p}" ${v?"checked":""}>${esc(c.l)}</label>`;
+  if(c.f==="sel")return `<div class="field"><label for="${id}">${esc(c.l)}</label><select id="${id}" data-c="${p}">${opts(c.ops,v)}</select></div>`;
+  if(c.f==="area")return `<div class="field"><label for="${id}">${esc(c.l)}</label><textarea id="${id}" data-c="${p}" ${inv}>${esc(v)}</textarea>${ay}${err}</div>`;
+  if(c.f==="num")return `<div class="field"><label for="${id}">${esc(c.l)}</label><input id="${id}" type="number" data-c="${p}" data-n="1" min="${c.min??""}" max="${c.max??""}" value="${esc(v)}" ${inv}>${ay}${err}</div>`;
+  if(c.f==="lineas")return `<div class="field"><label for="${id}">${esc(c.l)}</label><textarea id="${id}" data-c="${p}" data-l2="1">${esc((v||[]).join("\n"))}</textarea><span class="help">Una por línea.</span></div>`;
+  if(c.f==="foto")return `<div class="field"><span class="lab">${esc(c.l)}</span>${v?`<div class="ph una"><img src="${esc(src(v))}" alt=""><button data-a="f-quitar" data-r="${p}" aria-label="Quitar foto">Quitar</button></div>`:`<p class="help">Sin foto.</p>`}<div class="url-row"><input id="${id}" type="url" inputmode="url" aria-label="Enlace de la foto" placeholder="https://…" data-furl="${p}" value="${esc(S.urlD[p])}" ${inv}><button class="btn ghost" type="button" data-a="f-url" data-r="${p}">Añadir</button><label class="btn ghost" for="${id}-a">Subir</label></div><input id="${id}-a" type="file" accept="image/*" data-fup="${p}" hidden>${err}</div>`;
+  if(c.f==="rep"){const l=v||[];return `<div class="rep">${l.map((it,i)=>`<div class="rep-item"><div class="rep-top"><span class="lab">${esc(c.l)} ${i+1}</span><div class="row"><button class="ico" data-a="r-mov" data-r="${p}" data-i="${i}" data-d="-1" ${i?"":"disabled"} aria-label="Subir">↑</button><button class="ico" data-a="r-mov" data-r="${p}" data-i="${i}" data-d="1" ${i<l.length-1?"":"disabled"} aria-label="Bajar">↓</button><button class="ico del" data-a="r-del" data-r="${p}" data-i="${i}" aria-label="Quitar ${esc(c.l)} ${i+1}">×</button></div></div>${c.simple?campoHTML({k:String(i),l:c.campo.l,f:c.campo.f},p):c.c.map(x=>campoHTML(x,`${p}.${i}`)).join("")}</div>`).join("")}<div><button class="btn ghost" data-a="r-add" data-r="${p}">Añadir ${esc(c.l.toLowerCase())}</button></div></div>`}
+  return `<div class="field"><label for="${id}">${esc(c.l)}</label><input id="${id}" data-c="${p}" value="${esc(v)}" ${inv}>${ay}${err}</div>`;
+}
+const buscarDef=(p,cs=SEC[S.vista].grupos.flatMap(g=>g.c))=>cs.find(c=>c.k===p);
+const formulario=sec=>sec.grupos.map(g=>`<section class="card"><h2>${esc(g.t)}</h2>${g.c.map(c=>campoHTML(c)).join("")}</section>`).join("");
+const barra=()=>`<div class="savebar"><span class="status ${S.dirty?"dirty":""}" id="estado">${S.dirty?"Cambios sin guardar":""}</span><button class="btn" data-a="guardar" id="guardar" ${S.dirty?"":"disabled"}>Guardar cambios</button></div>`;
+const restaurarHTML=()=>S.confirm==="restaurar"?`<div class="confirm"><span>Se perderán tus cambios de prueba en esta sección.</span><button class="btn danger" data-a="restaurar-ok">Restaurar ejemplos</button><button class="btn ghost" data-a="cancelar">Cancelar</button></div>`:`<div><button class="btn plain" data-a="restaurar">Restaurar los datos de ejemplo</button></div>`;
+function vistaSeccion(){
+  const sec=SEC[S.vista];
+  if(!sec.lista){S.draft??=clon(DATOS[sec.arch]);work.innerHTML=`<div class="top"><h1>${esc(sec.nombre)}</h1></div>${formulario(sec)}${restaurarHTML()}${barra()}`;return}
+  if(S.draft){work.innerHTML=`<div class="top"><div><button class="btn plain" data-a="volver">← ${esc(sec.nombre)}</button><h1>${esc(S.draft[sec.clave]||"Nuevo elemento")}</h1></div></div>${formulario(sec)}${S.idx!==null?(S.confirm==="borrar"?`<div class="confirm"><span>Se borrará este elemento.</span><button class="btn danger" data-a="s-borrar-ok">Borrar</button><button class="btn ghost" data-a="cancelar">Cancelar</button></div>`:`<div><button class="btn plain" style="color:var(--danger)" data-a="borrar">Borrar</button></div>`):""}${S.errors._?`<p class="err">${esc(S.errors._)}</p>`:""}${barra()}`;return}
+  const l=DATOS[sec.arch];
+  work.innerHTML=`<div class="top"><h1>${esc(sec.nombre)}</h1><button class="btn" data-a="s-nuevo">Añadir ${esc(sec.singular)}</button></div>
+  <div class="list">${l.length?l.map((it,i)=>`<div class="fila"><button class="item2" data-a="s-abrir" data-i="${i}">${sec.foto?(it[sec.foto]?`<img class="thumb" src="${esc(src(it[sec.foto]))}" alt="">`:`<span class="thumb"></span>`):""}<span><b>${esc(it[sec.clave]||"Sin nombre")}</b><small>${esc(sec.sub(it))}</small></span></button><button class="ico" data-a="s-mov" data-i="${i}" data-d="-1" ${i?"":"disabled"} aria-label="Subir">↑</button><button class="ico" data-a="s-mov" data-i="${i}" data-d="1" ${i<l.length-1?"":"disabled"} aria-label="Bajar">↓</button></div>`).join(""):`<p class="empty">Todavía no hay nada aquí.</p>`}</div>${restaurarHTML()}`;
+}
+function validarSec(){
+  const e={},rev=(cs,b="")=>cs.forEach(c=>{const p=b?`${b}.${c.k}`:c.k,v=val(S.draft,p);if(c.req&&!String(v??"").trim())e[p]="Este campo es obligatorio.";if(c.f==="num"&&v!==""&&((c.min!=null&&+v<c.min)||(c.max!=null&&+v>c.max)))e[p]=`Escribe un número entre ${c.min??0} y ${c.max}.`});
+  SEC[S.vista].grupos.forEach(g=>rev(g.c));
+  const sec=SEC[S.vista];if(sec.lista&&sec.clave==="nombre"){const n=S.draft.nombre.trim().toLowerCase();if(DATOS[sec.arch].some((x,i)=>i!==S.idx&&x.nombre.toLowerCase()===n))e.nombre="Ya existe una cordillera con ese nombre."}
+  S.errors=e;return !Object.keys(e).length;
+}
+function dejarLimpio(o){for(const k in o){if(typeof o[k]==="string")o[k]=o[k].trim();else if(o[k]&&typeof o[k]==="object")dejarLimpio(o[k])}return o}
+async function guardarSec(salir){
+  const sec=SEC[S.vista],a=sec.arch;
+  if(!validarSec()){pintar();aviso("Revisa los campos marcados antes de guardar.",true);$(".err")?.closest(".card")?.scrollIntoView({block:"center"});return false}
+  const n=dejarLimpio(clon(S.draft)),prev=clon(DATOS[a]);
+  if(sec.lista){const viejo=S.idx!==null?DATOS[a][S.idx]:null;if(S.idx===null){DATOS[a].push(n);S.idx=DATOS[a].length-1}else DATOS[a][S.idx]=n;
+    if(a==="cordilleras"&&viejo&&viejo.nombre!==n.nombre){DATOS.rutas.forEach(r=>{if(r.cordillera===viejo.nombre)r.cordillera=n.nombre});await Almacen.guardar("rutas",DATOS.rutas)}}
+  else DATOS[a]=n;
+  try{await Almacen.guardar(a,DATOS[a])}catch{DATOS[a]=prev;S.errors={};aviso("No hay espacio en este navegador. Quita alguna foto y vuelve a guardar.",true);return false}
+  S.draft=clon(n);S.dirty=false;pintar();
+  if(salir||!sec.lista)aviso("Cambios guardados");else exitoGuardado();
+  return true;
+}
 
 /* ---------- Editor visual del perfil ---------- */
 const PF={w:760,h:250,L:52,R:16,T:18,B:30};
@@ -271,9 +339,10 @@ function validar(){
 }
 function norm(d){return {...d,titulo:d.titulo.trim(),precio:+d.precio,plazasMax:+d.plazasMax,distanciaKm:+d.distanciaKm||0,desnivelM:+d.desnivelM||0,salidas:d.salidas.map(s=>({inicio:s.inicio,fin:s.fin||"",plazasLibres:+s.plazasLibres||0}))}}
 async function guardar(salir=false){
+  if(S.vista!=="rutas")return guardarSec(salir);
   if(!validar()){S.msg="";pintar();aviso("Revisa los campos marcados antes de guardar.",true);$(".err")?.closest(".card")?.scrollIntoView({block:"center"});return false}
   const n=norm(S.draft);if(S.idx===null){S.rutas.unshift(n);S.idx=0}else S.rutas[S.idx]=n;
-  try{await Almacen.guardar(S.rutas);S.draft=JSON.parse(JSON.stringify(n));S.dirty=false;S.msg="Guardado";pintar();if(salir)aviso("Cambios guardados");else exitoGuardado();return true}
+  try{await Almacen.guardar("rutas",S.rutas);S.draft=JSON.parse(JSON.stringify(n));S.dirty=false;S.msg="Guardado";pintar();if(salir)aviso("Cambios guardados");else exitoGuardado();return true}
   catch{S.errors={fotos:"No hay espacio en este navegador para más fotos. Quita alguna y vuelve a guardar."};pintar();aviso("No se han podido guardar los cambios.",true);return false}
 }
 function abrir(i){if($("#toast").classList.contains("acciones"))cerrarAviso();S.urlDraft="";S.punto=null;S.idx=i;S.draft=i===null?NUEVA():JSON.parse(JSON.stringify(S.rutas[i]));S.dirty=i===null;S.confirm=null;S.errors={};S.msg="";pintar();scrollTo(0,0)}
@@ -286,18 +355,29 @@ work.addEventListener("click",async e=>{
   if(a==="guardar")await guardar();
   if(a==="add-sal"){S.draft.salidas.push({inicio:"",fin:"",plazasLibres:S.draft.plazasMax});marcar();pintar()}
   if(a==="del-sal"){S.draft.salidas.splice(i,1);marcar();pintar()}
+  if(a==="s-nuevo"){const sc=SEC[S.vista];S.idx=null;S.draft=sc.nuevo();S.dirty=true;S.errors={};cerrarAviso();pintar();scrollTo(0,0)}
+  if(a==="s-abrir"){S.idx=i;S.draft=clon(DATOS[SEC[S.vista].arch][i]);S.dirty=false;S.errors={};S.confirm=null;cerrarAviso();pintar();scrollTo(0,0)}
+  if(a==="s-mov"){const l=DATOS[SEC[S.vista].arch],j=i+ +t.dataset.d;[l[i],l[j]]=[l[j],l[i]];await Almacen.guardar(SEC[S.vista].arch,l);pintar();aviso("Orden guardado")}
+  if(a==="s-borrar-ok"){const sc=SEC[S.vista];if(sc.arch==="cordilleras"){const n=S.rutas.filter(r=>r.cordillera===S.draft.nombre).length;if(n){S.errors={_:`Esta cordillera tiene ${n} ${n===1?"ruta":"rutas"}. Cámbialas de cordillera antes de borrarla.`};S.confirm=null;pintar();return}}DATOS[sc.arch].splice(S.idx,1);await Almacen.guardar(sc.arch,DATOS[sc.arch]);S.draft=null;S.idx=null;S.dirty=false;S.confirm=null;pintar();aviso("Elemento borrado")}
+  if(a==="r-add"){const c=defRep(t.dataset.r);const l=val(S.draft,t.dataset.r)||[];l.push(typeof c.nuevo==="object"?{...c.nuevo}:c.nuevo);setv(S.draft,t.dataset.r,l);marcar();pintar()}
+  if(a==="r-del"){val(S.draft,t.dataset.r).splice(i,1);marcar();pintar()}
+  if(a==="r-mov"){const l=val(S.draft,t.dataset.r),j=i+ +t.dataset.d;[l[i],l[j]]=[l[j],l[i]];marcar();pintar()}
+  if(a==="f-quitar"){setv(S.draft,t.dataset.r,"");marcar();pintar()}
+  if(a==="f-url"){await fotoUrl(t.dataset.r)}
   if(a==="add-url")await anadirUrl();
   if(a==="del-punto"&&S.punto!==null&&S.draft.altitudes.length>2){S.draft.altitudes.splice(S.punto,1);S.punto=null;marcar();pintarPerfil()}
   if(a==="del-foto"){S.draft.fotos.splice(i,1);marcar();pintar()}
   if(a==="borrar"||a==="restaurar"){S.confirm=a;pintar()}
   if(a==="cancelar"){S.confirm=null;pintar()}
-  if(a==="borrar-ok"){S.rutas.splice(S.idx,1);await Almacen.guardar(S.rutas);S.draft=null;S.idx=null;S.dirty=false;S.confirm=null;S.msg="";pintar();aviso("Ruta borrada")}
-  if(a==="duplicar"){const c=norm(S.draft);c.titulo+=" (copia)";c.publicada=false;S.rutas.unshift(c);await Almacen.guardar(S.rutas);abrir(0);aviso("Copia creada como oculta")}
-  if(a==="restaurar-ok"){await Almacen.restaurar();S.rutas=await Almacen.cargar();S.confirm=null;S.msg="";pintar();aviso("Datos de ejemplo restaurados")}
+  if(a==="borrar-ok"){S.rutas.splice(S.idx,1);await Almacen.guardar("rutas",S.rutas);S.draft=null;S.idx=null;S.dirty=false;S.confirm=null;S.msg="";pintar();aviso("Ruta borrada")}
+  if(a==="duplicar"){const c=norm(S.draft);c.titulo+=" (copia)";c.publicada=false;S.rutas.unshift(c);await Almacen.guardar("rutas",S.rutas);abrir(0);aviso("Copia creada como oculta")}
+  if(a==="restaurar-ok"){const ar=SEC[S.vista].arch||"rutas";await Almacen.restaurar(ar);DATOS[ar]=await Almacen.cargar(ar);if(ar==="rutas")S.rutas=DATOS.rutas;S.draft=null;S.dirty=false;S.confirm=null;S.msg="";pintar();aviso("Datos de ejemplo restaurados")}
 });
 work.addEventListener("input",e=>{
   const t=e.target,d=S.draft;
   if(t.id==="f-url"){S.urlDraft=t.value;return}
+  if(t.dataset.furl){S.urlD[t.dataset.furl]=t.value;return}
+  if(t.dataset.c){setv(d||{},t.dataset.c,t.type==="checkbox"?t.checked:t.dataset.n?(t.value===""?"":+t.value):t.dataset.l2?t.value.split("\n").map(x=>x.trim()).filter(Boolean):t.value);marcar();return}
   if(t.id==="buscar"){S.q=t.value;const pos=t.selectionStart;vistaLista();const b=$("#buscar");b.focus();b.setSelectionRange(pos,pos);return}
   if(!d)return;
   if(t.dataset.k){d[t.dataset.k]=t.type==="checkbox"?t.checked:t.value;marcar()}
@@ -305,7 +385,15 @@ work.addEventListener("input",e=>{
   if("alt" in t.dataset){d.altitudes=t.value.split(/[,;\s]+/).map(Number).filter(n=>Number.isFinite(n)&&n>0);S.punto=null;marcar();pintarPerfil()}
   if(t.dataset.s){d.salidas[+t.dataset.i][t.dataset.s]=t.value;marcar()}
 });
-work.addEventListener("keydown",e=>{if(e.target.id==="f-url"&&e.key==="Enter"){e.preventDefault();anadirUrl()}});
+work.addEventListener("keydown",e=>{if(e.target.id==="f-url"&&e.key==="Enter"){e.preventDefault();anadirUrl()}if(e.target.dataset?.furl&&e.key==="Enter"){e.preventDefault();fotoUrl(e.target.dataset.furl)}});
+const defRep=p=>buscarDef(p);
+async function fotoUrl(p){
+  const url=(S.urlD[p]||"").trim();let u;delete S.errors[p];try{u=new URL(url)}catch{}
+  if(!u||u.protocol!=="https:")S.errors[p]="Pega un enlace completo que empiece por https://.";
+  else if(!await imagenCarga(url))S.errors[p]="No se ha podido cargar la imagen. Comprueba que el enlace lleve directamente a la foto.";
+  else{setv(S.draft,p,url);S.urlD[p]="";marcar()}
+  pintar();
+}
 function imagenCarga(url){return new Promise(ok=>{const im=new Image(),t=setTimeout(()=>ok(false),10000);im.onload=()=>{clearTimeout(t);ok(true)};im.onerror=()=>{clearTimeout(t);ok(false)};im.src=url})}
 async function anadirUrl(){
   const url=S.urlDraft.trim();let u;delete S.errors.fotos;
@@ -317,6 +405,7 @@ async function anadirUrl(){
   pintar();const f=$("#f-url");if(f)f.focus();
 }
 work.addEventListener("change",async e=>{
+  if(e.target.dataset.fup){const p=e.target.dataset.fup,f=e.target.files[0];if(!f)return;delete S.errors[p];try{setv(S.draft,p,await reducir(f));marcar()}catch{S.errors[p]=`No se ha podido leer ${f.name}.`}pintar();return}
   if(e.target.id==="f-gpx"){const f=e.target.files[0];if(!f)return;delete S.errors.perfil;try{Object.assign(S.draft,leerGPX(await f.text()));S.punto=null;marcar()}catch{S.errors.perfil="Este GPX no tiene puntos con altitud. Prueba con otro archivo."}pintar();return}
   if(e.target.id!=="f-foto")return;
   for(const f of e.target.files){try{S.draft.fotos.push(await reducir(f));marcar()}catch{S.errors.fotos=`No se ha podido leer ${f.name}.`}}
@@ -326,14 +415,18 @@ work.addEventListener("change",async e=>{
 function reducir(file){return new Promise((ok,ko)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const k=Math.min(1,1000/im.width),c=document.createElement("canvas");c.width=im.width*k;c.height=im.height*k;c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL("image/jpeg",.7))};im.onerror=ko;im.src=u})}
 
 function salir(){if(!S.draft)return;cerrarAviso();if(S.dirty)$("#salir").showModal();else cerrar()}
-$("#logo").addEventListener("click",()=>{if(S.draft)salir();else{S.q="";S.confirm=null;S.msg="";pintar();scrollTo(0,0)}});
-$("#salir-seguir").addEventListener("click",()=>$("#salir").close());
-$("#salir-descartar").addEventListener("click",()=>{$("#salir").close();cerrar()});
-$("#salir-guardar").addEventListener("click",async()=>{$("#salir").close();if(await guardar(true))cerrar()});
+function ir(v){cerrarAviso();S.vista=v;S.draft=null;S.idx=null;S.dirty=false;S.confirm=null;S.errors={};S.q="";S.urlD={};S.destino=null;pintarMenu();pintar();scrollTo(0,0)}
+function irA(v){if(S.dirty){S.destino=v;cerrarAviso();$("#salir").showModal()}else ir(v)}
+const trasSalir=()=>{if(S.destino)ir(S.destino);else cerrar()};
+$("#menu").addEventListener("click",e=>{const b=e.target.closest("[data-v]");if(b)irA(b.dataset.v)});
+$("#logo").addEventListener("click",()=>irA("rutas"));
+$("#salir-seguir").addEventListener("click",()=>{S.destino=null;$("#salir").close()});
+$("#salir-descartar").addEventListener("click",()=>{$("#salir").close();S.dirty=false;trasSalir()});
+$("#salir-guardar").addEventListener("click",async()=>{$("#salir").close();if(await guardar(true))trasSalir();else S.destino=null});
 $("#toast").addEventListener("click",e=>{const b=e.target.closest("[data-t]");if(!b)return;cerrarAviso();if(b.dataset.t==="volver")cerrar()});
 addEventListener("beforeunload",e=>{if(S.dirty)e.preventDefault()});
 
-(async()=>{try{S.rutas=await Almacen.cargar();pintar()}catch{work.innerHTML=`<p class="empty">No se han podido cargar las rutas. Recarga la página en unos segundos.</p>`}})();
+(async()=>{try{const d=await Promise.all(ARCHIVOS.map(a=>Almacen.cargar(a)));ARCHIVOS.forEach((a,i)=>DATOS[a]=d[i]);S.rutas=DATOS.rutas;pintarMenu();pintar()}catch{work.innerHTML=`<p class="empty">No se ha podido cargar el contenido. Recarga la página en unos segundos.</p>`}})();
 </script>
 </body>
 </html>
