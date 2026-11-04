@@ -293,11 +293,9 @@ dialog::backdrop{background:rgba(18,32,24,.66)}
 .previo .p1{width:min(620px,100%);height:clamp(190px,44vh,400px)}.previo .p2{width:min(500px,100%);height:64px}.previo .p3{width:min(360px,100%);height:48px}
 .hero.previo{background:var(--deep)}
 .on-deep{--sk:var(--deep-2)}
-.sync #titulo,.sync .lead,.sync .acts .btn,.sync .creds li,.sync .sec-head>*,.sync .date,.sync .name,.sync .meta,.sync .seat-txt,.sync .price,.sync .svc h3,.sync .svc p,.sync .svc .foot>*,.sync .rn,.sync .rs,.sync .range .mono,.sync .rc,.sync .tt,.sync .zone,.sync .stats,.sync .prof .mono,.sync .route .foot b,.sync .lv,.sync .steps h3,.sync .steps p,.sync .methods li>*,.sync .pago-nota,.sync td,.sync blockquote,.sync .about-txt>*,.sync summary,.sync .contact h2,.sync .contact p{color:transparent!important;background:var(--sk)!important;border-color:transparent!important;border-radius:3px;animation:latido 1.2s ease-in-out infinite;-webkit-text-fill-color:transparent}
-.sync .lv i,.sync .seats,.sync .prof svg,.sync .acts .btn{visibility:visible}
-.sync .lv i{visibility:hidden}
+.sync .dep .price,.sync .seat-txt,.sync .route .foot b{color:transparent!important;background:var(--sk)!important;border-radius:3px;animation:latido 1.2s ease-in-out infinite;-webkit-text-fill-color:transparent}
+.sync .dep .price small{color:transparent!important}
 .sync .seats,.sync .dep .act{visibility:hidden}
-.sync .prof svg{opacity:.2}
 .sync .dep .btn,.sync .route,.sync .range{pointer-events:none}
 @keyframes latido{50%{opacity:.55}}
 .estado{padding:96px 20px;text-align:center;color:var(--muted)}
@@ -613,7 +611,7 @@ function repintarSiSePuede(){
     if(guardada){mezclar(guardada);preparar();renderPagina()}
     const peticion=pedirRemoto(API,10000);
     if(!guardada){
-      /* Primera visita: la página aparece al momento con marcadores animados hasta tener los datos reales. */
+      /* Primera visita: los textos salen al momento; precios y plazas esperan a los datos reales. */
       document.body.classList.add("sync");preparar();renderPagina();
       try{const d=await peticion;mezclar(d);escribirCache(d);repintarSiSePuede()}catch(e){console.error(e)}
       document.body.classList.remove("sync");return;
