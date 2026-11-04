@@ -73,6 +73,8 @@ input[type=checkbox]{width:20px;min-height:20px;height:20px;accent-color:var(--l
 .ph{position:relative;aspect-ratio:4/3;background:var(--bg);border-radius:3px;overflow:hidden}
 .ph img{width:100%;height:100%;object-fit:cover;display:block}
 .ph button{position:absolute;top:4px;right:4px;padding:2px 8px;border:0;border-radius:3px;background:var(--surface);font-size:.76rem;font-weight:600;cursor:pointer}
+.url-row{display:flex;gap:8px}
+.url-row input{flex:1;min-width:0}
 .savebar{position:sticky;bottom:0;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin:0 calc(-1*clamp(16px,3vw,36px));padding:11px clamp(16px,3vw,36px);background:var(--surface);border-top:1px solid var(--line)}
 .status{color:var(--ok);font-weight:600;font-size:.92rem;min-height:1.4em}
 .status.dirty{color:var(--muted);font-weight:500}
@@ -135,7 +137,7 @@ const hoy=()=>new Date().toLocaleDateString("sv-SE");
 const proxima=r=>(r.salidas||[]).map(s=>s.inicio).filter(d=>d&&d>=hoy()).sort()[0];
 const fechaCorta=iso=>new Date(iso+"T12:00:00").toLocaleDateString("es-ES",{day:"numeric",month:"short",year:"numeric"}).replace(".","");
 const NUEVA=()=>({titulo:"",publicada:false,tipo:"Senderismo",cordillera:"Sistema Central",zona:"",nivel:"Medio",grado:"",distanciaKm:0,desnivelM:0,duracion:"",precio:0,plazasMax:8,descripcion:"",encuentro:"",incluye:[],material:[],fotos:[],altitudes:[],salidas:[]});
-const S={rutas:[],q:"",idx:null,draft:null,dirty:false,confirm:null,errors:{},msg:""};
+const S={rutas:[],q:"",idx:null,draft:null,dirty:false,confirm:null,errors:{},msg:"",urlDraft:""};
 const work=$("#work");
 
 function vistaLista(){
@@ -159,6 +161,7 @@ function vistaFicha(){
   <section class="card"><div class="row" style="justify-content:space-between"><h2>Próximas salidas</h2><button class="btn ghost" data-a="add-sal">Añadir fecha</button></div>
     ${(d.salidas||[]).length?d.salidas.map((s,i)=>`<div class="sal"><div class="field"><label for="s-ini-${i}">Inicio</label><input id="s-ini-${i}" type="date" data-s="inicio" data-i="${i}" value="${esc(s.inicio)}"></div><div class="field"><label for="s-fin-${i}">Fin (opcional)</label><input id="s-fin-${i}" type="date" data-s="fin" data-i="${i}" value="${esc(s.fin)}"></div><div class="field"><label for="s-pl-${i}">Plazas libres</label><input id="s-pl-${i}" type="number" min="0" data-s="plazasLibres" data-i="${i}" value="${esc(s.plazasLibres)}"></div><button class="x" data-a="del-sal" data-i="${i}" aria-label="Quitar esta fecha">×</button></div>`).join(""):`<p class="help">Sin fechas. La ruta se verá en el catálogo, pero no en próximas salidas.</p>`}${S.errors.salidas?`<p class="err">${esc(S.errors.salidas)}</p>`:""}</section>
   <section class="card"><div class="row" style="justify-content:space-between"><h2>Fotos</h2><label class="btn ghost" for="f-foto">Subir fotos</label></div><input id="f-foto" type="file" accept="image/*" multiple hidden>
+    <div class="field"><label for="f-url">Añadir por enlace</label><div class="url-row"><input id="f-url" type="url" inputmode="url" placeholder="https://…" value="${esc(S.urlDraft)}" ${S.errors.fotos?'aria-invalid="true"':""}><button class="btn ghost" type="button" data-a="add-url">Añadir</button></div><span class="help">Pega el enlace directo a una imagen.</span></div>
     ${(d.fotos||[]).length?`<div class="photos">${d.fotos.map((f,i)=>`<div class="ph"><img src="${esc(src(f))}" alt="Foto ${i+1}"><button data-a="del-foto" data-i="${i}" aria-label="Quitar foto ${i+1}">Quitar</button></div>`).join("")}</div>`:`<p class="help">Aún no hay fotos. La primera será la de la tarjeta.</p>`}${S.errors.fotos?`<p class="err">${esc(S.errors.fotos)}</p>`:""}</section>
   <section class="card"><h2>Detalles</h2><div class="grid2"><div class="field"><label for="f-incluye">Qué incluye</label><textarea id="f-incluye" data-l="incluye">${esc((d.incluye||[]).join("\n"))}</textarea><span class="help">Una cosa por línea.</span></div><div class="field"><label for="f-material">Qué traer</label><textarea id="f-material" data-l="material">${esc((d.material||[]).join("\n"))}</textarea><span class="help">Una cosa por línea.</span></div></div>
     <div class="field"><label for="f-altitudes">Altitudes del recorrido (m)</label><input id="f-altitudes" data-alt value="${esc((d.altitudes||[]).join(", "))}"><span class="help">Números en orden, separados por comas. Dibujan el perfil de la ruta.</span></div></section>
@@ -183,7 +186,7 @@ async function guardar(){
   try{await Almacen.guardar(S.rutas);S.draft=JSON.parse(JSON.stringify(n));S.dirty=false;S.msg="Guardado";pintar()}
   catch{S.errors={fotos:"No hay espacio en este navegador para más fotos. Quita alguna y vuelve a guardar."};pintar()}
 }
-function abrir(i){S.idx=i;S.draft=i===null?NUEVA():JSON.parse(JSON.stringify(S.rutas[i]));S.dirty=i===null;S.confirm=null;S.errors={};S.msg="";pintar();scrollTo(0,0)}
+function abrir(i){S.urlDraft="";S.idx=i;S.draft=i===null?NUEVA():JSON.parse(JSON.stringify(S.rutas[i]));S.dirty=i===null;S.confirm=null;S.errors={};S.msg="";pintar();scrollTo(0,0)}
 function cerrar(){S.draft=null;S.idx=null;S.dirty=false;S.confirm=null;S.errors={};S.msg="";pintar();scrollTo(0,0)}
 
 work.addEventListener("click",async e=>{
@@ -194,6 +197,7 @@ work.addEventListener("click",async e=>{
   if(a==="guardar")await guardar();
   if(a==="add-sal"){S.draft.salidas.push({inicio:"",fin:"",plazasLibres:S.draft.plazasMax});marcar();pintar()}
   if(a==="del-sal"){S.draft.salidas.splice(i,1);marcar();pintar()}
+  if(a==="add-url")await anadirUrl();
   if(a==="del-foto"){S.draft.fotos.splice(i,1);marcar();pintar()}
   if(a==="borrar"||a==="restaurar"){S.confirm=a;pintar()}
   if(a==="cancelar"){S.confirm=null;pintar()}
@@ -203,6 +207,7 @@ work.addEventListener("click",async e=>{
 });
 work.addEventListener("input",e=>{
   const t=e.target,d=S.draft;
+  if(t.id==="f-url"){S.urlDraft=t.value;return}
   if(t.id==="buscar"){S.q=t.value;const pos=t.selectionStart;vistaLista();const b=$("#buscar");b.focus();b.setSelectionRange(pos,pos);return}
   if(!d)return;
   if(t.dataset.k){d[t.dataset.k]=t.type==="checkbox"?t.checked:t.value;marcar()}
@@ -210,6 +215,17 @@ work.addEventListener("input",e=>{
   if("alt" in t.dataset){d.altitudes=t.value.split(/[,;\s]+/).map(Number).filter(n=>Number.isFinite(n)&&n>0);marcar()}
   if(t.dataset.s){d.salidas[+t.dataset.i][t.dataset.s]=t.value;marcar()}
 });
+work.addEventListener("keydown",e=>{if(e.target.id==="f-url"&&e.key==="Enter"){e.preventDefault();anadirUrl()}});
+function imagenCarga(url){return new Promise(ok=>{const im=new Image(),t=setTimeout(()=>ok(false),10000);im.onload=()=>{clearTimeout(t);ok(true)};im.onerror=()=>{clearTimeout(t);ok(false)};im.src=url})}
+async function anadirUrl(){
+  const url=S.urlDraft.trim();let u;delete S.errors.fotos;
+  try{u=new URL(url)}catch{}
+  if(!u||u.protocol!=="https:")S.errors.fotos="Pega un enlace completo que empiece por https://.";
+  else if(S.draft.fotos.includes(url))S.errors.fotos="Esta foto ya está añadida.";
+  else if(!await imagenCarga(url))S.errors.fotos="No se ha podido cargar la imagen. Comprueba que el enlace lleve directamente a la foto.";
+  else{S.draft.fotos.push(url);S.urlDraft="";marcar()}
+  pintar();const f=$("#f-url");if(f)f.focus();
+}
 work.addEventListener("change",async e=>{
   if(e.target.id!=="f-foto")return;
   for(const f of e.target.files){try{S.draft.fotos.push(await reducir(f));marcar()}catch{S.errors.fotos=`No se ha podido leer ${f.name}.`}}
