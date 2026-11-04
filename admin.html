@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>Panel de Daniel Mattern</title>
+<link rel="preconnect" href="https://script.google.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Sofia+Sans+Extra+Condensed:wght@800&display=swap">
@@ -165,14 +166,16 @@ async function llamar(cuerpo){
   if(!r.ok)throw new Error("red");const j=await r.json();
   if(!j.ok){const e=new Error(j.error||"error");e.codigo=j.error;throw e}return j;
 }
+const CACHE="dm-cache";
+const leerCache=()=>{try{return JSON.parse(localStorage.getItem(CACHE)||"null")}catch{return null}};
+const escribirCache=d=>{try{localStorage.setItem(CACHE,JSON.stringify(d))}catch{}};
 const Almacen={
   clave:a=>"dm-demo-"+a,
-  async cargar(a){
-    if(API){remoto??=fetch(API).then(r=>{if(!r.ok)throw new Error("red");return r.json()});const d=await remoto;if(d[a]!==undefined)return d[a]}
-    else try{const g=localStorage.getItem(this.clave(a));if(g)return JSON.parse(g)}catch{}
-    const r=await fetch(`content/${a}.json`,{cache:"no-cache"});if(!r.ok)throw new Error(a);return r.json();
-  },
-  async guardar(a,datos){if(API)await llamar({accion:"guardar",clave:a,datos});else localStorage.setItem(this.clave(a),JSON.stringify(datos))},
+  async base(a){if(!API)try{const g=localStorage.getItem(this.clave(a));if(g)return JSON.parse(g)}catch{}
+    const r=await fetch(`content/${a}.json`,{cache:"no-cache"});if(!r.ok)throw new Error(a);return r.json()},
+  async cargar(a){return this.base(a)},
+  remoto(){return fetch(API).then(r=>{if(!r.ok)throw new Error("red");return r.json()})},
+  async guardar(a,datos){if(API){await llamar({accion:"guardar",clave:a,datos});const c=leerCache()||{};c[a]=datos;escribirCache(c)}else localStorage.setItem(this.clave(a),JSON.stringify(datos))},
   async restaurar(a){try{localStorage.removeItem(this.clave(a))}catch{}}
 };
 const ARCHIVOS=["rutas","portada","servicios","cordilleras","reservas","sobre-mi","preguntas","secciones","general"];
@@ -472,9 +475,19 @@ $("#toast").addEventListener("click",e=>{const b=e.target.closest("[data-t]");if
 addEventListener("unhandledrejection",()=>aviso("No se han podido guardar los cambios. Inténtalo de nuevo.",true));
 addEventListener("beforeunload",e=>{if(S.dirty)e.preventDefault()});
 
+function aplicar(d){ARCHIVOS.forEach(a=>{if(d[a]!==undefined)DATOS[a]=d[a]});S.rutas=DATOS.rutas}
 async function arrancar(){
-  try{const d=await Promise.all(ARCHIVOS.map(a=>Almacen.cargar(a)));ARCHIVOS.forEach((a,i)=>DATOS[a]=d[i]);S.rutas=DATOS.rutas;pintarMenu();pintar()}
-  catch{work.innerHTML=`<p class="empty">No se ha podido cargar el contenido. Recarga la página en unos segundos.</p>`}
+  try{
+    const d=await Promise.all(ARCHIVOS.map(a=>Almacen.cargar(a)));ARCHIVOS.forEach((a,i)=>DATOS[a]=d[i]);S.rutas=DATOS.rutas;
+    if(!API){pintarMenu();pintar();return}
+    const guardada=leerCache(),peticion=Almacen.remoto();
+    if(guardada){aplicar(guardada);pintarMenu();pintar();
+      /* El panel ya se ve; se actualiza por detrás si hay datos más nuevos y nadie está editando. */
+      peticion.then(nuevo=>{if(JSON.stringify(nuevo)===JSON.stringify(guardada))return;if(S.dirty||S.idx!==null)return;escribirCache(nuevo);aplicar(nuevo);S.draft=null;pintar()}).catch(()=>{});
+      return}
+    /* Primera vez en este navegador: hay que esperar para no editar datos antiguos. */
+    aplicar(await peticion.then(n=>(escribirCache(n),n)));pintarMenu();pintar();
+  }catch{work.innerHTML=`<p class="empty">No se ha podido cargar el contenido. Recarga la página en unos segundos.</p>`}
 }
 function vistaLogin(error=""){
   work.innerHTML=`<form class="login" id="login"><h1>Entrar</h1><div class="field"><label for="clave">Contraseña</label><input id="clave" type="password" autocomplete="current-password" required></div>${error?`<p class="err" role="alert">${esc(error)}</p>`:""}<button class="btn" type="submit">Entrar al panel</button></form>`;

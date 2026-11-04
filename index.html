@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Daniel Mattern, guía de montaña</title>
 <meta name="description" content="Rutas, trekkings, escalada en paredes de roca y cursos con Daniel Mattern, guía de montaña y escalada AEGM y UIMLA.">
+<link rel="preconnect" href="https://script.google.com">
+<link rel="preconnect" href="https://images.pexels.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=Sofia+Sans+Extra+Condensed:wght@600;800&display=swap">
@@ -577,19 +579,38 @@ function contours(cv,{seed=11,peak=[.5,.42],color="#8DAF97",step=.07}={}){
 function drawMaps(){const cv=$("#photo-map");if(cv)contours(cv,{color:getComputedStyle(document.documentElement).getPropertyValue("--contour").trim()})}
 let rz;addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(drawMaps,150)});
 
-/* ---------- Arranque ---------- */
+/* ---------- Arranque: primero la copia guardada, después la versión más reciente ---------- */
+const CACHE="dm-cache";
+const leerCache=()=>{try{return JSON.parse(localStorage.getItem(CACHE)||"null")}catch{return null}};
+const escribirCache=d=>{try{localStorage.setItem(CACHE,JSON.stringify(d))}catch{}};
+const mezclar=d=>ARCHIVOS.forEach(a=>{if(d&&d[a]!==undefined)C[a]=d[a]});
+const pedirRemoto=(API,ms)=>{const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);return fetch(API,{signal:c.signal}).then(r=>{if(!r.ok)throw new Error("red");return r.json()}).finally(()=>clearTimeout(t))};
+function repintarSiSePuede(){
+  if($$("dialog").some(d=>d.open)||$("#c-name")?.value||$("#c-msg")?.value)return;
+  const y=scrollY,l=F.level,r=F.range;preparar();renderPagina();
+  $("#f-level").value=l;$("#f-range").value=r;renderRoutes();scrollTo(0,y);
+}
 (async()=>{
   try{
+    const API=window.CONFIG?.API_URL;
     const datos=await Promise.all(ARCHIVOS.map(a=>fetch(`content/${a}.json`,{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error(a);return r.json()})));
     ARCHIVOS.forEach((a,i)=>C[a]=datos[i]);
-    const API=window.CONFIG?.API_URL;
-    if(API){
-      try{const c=new AbortController(),t=setTimeout(()=>c.abort(),8000),d=await fetch(API,{signal:c.signal}).then(r=>r.json());clearTimeout(t);ARCHIVOS.forEach(a=>{if(d[a]!==undefined)C[a]=d[a]})}
-      catch(e){console.error("Sin conexión con el contenido guardado",e)}
-    }else ARCHIVOS.forEach(a=>{try{const d=localStorage.getItem("dm-demo-"+a);if(d)C[a]=JSON.parse(d)}catch{}});
-    preparar();renderPagina();
+    if(!API){ARCHIVOS.forEach(a=>{try{const d=localStorage.getItem("dm-demo-"+a);if(d)C[a]=JSON.parse(d)}catch{}});preparar();renderPagina();return}
+    const guardada=leerCache();
+    if(guardada){mezclar(guardada);preparar();renderPagina()}
+    const peticion=pedirRemoto(API,10000);
+    if(!guardada){
+      /* Primera visita: espera un momento para no enseñar textos antiguos. */
+      const d=await Promise.race([peticion,new Promise(ok=>setTimeout(()=>ok(null),1800))]).catch(()=>null);
+      if(d){mezclar(d);escribirCache(d)}
+      preparar();renderPagina();
+      if(d)return;
+    }
+    const nuevo=await peticion,igual=JSON.stringify(nuevo)===JSON.stringify(guardada);
+    escribirCache(nuevo);
+    if(!igual){mezclar(nuevo);repintarSiSePuede()}
   }catch(e){
-    $("#estado").textContent=location.protocol==="file:"?"Esta versión lee su contenido de internet: ábrela desde su dirección web.":"No se ha podido cargar el contenido. Recarga la página en unos segundos.";
+    if(!$("#titulo"))$("#estado").textContent=location.protocol==="file:"?"Esta versión lee su contenido de internet: ábrela desde su dirección web.":"No se ha podido cargar el contenido. Recarga la página en unos segundos.";
     console.error(e);
   }
 })();
