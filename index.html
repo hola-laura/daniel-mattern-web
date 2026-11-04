@@ -568,7 +568,9 @@ let rz;addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(drawMaps,15
 (async()=>{
   try{
     const datos=await Promise.all(ARCHIVOS.map(a=>fetch(`content/${a}.json`,{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error(a);return r.json()})));
-    ARCHIVOS.forEach((a,i)=>C[a]=datos[i]);preparar();renderPagina();
+    ARCHIVOS.forEach((a,i)=>C[a]=datos[i]);
+    try{const d=localStorage.getItem("dm-demo-rutas");if(d)C.rutas=JSON.parse(d)}catch{}
+    preparar();renderPagina();
   }catch(e){
     $("#estado").textContent=location.protocol==="file:"?"Esta versión lee su contenido de internet: ábrela desde su dirección web.":"No se ha podido cargar el contenido. Recarga la página en unos segundos.";
     console.error(e);

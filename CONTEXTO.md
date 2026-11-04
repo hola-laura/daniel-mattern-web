@@ -1,14 +1,13 @@
 # Web de Daniel Mattern: contexto del proyecto
 
 Prototipo de web para Daniel Mattern, guía de montaña y escalada (TD2 Montaña, TD2 Escalada, AEGM, UIMLA).
-La web es `index.html`, que lee su contenido de `content/*.json`. Se edita con Pages CMS, configurado en `.pages.yml`. Las fotos subidas van a `media/`.
+La web es `index.html`, que lee su contenido de `content/*.json`. Se decidió un panel propio (`admin.html`) sobre Supabase, sin depender de GitHub para editar. Aún funciona en modo demostración: `Almacen` guarda en localStorage y la web lee esa copia si existe. El esquema está en `supabase/schema.sql`.
 
 ## Cómo trabajar
 - Haz los cambios en el código, no en Figma, salvo que se pida lo contrario.
 - La interfaz y los textos están en español, tratando al visitante de tú.
-- No metas contenido en `index.html`: cada texto, precio, foto o ruta va en `content/` y debe tener su campo en `.pages.yml`.
+- No metas contenido en `index.html`: cada texto, precio, foto o ruta va en `content/` y debe poder editarse en el panel.
 - Las salidas van dentro de cada ruta en `content/rutas.json`. Las pasadas se ocultan solas.
-- Si se añade una cordillera, hay que añadirla también a la lista de `cordillera` en `.pages.yml`.
 - `index.html` no funciona abierto como archivo local: hay que servirlo desde una dirección web.
 - Los colores y tipografías son variables CSS en `:root`, con su versión oscura debajo.
 
@@ -32,7 +31,9 @@ La web es `index.html`, que lee su contenido de `content/*.json`. Se edita con P
 - [ ] Añadir teléfono, correo y WhatsApp reales de Daniel. No uses los datos de Subalpino.
 - [ ] Conectar una pasarela de pago real. Ahora el pago es simulado y no se piden datos de tarjeta.
 - [ ] Hacer funcionar los formularios de reserva y contacto. Las plazas no bajan solas con reservas reales todavía.
-- [ ] Conectar Pages CMS e invitar a Daniel por correo.
+- [ ] Añadir al panel: portada, servicios, cordilleras, reserva y pago, sobre mí, preguntas y textos.
+- [ ] Conectar Supabase: cuenta, acceso de Daniel, carga de datos y fotos. Quitar el modo demostración.
+- [ ] Elegir alojamiento y dominio, a nombre de Daniel.
 - [ ] Decidir si oscurecer `#8A9B6F` en «Quedan 2 de 6», porque tiene poco contraste sobre blanco.
 - [ ] Revisar textos legales, requisitos para viajes al extranjero y alcance de las titulaciones.
 - [ ] Quitar la banda de prototipo antes de publicar la versión final.

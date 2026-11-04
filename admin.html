@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Panel de Daniel Mattern</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Sofia+Sans+Extra+Condensed:wght@800&display=swap">
+<style>
+/* Layout: barra lateral de secciones y zona de trabajo con lista y ficha de edición. */
+:root{
+  --bg:#F4F7F1; --surface:#FFFFFF; --fg:#2F434D; --muted:#5A6F79; --line:#D5E0E1; --line-strong:#8DAF97; --link:#3B5A4A;
+  --deep:#2F4A3A; --deep-2:#3B5A4A; --on-deep:#F6F9F8; --on-deep-muted:#E0E9EA; --accent:#C8E3C1; --on-accent:#2F434D; --notice:#DDE8D8; --danger:#A33A2B; --ok:#3B5A4A;
+  --f-display:"Sofia Sans Extra Condensed","Arial Narrow",Impact,sans-serif; --f-body:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#18241D;--surface:#212F27;--fg:#E8EFE9;--muted:#B2C2B7;--line:#37493E;--link:#C8E3C1;--deep:#24392D;--deep-2:#2F4A3A;--danger:#F2A493;--ok:#C8E3C1;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#18241D;--surface:#212F27;--fg:#E8EFE9;--muted:#B2C2B7;--line:#37493E;--link:#C8E3C1;--deep:#24392D;--deep-2:#2F4A3A;--danger:#F2A493;--ok:#C8E3C1;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/1.5 var(--f-body)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--link);outline-offset:2px;border-radius:2px}
+h1,h2,h3,p,ul{margin:0;padding:0;list-style:none}
+.shell{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh}
+.side{background:var(--deep);color:var(--on-deep);padding:20px 14px;display:flex;flex-direction:column;gap:22px;position:sticky;top:0;height:100vh}
+.brand b{display:block;font:800 1.6rem/1 var(--f-display);text-transform:uppercase;padding-inline:8px}
+.brand span{display:block;padding:3px 8px 0;font:400 .72rem/1.2 var(--f-mono);color:var(--on-deep-muted)}
+.menu{display:grid;gap:2px}
+.menu button{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;min-height:42px;padding:8px;background:none;border:0;border-radius:4px;color:var(--on-deep);font-weight:600;text-align:left}
+.menu button[aria-current="page"]{background:var(--deep-2)}
+.menu button:disabled{color:var(--on-deep-muted);opacity:.7;font-weight:500}
+.menu small{font:400 .66rem/1 var(--f-mono)}
+.side .view{margin-top:auto;color:var(--accent);font-weight:600;padding:8px}
+.main{min-width:0;display:flex;flex-direction:column}
+.demo{background:var(--notice);color:#2F434D;font-size:.88rem;font-weight:600;padding:7px 28px}
+.work{padding:30px clamp(16px,3vw,36px) 110px;max-width:1040px;width:100%;margin-inline:auto;display:grid;gap:20px}
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px}
+h1{font:800 clamp(2.6rem,5vw,3.6rem)/.95 var(--f-display);text-transform:uppercase}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:8px 16px;border:2px solid transparent;border-radius:3px;background:var(--accent);color:var(--on-accent);font-weight:700;cursor:pointer;text-decoration:none}
+.btn.ghost{background:transparent;color:var(--fg);border-color:var(--line-strong)}
+.btn.plain{background:none;color:var(--link);padding-inline:6px;min-height:36px}
+.btn.danger{background:var(--danger);color:#fff}
+:root[data-theme="dark"] .btn.danger{color:#1B241E}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.search{flex:1;min-width:200px}
+input,select,textarea{width:100%;min-height:42px;padding:8px 10px;border:1.5px solid var(--line);border-radius:3px;background:var(--surface)}
+textarea{min-height:92px;resize:vertical}
+input[type=checkbox]{width:20px;min-height:20px;height:20px;accent-color:var(--link)}
+.list{display:grid;background:var(--surface);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.item{display:grid;grid-template-columns:minmax(0,1fr) 110px 86px 112px;gap:12px;align-items:center;width:100%;padding:13px 16px;background:none;border:0;border-top:1px solid var(--line);text-align:left;cursor:pointer}
+.item:first-child{border-top:0}
+.item:hover{background:var(--bg)}
+.item b{display:block;line-height:1.25}
+.item small{color:var(--muted);font-size:.86rem}
+.mono{font:400 .8rem/1.3 var(--f-mono);font-variant-numeric:tabular-nums}
+.pill{justify-self:start;padding:2px 8px;border-radius:999px;background:var(--notice);color:#2F434D;font:500 .72rem/1.5 var(--f-mono)}
+.pill.off{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.empty{padding:28px;text-align:center;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:20px;display:grid;gap:15px}
+.card h2{font-size:1.05rem}
+.help{color:var(--muted);font-size:.86rem}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.field{display:grid;gap:4px;align-content:start;min-width:0}
+.field label,.lab{font-size:.88rem;font-weight:600}
+.check{display:flex;gap:9px;align-items:center;font-weight:600}
+.err{color:var(--danger);font-size:.84rem;font-weight:600}
+.sal{display:grid;grid-template-columns:1fr 1fr 110px 40px;gap:8px;align-items:end}
+.sal+.sal{padding-top:10px;border-top:1px solid var(--line)}
+.x{width:40px;height:42px;border:0;background:none;font-size:1.3rem;color:var(--danger);cursor:pointer}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.ph{position:relative;aspect-ratio:4/3;background:var(--bg);border-radius:3px;overflow:hidden}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph button{position:absolute;top:4px;right:4px;padding:2px 8px;border:0;border-radius:3px;background:var(--surface);font-size:.76rem;font-weight:600;cursor:pointer}
+.savebar{position:sticky;bottom:0;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin:0 calc(-1*clamp(16px,3vw,36px));padding:11px clamp(16px,3vw,36px);background:var(--surface);border-top:1px solid var(--line)}
+.status{color:var(--ok);font-weight:600;font-size:.92rem;min-height:1.4em}
+.status.dirty{color:var(--muted);font-weight:500}
+.confirm{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px;border:1.5px solid var(--danger);border-radius:4px}
+@media (max-width:820px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  .side{position:static;height:auto;gap:10px;padding-block:12px}
+  .menu{grid-auto-flow:column;grid-auto-columns:max-content;overflow-x:auto}
+  .side .view{margin-top:0;padding-block:0}
+  .demo{padding-inline:16px}
+  .grid,.grid2{grid-template-columns:minmax(0,1fr)}
+  .item{grid-template-columns:minmax(0,1fr) auto}
+  .item .hide{display:none}
+  .sal{grid-template-columns:1fr 1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <div class="brand"><b>Daniel Mattern</b><span>panel de la web</span></div>
+    <nav class="menu" aria-label="Secciones del panel">
+      <button aria-current="page">Rutas y salidas</button>
+      <button disabled>Portada <small>próximamente</small></button>
+      <button disabled>Servicios <small>próximamente</small></button>
+      <button disabled>Cordilleras <small>próximamente</small></button>
+      <button disabled>Reserva y pago <small>próximamente</small></button>
+      <button disabled>Sobre mí <small>próximamente</small></button>
+      <button disabled>Preguntas <small>próximamente</small></button>
+    </nav>
+    <a class="view" href="index.html" target="_blank" rel="noopener">Ver la web</a>
+  </aside>
+  <div class="main">
+    <p class="demo">Modo demostración: los cambios se guardan solo en este navegador y nadie más los ve.</p>
+    <main class="work" id="work" aria-live="polite"><p class="empty">Cargando…</p></main>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* Almacén de datos. En modo demostración usa este navegador; al conectar Supabase solo cambia este objeto. */
+const CLAVE="dm-demo-rutas";
+const Almacen={
+  async cargar(){
+    try{const g=localStorage.getItem(CLAVE);if(g)return JSON.parse(g)}catch{}
+    const r=await fetch("content/rutas.json",{cache:"no-cache"});if(!r.ok)throw new Error("rutas");return r.json();
+  },
+  async guardar(rutas){localStorage.setItem(CLAVE,JSON.stringify(rutas))},
+  async restaurar(){try{localStorage.removeItem(CLAVE)}catch{}}
+};
+const TIPOS=["Senderismo","Trekking","Escalada","Raquetas","Cursos"],NIVELES=["Iniciación","Medio","Exigente","Técnico"];
+const CORDILLERAS=["Sistema Central","Pirineos","Picos de Europa","Sierra Nevada","Alpes","Atlas","Andes","Himalaya"];
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const eur=n=>new Intl.NumberFormat("es-ES",{maximumFractionDigits:2}).format(n)+" €";
+const opts=(l,v)=>l.map(o=>`<option ${o===v?"selected":""}>${esc(o)}</option>`).join("");
+const src=p=>/^(https?:|data:)/.test(p||"")?p:String(p||"").replace(/^\/+/,"");
+const hoy=()=>new Date().toLocaleDateString("sv-SE");
+const proxima=r=>(r.salidas||[]).map(s=>s.inicio).filter(d=>d&&d>=hoy()).sort()[0];
+const fechaCorta=iso=>new Date(iso+"T12:00:00").toLocaleDateString("es-ES",{day:"numeric",month:"short",year:"numeric"}).replace(".","");
+const NUEVA=()=>({titulo:"",publicada:false,tipo:"Senderismo",cordillera:"Sistema Central",zona:"",nivel:"Medio",grado:"",distanciaKm:0,desnivelM:0,duracion:"",precio:0,plazasMax:8,descripcion:"",encuentro:"",incluye:[],material:[],fotos:[],altitudes:[],salidas:[]});
+const S={rutas:[],q:"",idx:null,draft:null,dirty:false,confirm:null,errors:{},msg:""};
+const work=$("#work");
+
+function vistaLista(){
+  const q=S.q.toLowerCase(),l=S.rutas.map((r,i)=>[r,i]).filter(([r])=>!q||(r.titulo+" "+r.zona+" "+r.cordillera).toLowerCase().includes(q));
+  work.innerHTML=`<div class="top"><h1>Rutas y salidas</h1><div class="row"><button class="btn" data-a="nueva">Añadir ruta</button></div></div>
+  <div class="row"><input class="search" id="buscar" type="search" aria-label="Buscar ruta" placeholder="Buscar por nombre o zona" value="${esc(S.q)}"><span class="mono">${l.length} de ${S.rutas.length}</span></div>
+  <div class="list" id="lista">${l.length?l.map(([r,i])=>{const p=proxima(r);return `<button class="item" data-a="abrir" data-i="${i}"><span><b>${esc(r.titulo||"Ruta sin título")}</b><small>${esc(r.cordillera)} · ${esc(r.nivel)}</small></span><span class="mono hide">${p?fechaCorta(p):"Sin fechas"}</span><span class="mono hide">${eur(r.precio||0)}</span><span class="pill ${r.publicada?"":"off"}">${r.publicada?"Visible":"Oculta"}</span></button>`}).join(""):`<p class="empty">No hay rutas con esa búsqueda.</p>`}</div>
+  ${S.confirm==="restaurar"?`<div class="confirm"><span>Se perderán todos tus cambios de prueba.</span><button class="btn danger" data-a="restaurar-ok">Restaurar ejemplos</button><button class="btn ghost" data-a="cancelar">Cancelar</button></div>`:`<div><button class="btn plain" data-a="restaurar">Restaurar los datos de ejemplo</button></div>`}${S.msg?`<p class="status" role="status">${esc(S.msg)}</p>`:""}`;
+}
+
+function campo(k,label,tipo="text",extra=""){const e=S.errors[k];return `<div class="field"><label for="f-${k}">${label}</label><input id="f-${k}" data-k="${k}" type="${tipo}" value="${esc(S.draft[k])}" ${extra} ${e?'aria-invalid="true"':""}>${e?`<span class="err">${esc(e)}</span>`:""}</div>`}
+function vistaFicha(){
+  const d=S.draft;
+  work.innerHTML=`<div class="top"><div><button class="btn plain" data-a="volver">← Todas las rutas</button><h1>${esc(d.titulo||"Nueva ruta")}</h1></div></div>
+  <section class="card"><h2>Información principal</h2>${campo("titulo","Título")}
+    <label class="check"><input type="checkbox" id="f-publicada" data-k="publicada" ${d.publicada?"checked":""}>Visible en la web</label>
+    <div class="grid"><div class="field"><label for="f-tipo">Tipo</label><select id="f-tipo" data-k="tipo">${opts(TIPOS,d.tipo)}</select></div><div class="field"><label for="f-nivel">Dificultad</label><select id="f-nivel" data-k="nivel">${opts(NIVELES,d.nivel)}</select></div><div class="field"><label for="f-cordillera">Cordillera</label><select id="f-cordillera" data-k="cordillera">${opts(CORDILLERAS,d.cordillera)}</select></div></div>
+    <div class="grid2">${campo("zona","Zona")}${campo("grado","Grado o escala")}</div>
+    <div class="field"><label for="f-descripcion">Descripción</label><textarea id="f-descripcion" data-k="descripcion">${esc(d.descripcion)}</textarea></div></section>
+  <section class="card"><h2>Datos y precio</h2><div class="grid">${campo("precio","Precio por persona (€)","number",'min="0" step="1"')}${campo("plazasMax","Plazas por salida","number",'min="1" step="1"')}${campo("duracion","Duración")}${campo("distanciaKm","Distancia (km)","number",'min="0" step="0.1"')}${campo("desnivelM","Desnivel (m)","number",'min="0" step="1"')}${campo("encuentro","Punto de encuentro")}</div></section>
+  <section class="card"><div class="row" style="justify-content:space-between"><h2>Próximas salidas</h2><button class="btn ghost" data-a="add-sal">Añadir fecha</button></div>
+    ${(d.salidas||[]).length?d.salidas.map((s,i)=>`<div class="sal"><div class="field"><label for="s-ini-${i}">Inicio</label><input id="s-ini-${i}" type="date" data-s="inicio" data-i="${i}" value="${esc(s.inicio)}"></div><div class="field"><label for="s-fin-${i}">Fin (opcional)</label><input id="s-fin-${i}" type="date" data-s="fin" data-i="${i}" value="${esc(s.fin)}"></div><div class="field"><label for="s-pl-${i}">Plazas libres</label><input id="s-pl-${i}" type="number" min="0" data-s="plazasLibres" data-i="${i}" value="${esc(s.plazasLibres)}"></div><button class="x" data-a="del-sal" data-i="${i}" aria-label="Quitar esta fecha">×</button></div>`).join(""):`<p class="help">Sin fechas. La ruta se verá en el catálogo, pero no en próximas salidas.</p>`}${S.errors.salidas?`<p class="err">${esc(S.errors.salidas)}</p>`:""}</section>
+  <section class="card"><div class="row" style="justify-content:space-between"><h2>Fotos</h2><label class="btn ghost" for="f-foto">Subir fotos</label></div><input id="f-foto" type="file" accept="image/*" multiple hidden>
+    ${(d.fotos||[]).length?`<div class="photos">${d.fotos.map((f,i)=>`<div class="ph"><img src="${esc(src(f))}" alt="Foto ${i+1}"><button data-a="del-foto" data-i="${i}" aria-label="Quitar foto ${i+1}">Quitar</button></div>`).join("")}</div>`:`<p class="help">Aún no hay fotos. La primera será la de la tarjeta.</p>`}${S.errors.fotos?`<p class="err">${esc(S.errors.fotos)}</p>`:""}</section>
+  <section class="card"><h2>Detalles</h2><div class="grid2"><div class="field"><label for="f-incluye">Qué incluye</label><textarea id="f-incluye" data-l="incluye">${esc((d.incluye||[]).join("\n"))}</textarea><span class="help">Una cosa por línea.</span></div><div class="field"><label for="f-material">Qué traer</label><textarea id="f-material" data-l="material">${esc((d.material||[]).join("\n"))}</textarea><span class="help">Una cosa por línea.</span></div></div>
+    <div class="field"><label for="f-altitudes">Altitudes del recorrido (m)</label><input id="f-altitudes" data-alt value="${esc((d.altitudes||[]).join(", "))}"><span class="help">Números en orden, separados por comas. Dibujan el perfil de la ruta.</span></div></section>
+  ${S.idx!==null?(S.confirm==="borrar"?`<div class="confirm"><span>Se borrará esta ruta y sus fechas.</span><button class="btn danger" data-a="borrar-ok">Borrar ruta</button><button class="btn ghost" data-a="cancelar">Cancelar</button></div>`:`<div class="row"><button class="btn plain" data-a="duplicar">Duplicar ruta</button><button class="btn plain" style="color:var(--danger)" data-a="borrar">Borrar ruta</button></div>`):""}
+  ${S.confirm==="salir"?`<div class="confirm"><span>Tienes cambios sin guardar.</span><button class="btn danger" data-a="descartar">Descartar cambios</button><button class="btn ghost" data-a="cancelar">Seguir editando</button></div>`:""}
+  <div class="savebar"><span class="status ${S.dirty?"dirty":""}" id="estado" role="status">${S.dirty?"Cambios sin guardar":esc(S.msg)}</span><button class="btn" data-a="guardar">Guardar cambios</button></div>`;
+}
+const pintar=()=>S.draft?vistaFicha():vistaLista();
+function marcar(){S.dirty=true;S.msg="";const e=$("#estado");if(e){e.textContent="Cambios sin guardar";e.classList.add("dirty")}}
+function validar(){
+  const d=S.draft,e={};
+  if(!d.titulo.trim())e.titulo="Escribe un título.";
+  if(!(+d.precio>=0))e.precio="Escribe un precio válido.";
+  if(!(+d.plazasMax>=1))e.plazasMax="Debe haber al menos una plaza.";
+  for(const s of d.salidas){if(!s.inicio)e.salidas="Cada salida necesita una fecha de inicio.";else if(s.fin&&s.fin<s.inicio)e.salidas="La fecha de fin no puede ser anterior al inicio.";else if(+s.plazasLibres>+d.plazasMax)e.salidas="Las plazas libres no pueden superar las plazas por salida."}
+  S.errors=e;return !Object.keys(e).length;
+}
+function norm(d){return {...d,titulo:d.titulo.trim(),precio:+d.precio,plazasMax:+d.plazasMax,distanciaKm:+d.distanciaKm||0,desnivelM:+d.desnivelM||0,salidas:d.salidas.map(s=>({inicio:s.inicio,fin:s.fin||"",plazasLibres:+s.plazasLibres||0}))}}
+async function guardar(){
+  if(!validar()){S.msg="";pintar();return}
+  const n=norm(S.draft);if(S.idx===null){S.rutas.unshift(n);S.idx=0}else S.rutas[S.idx]=n;
+  try{await Almacen.guardar(S.rutas);S.draft=JSON.parse(JSON.stringify(n));S.dirty=false;S.msg="Guardado";pintar()}
+  catch{S.errors={fotos:"No hay espacio en este navegador para más fotos. Quita alguna y vuelve a guardar."};pintar()}
+}
+function abrir(i){S.idx=i;S.draft=i===null?NUEVA():JSON.parse(JSON.stringify(S.rutas[i]));S.dirty=i===null;S.confirm=null;S.errors={};S.msg="";pintar();scrollTo(0,0)}
+function cerrar(){S.draft=null;S.idx=null;S.dirty=false;S.confirm=null;S.errors={};S.msg="";pintar();scrollTo(0,0)}
+
+work.addEventListener("click",async e=>{
+  const t=e.target.closest("[data-a]");if(!t)return;const a=t.dataset.a,i=+t.dataset.i;
+  if(a==="nueva")abrir(null);if(a==="abrir")abrir(i);
+  if(a==="volver"){if(S.dirty){S.confirm="salir";pintar()}else cerrar()}
+  if(a==="descartar")cerrar();
+  if(a==="guardar")await guardar();
+  if(a==="add-sal"){S.draft.salidas.push({inicio:"",fin:"",plazasLibres:S.draft.plazasMax});marcar();pintar()}
+  if(a==="del-sal"){S.draft.salidas.splice(i,1);marcar();pintar()}
+  if(a==="del-foto"){S.draft.fotos.splice(i,1);marcar();pintar()}
+  if(a==="borrar"||a==="restaurar"){S.confirm=a;pintar()}
+  if(a==="cancelar"){S.confirm=null;pintar()}
+  if(a==="borrar-ok"){S.rutas.splice(S.idx,1);await Almacen.guardar(S.rutas);S.draft=null;S.idx=null;S.dirty=false;S.confirm=null;S.msg="Ruta borrada";pintar()}
+  if(a==="duplicar"){const c=norm(S.draft);c.titulo+=" (copia)";c.publicada=false;S.rutas.unshift(c);await Almacen.guardar(S.rutas);S.msg="Copia creada como oculta";abrir(0);S.msg="Copia creada como oculta";pintar()}
+  if(a==="restaurar-ok"){await Almacen.restaurar();S.rutas=await Almacen.cargar();S.confirm=null;S.msg="Datos de ejemplo restaurados";pintar()}
+});
+work.addEventListener("input",e=>{
+  const t=e.target,d=S.draft;
+  if(t.id==="buscar"){S.q=t.value;const pos=t.selectionStart;vistaLista();const b=$("#buscar");b.focus();b.setSelectionRange(pos,pos);return}
+  if(!d)return;
+  if(t.dataset.k){d[t.dataset.k]=t.type==="checkbox"?t.checked:t.value;marcar()}
+  if(t.dataset.l){d[t.dataset.l]=t.value.split("\n").map(x=>x.trim()).filter(Boolean);marcar()}
+  if("alt" in t.dataset){d.altitudes=t.value.split(/[,;\s]+/).map(Number).filter(n=>Number.isFinite(n)&&n>0);marcar()}
+  if(t.dataset.s){d.salidas[+t.dataset.i][t.dataset.s]=t.value;marcar()}
+});
+work.addEventListener("change",async e=>{
+  if(e.target.id!=="f-foto")return;
+  for(const f of e.target.files){try{S.draft.fotos.push(await reducir(f));marcar()}catch{S.errors.fotos=`No se ha podido leer ${f.name}.`}}
+  pintar();
+});
+/* En modo demo la foto se reduce para caber en el navegador. Con Supabase se subirá al almacén de fotos. */
+function reducir(file){return new Promise((ok,ko)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const k=Math.min(1,1000/im.width),c=document.createElement("canvas");c.width=im.width*k;c.height=im.height*k;c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL("image/jpeg",.7))};im.onerror=ko;im.src=u})}
+
+(async()=>{try{S.rutas=await Almacen.cargar();pintar()}catch{work.innerHTML=`<p class="empty">No se han podido cargar las rutas. Recarga la página en unos segundos.</p>`}})();
+</script>
+</body>
+</html>
