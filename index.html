@@ -288,6 +288,15 @@ dialog::backdrop{background:rgba(18,32,24,.66)}
 .trampa{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .acepta{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;font-size:.92rem;color:var(--on-deep)}
 .acepta input{width:18px;height:18px;margin-top:3px;accent-color:var(--accent)}
+:root{--sk:var(--line)}
+.on-deep{--sk:var(--deep-2)}
+.sync #titulo,.sync .lead,.sync .acts .btn,.sync .creds li,.sync .sec-head>*,.sync .date,.sync .name,.sync .meta,.sync .seat-txt,.sync .price,.sync .svc h3,.sync .svc p,.sync .svc .foot>*,.sync .rn,.sync .rs,.sync .range .mono,.sync .rc,.sync .tt,.sync .zone,.sync .stats,.sync .prof .mono,.sync .route .foot b,.sync .lv,.sync .steps h3,.sync .steps p,.sync .methods li>*,.sync .pago-nota,.sync td,.sync blockquote,.sync .about-txt>*,.sync summary,.sync .contact h2,.sync .contact p{color:transparent!important;background:var(--sk)!important;border-color:transparent!important;border-radius:3px;animation:latido 1.2s ease-in-out infinite;-webkit-text-fill-color:transparent}
+.sync .lv i,.sync .seats,.sync .prof svg,.sync .acts .btn{visibility:visible}
+.sync .lv i{visibility:hidden}
+.sync .seats,.sync .dep .act{visibility:hidden}
+.sync .prof svg{opacity:.2}
+.sync .dep .btn,.sync .route,.sync .range{pointer-events:none}
+@keyframes latido{50%{opacity:.55}}
 .estado{padding:96px 20px;text-align:center;color:var(--muted)}
 .lnk.nota-lnk{background:none;border:0;padding:0;color:var(--link);text-decoration:underline;cursor:pointer;font-weight:600}
 .route-foto{width:100%;aspect-ratio:16/9;object-fit:cover}
@@ -600,11 +609,10 @@ function repintarSiSePuede(){
     if(guardada){mezclar(guardada);preparar();renderPagina()}
     const peticion=pedirRemoto(API,10000);
     if(!guardada){
-      /* Primera visita: espera un momento para no enseñar textos antiguos. */
-      const d=await Promise.race([peticion,new Promise(ok=>setTimeout(()=>ok(null),1800))]).catch(()=>null);
-      if(d){mezclar(d);escribirCache(d)}
-      preparar();renderPagina();
-      if(d)return;
+      /* Primera visita: la página aparece al momento con marcadores animados hasta tener los datos reales. */
+      document.body.classList.add("sync");preparar();renderPagina();
+      try{const d=await peticion;mezclar(d);escribirCache(d);repintarSiSePuede()}catch(e){console.error(e)}
+      document.body.classList.remove("sync");return;
     }
     const nuevo=await peticion,igual=JSON.stringify(nuevo)===JSON.stringify(guardada);
     escribirCache(nuevo);

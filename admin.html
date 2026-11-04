@@ -118,6 +118,10 @@ dialog p{color:var(--muted);margin-bottom:16px}
 body.conectado .solo-demo{display:none}
 .login{max-width:380px;margin:12vh auto;padding:24px;display:grid;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:6px}
 .item.salida{grid-template-columns:128px minmax(0,1fr) auto auto}
+.esq{display:grid;gap:14px}
+.esq i{display:block;height:92px;border-radius:4px;background:var(--line);animation:latido 1.2s ease-in-out infinite}
+.esq i.t{height:52px;width:45%}
+@keyframes latido{50%{opacity:.55}}
 .savebar{position:sticky;bottom:0;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin:0 calc(-1*clamp(16px,3vw,36px));padding:11px clamp(16px,3vw,36px);background:var(--surface);border-top:1px solid var(--line)}
 .status{color:var(--ok);font-weight:600;font-size:.92rem;min-height:1.4em}
 .status.dirty{color:var(--muted);font-weight:500}
@@ -463,7 +467,7 @@ work.addEventListener("change",async e=>{
 function reducir(file){return new Promise((ok,ko)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const k=Math.min(1,1000/im.width),c=document.createElement("canvas");c.width=im.width*k;c.height=im.height*k;c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL("image/jpeg",.7))};im.onerror=ko;im.src=u})}
 
 function salir(){if(!S.draft)return;cerrarAviso();if(S.dirty)$("#salir").showModal();else cerrar()}
-function ir(v){cerrarAviso();S.vista=v;S.draft=null;S.idx=null;S.dirty=false;S.confirm=null;S.errors={};S.q="";S.urlD={};S.destino=null;pintarMenu();pintar();scrollTo(0,0)}
+function ir(v){if(!S.listo){S.vista=v;pintarMenu();return}cerrarAviso();S.vista=v;S.draft=null;S.idx=null;S.dirty=false;S.confirm=null;S.errors={};S.q="";S.urlD={};S.destino=null;pintarMenu();pintar();scrollTo(0,0)}
 function irA(v){if(S.dirty){S.destino=v;cerrarAviso();$("#salir").showModal()}else ir(v)}
 const trasSalir=()=>{if(S.destino)ir(S.destino);else cerrar()};
 $("#menu").addEventListener("click",e=>{const b=e.target.closest("[data-v]");if(b)irA(b.dataset.v)});
@@ -478,15 +482,17 @@ addEventListener("beforeunload",e=>{if(S.dirty)e.preventDefault()});
 function aplicar(d){ARCHIVOS.forEach(a=>{if(d[a]!==undefined)DATOS[a]=d[a]});S.rutas=DATOS.rutas}
 async function arrancar(){
   try{
+    pintarMenu();
+    if(API&&!leerCache())work.innerHTML=`<div class="esq" aria-label="Cargando contenido"><i class="t"></i><i></i><i></i><i></i></div>`;
     const d=await Promise.all(ARCHIVOS.map(a=>Almacen.cargar(a)));ARCHIVOS.forEach((a,i)=>DATOS[a]=d[i]);S.rutas=DATOS.rutas;
-    if(!API){pintarMenu();pintar();return}
+    if(!API){S.listo=true;pintar();return}
     const guardada=leerCache(),peticion=Almacen.remoto();
-    if(guardada){aplicar(guardada);pintarMenu();pintar();
+    if(guardada){aplicar(guardada);S.listo=true;pintar();
       /* El panel ya se ve; se actualiza por detrás si hay datos más nuevos y nadie está editando. */
       peticion.then(nuevo=>{if(JSON.stringify(nuevo)===JSON.stringify(guardada))return;if(S.dirty||S.idx!==null)return;escribirCache(nuevo);aplicar(nuevo);S.draft=null;pintar()}).catch(()=>{});
       return}
     /* Primera vez en este navegador: hay que esperar para no editar datos antiguos. */
-    aplicar(await peticion.then(n=>(escribirCache(n),n)));pintarMenu();pintar();
+    aplicar(await peticion.then(n=>(escribirCache(n),n)));S.listo=true;pintar();
   }catch{work.innerHTML=`<p class="empty">No se ha podido cargar el contenido. Recarga la página en unos segundos.</p>`}
 }
 function vistaLogin(error=""){
