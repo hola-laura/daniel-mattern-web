@@ -114,6 +114,8 @@ dialog p{color:var(--muted);margin-bottom:16px}
 .thumb{flex:none;width:64px;height:48px;border-radius:3px;background:var(--notice);object-fit:cover}
 .ph.una{max-width:280px;margin-bottom:6px}
 .url-row .btn{flex:none;min-height:42px}
+body.conectado .solo-demo{display:none}
+.login{max-width:380px;margin:12vh auto;padding:24px;display:grid;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:6px}
 .savebar{position:sticky;bottom:0;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin:0 calc(-1*clamp(16px,3vw,36px));padding:11px clamp(16px,3vw,36px);background:var(--surface);border-top:1px solid var(--line)}
 .status{color:var(--ok);font-weight:600;font-size:.92rem;min-height:1.4em}
 .status.dirty{color:var(--muted);font-weight:500}
@@ -140,7 +142,7 @@ dialog p{color:var(--muted);margin-bottom:16px}
     <a class="view" href="index.html" target="_blank" rel="noopener">Ver la web</a>
   </aside>
   <div class="main">
-    <p class="demo">Modo demostración: los cambios se guardan solo en este navegador y nadie más los ve.</p>
+    <p class="demo" id="modo"></p>
     <main class="work" id="work" aria-live="polite"><p class="empty">Cargando…</p></main>
   </div>
 </div>
@@ -148,16 +150,26 @@ dialog p{color:var(--muted);margin-bottom:16px}
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 <dialog id="salir" aria-labelledby="salir-t"><h2 id="salir-t">Guarda tu progreso</h2><p>Tienes cambios sin guardar. Si sales ahora, se perderán.</p><div class="row"><button class="btn" id="salir-guardar">Guardar y salir</button><button class="btn ghost" id="salir-seguir">Seguir editando</button><button class="btn plain" id="salir-descartar" style="color:var(--danger)">Salir sin guardar</button></div></dialog>
 
+<script src="config.js"></script>
 <script>
 "use strict";
 /* Almacén de datos. En modo demostración usa este navegador; al conectar Supabase solo cambia este objeto. */
+const API=window.CONFIG?.API_URL||"";
+let remoto=null;
+const Sesion={get(){try{return sessionStorage.getItem("dm-clave")||""}catch{return ""}},set(v){try{sessionStorage.setItem("dm-clave",v)}catch{}},borrar(){try{sessionStorage.removeItem("dm-clave")}catch{}}};
+async function llamar(cuerpo){
+  const r=await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({...cuerpo,password:Sesion.get()})});
+  if(!r.ok)throw new Error("red");const j=await r.json();
+  if(!j.ok){const e=new Error(j.error||"error");e.codigo=j.error;throw e}return j;
+}
 const Almacen={
   clave:a=>"dm-demo-"+a,
   async cargar(a){
-    try{const g=localStorage.getItem(this.clave(a));if(g)return JSON.parse(g)}catch{}
+    if(API){remoto??=fetch(API).then(r=>{if(!r.ok)throw new Error("red");return r.json()});const d=await remoto;if(d[a]!==undefined)return d[a]}
+    else try{const g=localStorage.getItem(this.clave(a));if(g)return JSON.parse(g)}catch{}
     const r=await fetch(`content/${a}.json`,{cache:"no-cache"});if(!r.ok)throw new Error(a);return r.json();
   },
-  async guardar(a,datos){localStorage.setItem(this.clave(a),JSON.stringify(datos))},
+  async guardar(a,datos){if(API)await llamar({accion:"guardar",clave:a,datos});else localStorage.setItem(this.clave(a),JSON.stringify(datos))},
   async restaurar(a){try{localStorage.removeItem(this.clave(a))}catch{}}
 };
 const ARCHIVOS=["rutas","portada","servicios","cordilleras","reservas","sobre-mi","preguntas","secciones","general"];
@@ -196,7 +208,7 @@ function vistaLista(){
   work.innerHTML=`<div class="top"><h1>Rutas y salidas</h1><div class="row"><button class="btn" data-a="nueva">Añadir ruta</button></div></div>
   <div class="row"><input class="search" id="buscar" type="search" aria-label="Buscar ruta" placeholder="Buscar por nombre o zona" value="${esc(S.q)}"><span class="mono">${l.length} de ${S.rutas.length}</span></div>
   <div class="list" id="lista">${l.length?l.map(([r,i])=>{const p=proxima(r);return `<button class="item" data-a="abrir" data-i="${i}"><span><b>${esc(r.titulo||"Ruta sin título")}</b><small>${esc(r.cordillera)} · ${esc(r.nivel)}</small></span><span class="mono hide">${p?fechaCorta(p):"Sin fechas"}</span><span class="mono hide">${eur(r.precio||0)}</span><span class="pill ${r.publicada?"":"off"}">${r.publicada?"Visible":"Oculta"}</span></button>`}).join(""):`<p class="empty">No hay rutas con esa búsqueda.</p>`}</div>
-  ${S.confirm==="restaurar"?`<div class="confirm"><span>Se perderán todos tus cambios de prueba.</span><button class="btn danger" data-a="restaurar-ok">Restaurar ejemplos</button><button class="btn ghost" data-a="cancelar">Cancelar</button></div>`:`<div><button class="btn plain" data-a="restaurar">Restaurar los datos de ejemplo</button></div>`}${S.msg?`<p class="status" role="status">${esc(S.msg)}</p>`:""}`;
+  ${restaurarHTML()}${S.msg?`<p class="status" role="status">${esc(S.msg)}</p>`:""}`;
 }
 
 function campo(k,label,tipo="text",extra=""){const e=S.errors[k];return `<div class="field"><label for="f-${k}">${label}</label><input id="f-${k}" data-k="${k}" type="${tipo}" value="${esc(S.draft[k])}" ${extra} ${e?'aria-invalid="true"':""}>${e?`<span class="err">${esc(e)}</span>`:""}</div>`}
@@ -211,7 +223,7 @@ function vistaFicha(){
   <section class="card"><h2>Datos y precio</h2><div class="grid">${campo("precio","Precio por persona (€)","number",'min="0" step="1"')}${campo("plazasMax","Plazas por salida","number",'min="1" step="1"')}${campo("duracion","Duración")}${campo("distanciaKm","Distancia (km)","number",'min="0" step="0.1"')}${campo("desnivelM","Desnivel (m)","number",'min="0" step="1"')}${campo("encuentro","Punto de encuentro")}</div></section>
   <section class="card"><div class="row" style="justify-content:space-between"><h2>Próximas salidas</h2><button class="btn ghost" data-a="add-sal">Añadir fecha</button></div>
     ${(d.salidas||[]).length?d.salidas.map((s,i)=>`<div class="sal"><div class="field"><label for="s-ini-${i}">Inicio</label><input id="s-ini-${i}" type="date" data-s="inicio" data-i="${i}" value="${esc(s.inicio)}"></div><div class="field"><label for="s-fin-${i}">Fin (opcional)</label><input id="s-fin-${i}" type="date" data-s="fin" data-i="${i}" value="${esc(s.fin)}"></div><div class="field"><label for="s-pl-${i}">Plazas libres</label><input id="s-pl-${i}" type="number" min="0" data-s="plazasLibres" data-i="${i}" value="${esc(s.plazasLibres)}"></div><button class="x" data-a="del-sal" data-i="${i}" aria-label="Quitar esta fecha">×</button></div>`).join(""):`<p class="help">Sin fechas. La ruta se verá en el catálogo, pero no en próximas salidas.</p>`}${S.errors.salidas?`<p class="err">${esc(S.errors.salidas)}</p>`:""}</section>
-  <section class="card"><div class="row" style="justify-content:space-between"><h2>Fotos</h2><label class="btn ghost" for="f-foto">Subir fotos</label></div><input id="f-foto" type="file" accept="image/*" multiple hidden>
+  <section class="card"><div class="row" style="justify-content:space-between"><h2>Fotos</h2><label class="btn ghost solo-demo" for="f-foto">Subir fotos</label></div><input id="f-foto" type="file" accept="image/*" multiple hidden>
     <div class="field"><label for="f-url">Añadir por enlace</label><div class="url-row"><input id="f-url" type="url" inputmode="url" placeholder="https://…" value="${esc(S.urlDraft)}" ${S.errors.fotos?'aria-invalid="true"':""}><button class="btn ghost" type="button" data-a="add-url">Añadir</button></div><span class="help">Pega el enlace directo a una imagen.</span></div>
     ${(d.fotos||[]).length?`<div class="photos">${d.fotos.map((f,i)=>`<div class="ph"><img src="${esc(src(f))}" alt="Foto ${i+1}"><button data-a="del-foto" data-i="${i}" aria-label="Quitar foto ${i+1}">Quitar</button></div>`).join("")}</div>`:`<p class="help">Aún no hay fotos. La primera será la de la tarjeta.</p>`}${S.errors.fotos?`<p class="err">${esc(S.errors.fotos)}</p>`:""}</section>
   <section class="card"><h2>Detalles</h2><div class="grid2"><div class="field"><label for="f-incluye">Qué incluye</label><textarea id="f-incluye" data-l="incluye">${esc((d.incluye||[]).join("\n"))}</textarea><span class="help">Una cosa por línea.</span></div><div class="field"><label for="f-material">Qué traer</label><textarea id="f-material" data-l="material">${esc((d.material||[]).join("\n"))}</textarea><span class="help">Una cosa por línea.</span></div></div></section>
@@ -236,14 +248,14 @@ function campoHTML(c,base=""){
   if(c.f==="area")return `<div class="field"><label for="${id}">${esc(c.l)}</label><textarea id="${id}" data-c="${p}" ${inv}>${esc(v)}</textarea>${ay}${err}</div>`;
   if(c.f==="num")return `<div class="field"><label for="${id}">${esc(c.l)}</label><input id="${id}" type="number" data-c="${p}" data-n="1" min="${c.min??""}" max="${c.max??""}" value="${esc(v)}" ${inv}>${ay}${err}</div>`;
   if(c.f==="lineas")return `<div class="field"><label for="${id}">${esc(c.l)}</label><textarea id="${id}" data-c="${p}" data-l2="1">${esc((v||[]).join("\n"))}</textarea><span class="help">Una por línea.</span></div>`;
-  if(c.f==="foto")return `<div class="field"><span class="lab">${esc(c.l)}</span>${v?`<div class="ph una"><img src="${esc(src(v))}" alt=""><button data-a="f-quitar" data-r="${p}" aria-label="Quitar foto">Quitar</button></div>`:`<p class="help">Sin foto.</p>`}<div class="url-row"><input id="${id}" type="url" inputmode="url" aria-label="Enlace de la foto" placeholder="https://…" data-furl="${p}" value="${esc(S.urlD[p])}" ${inv}><button class="btn ghost" type="button" data-a="f-url" data-r="${p}">Añadir</button><label class="btn ghost" for="${id}-a">Subir</label></div><input id="${id}-a" type="file" accept="image/*" data-fup="${p}" hidden>${err}</div>`;
+  if(c.f==="foto")return `<div class="field"><span class="lab">${esc(c.l)}</span>${v?`<div class="ph una"><img src="${esc(src(v))}" alt=""><button data-a="f-quitar" data-r="${p}" aria-label="Quitar foto">Quitar</button></div>`:`<p class="help">Sin foto.</p>`}<div class="url-row"><input id="${id}" type="url" inputmode="url" aria-label="Enlace de la foto" placeholder="https://…" data-furl="${p}" value="${esc(S.urlD[p])}" ${inv}><button class="btn ghost" type="button" data-a="f-url" data-r="${p}">Añadir</button><label class="btn ghost solo-demo" for="${id}-a">Subir</label></div><input id="${id}-a" type="file" accept="image/*" data-fup="${p}" hidden>${err}</div>`;
   if(c.f==="rep"){const l=v||[];return `<div class="rep">${l.map((it,i)=>`<div class="rep-item"><div class="rep-top"><span class="lab">${esc(c.l)} ${i+1}</span><div class="row"><button class="ico" data-a="r-mov" data-r="${p}" data-i="${i}" data-d="-1" ${i?"":"disabled"} aria-label="Subir">↑</button><button class="ico" data-a="r-mov" data-r="${p}" data-i="${i}" data-d="1" ${i<l.length-1?"":"disabled"} aria-label="Bajar">↓</button><button class="ico del" data-a="r-del" data-r="${p}" data-i="${i}" aria-label="Quitar ${esc(c.l)} ${i+1}">×</button></div></div>${c.simple?campoHTML({k:String(i),l:c.campo.l,f:c.campo.f},p):c.c.map(x=>campoHTML(x,`${p}.${i}`)).join("")}</div>`).join("")}<div><button class="btn ghost" data-a="r-add" data-r="${p}">Añadir ${esc(c.l.toLowerCase())}</button></div></div>`}
   return `<div class="field"><label for="${id}">${esc(c.l)}</label><input id="${id}" data-c="${p}" value="${esc(v)}" ${inv}>${ay}${err}</div>`;
 }
 const buscarDef=(p,cs=SEC[S.vista].grupos.flatMap(g=>g.c))=>cs.find(c=>c.k===p);
 const formulario=sec=>sec.grupos.map(g=>`<section class="card"><h2>${esc(g.t)}</h2>${g.c.map(c=>campoHTML(c)).join("")}</section>`).join("");
 const barra=()=>`<div class="savebar"><span class="status ${S.dirty?"dirty":""}" id="estado">${S.dirty?"Cambios sin guardar":""}</span><button class="btn" data-a="guardar" id="guardar" ${S.dirty?"":"disabled"}>Guardar cambios</button></div>`;
-const restaurarHTML=()=>S.confirm==="restaurar"?`<div class="confirm"><span>Se perderán tus cambios de prueba en esta sección.</span><button class="btn danger" data-a="restaurar-ok">Restaurar ejemplos</button><button class="btn ghost" data-a="cancelar">Cancelar</button></div>`:`<div><button class="btn plain" data-a="restaurar">Restaurar los datos de ejemplo</button></div>`;
+const restaurarHTML=()=>API?"":S.confirm==="restaurar"?`<div class="confirm"><span>Se perderán tus cambios de prueba en esta sección.</span><button class="btn danger" data-a="restaurar-ok">Restaurar ejemplos</button><button class="btn ghost" data-a="cancelar">Cancelar</button></div>`:`<div><button class="btn plain" data-a="restaurar">Restaurar los datos de ejemplo</button></div>`;
 function vistaSeccion(){
   const sec=SEC[S.vista];
   if(!sec.lista){S.draft??=clon(DATOS[sec.arch]);work.innerHTML=`<div class="top"><h1>${esc(sec.nombre)}</h1></div>${formulario(sec)}${restaurarHTML()}${barra()}`;return}
@@ -266,7 +278,7 @@ async function guardarSec(salir){
   if(sec.lista){const viejo=S.idx!==null?DATOS[a][S.idx]:null;if(S.idx===null){DATOS[a].push(n);S.idx=DATOS[a].length-1}else DATOS[a][S.idx]=n;
     if(a==="cordilleras"&&viejo&&viejo.nombre!==n.nombre){DATOS.rutas.forEach(r=>{if(r.cordillera===viejo.nombre)r.cordillera=n.nombre});await Almacen.guardar("rutas",DATOS.rutas)}}
   else DATOS[a]=n;
-  try{await Almacen.guardar(a,DATOS[a])}catch{DATOS[a]=prev;S.errors={};aviso("No hay espacio en este navegador. Quita alguna foto y vuelve a guardar.",true);return false}
+  try{await Almacen.guardar(a,DATOS[a])}catch{DATOS[a]=prev;S.errors={};aviso(API?"No se han podido guardar los cambios. Revisa tu conexión y vuelve a intentarlo.":"No hay espacio en este navegador. Quita alguna foto y vuelve a guardar.",true);return false}
   S.draft=clon(n);S.dirty=false;pintar();
   if(salir||!sec.lista)aviso("Cambios guardados");else exitoGuardado();
   return true;
@@ -343,7 +355,7 @@ async function guardar(salir=false){
   if(!validar()){S.msg="";pintar();aviso("Revisa los campos marcados antes de guardar.",true);$(".err")?.closest(".card")?.scrollIntoView({block:"center"});return false}
   const n=norm(S.draft);if(S.idx===null){S.rutas.unshift(n);S.idx=0}else S.rutas[S.idx]=n;
   try{await Almacen.guardar("rutas",S.rutas);S.draft=JSON.parse(JSON.stringify(n));S.dirty=false;S.msg="Guardado";pintar();if(salir)aviso("Cambios guardados");else exitoGuardado();return true}
-  catch{S.errors={fotos:"No hay espacio en este navegador para más fotos. Quita alguna y vuelve a guardar."};pintar();aviso("No se han podido guardar los cambios.",true);return false}
+  catch(e){if(e.codigo==="password"){Sesion.borrar();aviso("La sesión ha caducado. Vuelve a entrar.",true);return false}if(!API)S.errors={fotos:"No hay espacio en este navegador para más fotos. Quita alguna y vuelve a guardar."};pintar();aviso(API?"No se han podido guardar los cambios. Revisa tu conexión y vuelve a intentarlo.":"No se han podido guardar los cambios.",true);return false}
 }
 function abrir(i){if($("#toast").classList.contains("acciones"))cerrarAviso();S.urlDraft="";S.punto=null;S.idx=i;S.draft=i===null?NUEVA():JSON.parse(JSON.stringify(S.rutas[i]));S.dirty=i===null;S.confirm=null;S.errors={};S.msg="";pintar();scrollTo(0,0)}
 function cerrar(){S.draft=null;S.idx=null;S.dirty=false;S.confirm=null;S.errors={};S.msg="";pintar();scrollTo(0,0)}
@@ -424,9 +436,22 @@ $("#salir-seguir").addEventListener("click",()=>{S.destino=null;$("#salir").clos
 $("#salir-descartar").addEventListener("click",()=>{$("#salir").close();S.dirty=false;trasSalir()});
 $("#salir-guardar").addEventListener("click",async()=>{$("#salir").close();if(await guardar(true))trasSalir();else S.destino=null});
 $("#toast").addEventListener("click",e=>{const b=e.target.closest("[data-t]");if(!b)return;cerrarAviso();if(b.dataset.t==="volver")cerrar()});
+addEventListener("unhandledrejection",()=>aviso("No se han podido guardar los cambios. Inténtalo de nuevo.",true));
 addEventListener("beforeunload",e=>{if(S.dirty)e.preventDefault()});
 
-(async()=>{try{const d=await Promise.all(ARCHIVOS.map(a=>Almacen.cargar(a)));ARCHIVOS.forEach((a,i)=>DATOS[a]=d[i]);S.rutas=DATOS.rutas;pintarMenu();pintar()}catch{work.innerHTML=`<p class="empty">No se ha podido cargar el contenido. Recarga la página en unos segundos.</p>`}})();
+async function arrancar(){
+  try{const d=await Promise.all(ARCHIVOS.map(a=>Almacen.cargar(a)));ARCHIVOS.forEach((a,i)=>DATOS[a]=d[i]);S.rutas=DATOS.rutas;pintarMenu();pintar()}
+  catch{work.innerHTML=`<p class="empty">No se ha podido cargar el contenido. Recarga la página en unos segundos.</p>`}
+}
+function vistaLogin(error=""){
+  work.innerHTML=`<form class="login" id="login"><h1>Entrar</h1><div class="field"><label for="clave">Contraseña</label><input id="clave" type="password" autocomplete="current-password" required></div>${error?`<p class="err" role="alert">${esc(error)}</p>`:""}<button class="btn" type="submit">Entrar al panel</button></form>`;
+  $("#clave").focus();
+  $("#login").addEventListener("submit",async e=>{e.preventDefault();Sesion.set($("#clave").value);const b=$("#login button");b.disabled=true;b.textContent="Comprobando…";
+    try{await llamar({accion:"comprobar"});arrancar()}catch(x){const mal=x.codigo==="password";Sesion.borrar();vistaLogin(mal?"La contraseña no es correcta.":"No se ha podido conectar. Inténtalo de nuevo.")}});
+}
+$("#modo").textContent=API?"Versión de prueba: los cambios guardados se verán en la web para todo el mundo.":"Modo demostración: los cambios se guardan solo en este navegador y nadie más los ve.";
+document.body.classList.toggle("conectado",!!API);
+if(API&&!Sesion.get()){vistaLogin()}else{arrancar()}
 </script>
 </body>
 </html>

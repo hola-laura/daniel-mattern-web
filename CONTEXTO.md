@@ -1,7 +1,7 @@
 # Web de Daniel Mattern: contexto del proyecto
 
 Prototipo de web para Daniel Mattern, guía de montaña y escalada (TD2 Montaña, TD2 Escalada, AEGM, UIMLA).
-La web es `index.html`, que lee su contenido de `content/*.json`. Se decidió un panel propio (`admin.html`) sobre Supabase, sin depender de GitHub para editar. Aún funciona en modo demostración: `Almacen` guarda en localStorage y la web lee esa copia si existe. El esquema está en `supabase/schema.sql`.
+La web es `index.html`, que lee su contenido de `content/*.json`. Se decidió un panel propio (`admin.html`) sobre Supabase, sin depender de GitHub para editar. Tiene dos modos según `config.js`: sin `API_URL`, demostración en localStorage; con `API_URL`, almacén de pruebas en Google Drive mediante `google/Code.gs`. El objeto `Almacen` de `admin.html` concentra el acceso a datos, para pasar a Supabase más adelante. El esquema está en `supabase/schema.sql`.
 
 ## Cómo trabajar
 - Haz los cambios en el código, no en Figma, salvo que se pida lo contrario.

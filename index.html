@@ -309,6 +309,7 @@ dialog::backdrop{background:rgba(18,32,24,.66)}
 <dialog id="dlg-route" aria-labelledby="r-title"></dialog>
 <dialog id="dlg-book" aria-labelledby="b-title"></dialog>
 
+<script src="config.js"></script>
 <script>
 "use strict";
 /* El contenido vive en /content/*.json y se edita desde el gestor (.pages.yml). */
@@ -569,7 +570,11 @@ let rz;addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(drawMaps,15
   try{
     const datos=await Promise.all(ARCHIVOS.map(a=>fetch(`content/${a}.json`,{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error(a);return r.json()})));
     ARCHIVOS.forEach((a,i)=>C[a]=datos[i]);
-    ARCHIVOS.forEach(a=>{try{const d=localStorage.getItem("dm-demo-"+a);if(d)C[a]=JSON.parse(d)}catch{}});
+    const API=window.CONFIG?.API_URL;
+    if(API){
+      try{const c=new AbortController(),t=setTimeout(()=>c.abort(),8000),d=await fetch(API,{signal:c.signal}).then(r=>r.json());clearTimeout(t);ARCHIVOS.forEach(a=>{if(d[a]!==undefined)C[a]=d[a]})}
+      catch(e){console.error("Sin conexión con el contenido guardado",e)}
+    }else ARCHIVOS.forEach(a=>{try{const d=localStorage.getItem("dm-demo-"+a);if(d)C[a]=JSON.parse(d)}catch{}});
     preparar();renderPagina();
   }catch(e){
     $("#estado").textContent=location.protocol==="file:"?"Esta versión lee su contenido de internet: ábrela desde su dirección web.":"No se ha podido cargar el contenido. Recarga la página en unos segundos.";
