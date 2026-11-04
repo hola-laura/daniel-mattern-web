@@ -18,6 +18,7 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#18241D;--surface:#212F27;--fg:#E8EFE9;--muted:#B2C2B7;--line:#37493E;--link:#C8E3C1;--deep:#24392D;--deep-2:#2F4A3A;--danger:#F2A493;--ok:#C8E3C1;--chart:#8DAF97;--chart-fill:#2F4A3A;color-scheme:dark}}
 :root[data-theme="dark"]{--bg:#18241D;--surface:#212F27;--fg:#E8EFE9;--muted:#B2C2B7;--line:#37493E;--link:#C8E3C1;--deep:#24392D;--deep-2:#2F4A3A;--danger:#F2A493;--ok:#C8E3C1;--chart:#8DAF97;--chart-fill:#2F4A3A;color-scheme:dark}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/1.5 var(--f-body)}
 button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--link);outline-offset:2px;border-radius:2px}
@@ -35,7 +36,7 @@ h1,h2,h3,p,ul{margin:0;padding:0;list-style:none}
 .side .view{margin-top:auto;color:var(--accent);font-weight:600;padding:8px}
 .main{min-width:0;display:flex;flex-direction:column}
 .demo{background:var(--notice);color:#2F434D;font-size:.88rem;font-weight:600;padding:7px 28px}
-.work{padding:30px clamp(16px,3vw,36px) 110px;max-width:1040px;width:100%;margin-inline:auto;display:grid;gap:20px}
+.work{padding:30px clamp(16px,3vw,36px) 0;max-width:1040px;width:100%;margin-inline:auto;display:grid;gap:20px}
 .top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px}
 h1{font:800 clamp(2.6rem,5vw,3.6rem)/.95 var(--f-display);text-transform:uppercase}
 .btn{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:8px 16px;border:2px solid transparent;border-radius:3px;background:var(--accent);color:var(--on-accent);font-weight:700;cursor:pointer;text-decoration:none}
@@ -88,6 +89,16 @@ dialog{width:min(480px,calc(100vw - 32px));border:0;border-radius:6px;padding:22
 dialog::backdrop{background:rgba(18,32,24,.6)}
 dialog h2{font:800 2.2rem/1 var(--f-display);text-transform:uppercase;margin-bottom:8px}
 dialog p{color:var(--muted);margin-bottom:16px}
+.work>:last-child:not(.savebar){margin-bottom:56px}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:40;transform:translateX(-50%);display:flex;align-items:center;gap:9px;max-width:calc(100vw - 32px);padding:11px 16px;border-radius:5px;background:var(--deep);color:var(--on-deep);font-weight:700;box-shadow:0 10px 30px rgba(16,30,22,.3);animation:sube .18s ease-out}
+.toast.error{background:var(--danger);color:#fff}
+:root[data-theme="dark"] .toast.error{color:#1B241E}
+.toast svg{flex:none}
+.toast.acciones{flex-wrap:wrap;justify-content:center;gap:8px 12px;width:min(560px,calc(100vw - 32px))}
+.toast.acciones>span{margin-right:auto}
+.toast .btn{min-height:36px;padding:5px 12px;font-size:.92rem}
+.toast .btn.ghost{color:var(--on-deep);border-color:var(--on-deep-muted)}
+@keyframes sube{from{transform:translate(-50%,8px)}to{transform:translate(-50%,0)}}
 .savebar{position:sticky;bottom:0;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin:0 calc(-1*clamp(16px,3vw,36px));padding:11px clamp(16px,3vw,36px);background:var(--surface);border-top:1px solid var(--line)}
 .status{color:var(--ok);font-weight:600;font-size:.92rem;min-height:1.4em}
 .status.dirty{color:var(--muted);font-weight:500}
@@ -127,6 +138,7 @@ dialog p{color:var(--muted);margin-bottom:16px}
   </div>
 </div>
 
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 <dialog id="salir" aria-labelledby="salir-t"><h2 id="salir-t">Guarda tu progreso</h2><p>Tienes cambios sin guardar en esta ruta. Si sales ahora, se perderán.</p><div class="row"><button class="btn" id="salir-guardar">Guardar y salir</button><button class="btn ghost" id="salir-seguir">Seguir editando</button><button class="btn plain" id="salir-descartar" style="color:var(--danger)">Salir sin guardar</button></div></dialog>
 
 <script>
@@ -183,8 +195,13 @@ function vistaFicha(){
     <div id="perfil" class="perfil"></div>${S.errors.perfil?`<p class="err">${esc(S.errors.perfil)}</p>`:""}
     <details class="nums"><summary>Editar como números</summary><div class="field"><label for="f-altitudes">Altitudes en metros, en orden</label><input id="f-altitudes" data-alt value="${esc((d.altitudes||[]).join(", "))}"></div></details></section>
   ${S.idx!==null?(S.confirm==="borrar"?`<div class="confirm"><span>Se borrará esta ruta y sus fechas.</span><button class="btn danger" data-a="borrar-ok">Borrar ruta</button><button class="btn ghost" data-a="cancelar">Cancelar</button></div>`:`<div class="row"><button class="btn plain" data-a="duplicar">Duplicar ruta</button><button class="btn plain" style="color:var(--danger)" data-a="borrar">Borrar ruta</button></div>`):""}
-  <div class="savebar"><span class="status ${S.dirty?"dirty":""}" id="estado" role="status">${S.dirty?"Cambios sin guardar":esc(S.msg)}</span><button class="btn" data-a="guardar">Guardar cambios</button></div>`;
+  <div class="savebar"><span class="status ${S.dirty?"dirty":""}" id="estado">${S.dirty?"Cambios sin guardar":esc(S.msg)}</span><button class="btn" data-a="guardar" id="guardar" ${S.dirty?"":"disabled"}>Guardar cambios</button></div>`;
 }
+let toastT;
+function aviso(msg,error=false,acciones=""){const t=$("#toast");t.className="toast"+(error?" error":"")+(acciones?" acciones":"");t.innerHTML=(error?"":`<svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M3.5 9.5l3.5 3.5 7.5-8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`)+`<span>${esc(msg)}</span>`+acciones;t.hidden=false;clearTimeout(toastT);if(!acciones)toastT=setTimeout(()=>t.hidden=true,error?6000:3500)}
+const SECCION="Rutas y salidas";
+const cerrarAviso=()=>{clearTimeout(toastT);$("#toast").hidden=true};
+function exitoGuardado(){aviso("Cambios guardados",false,`<button class="btn ghost" data-t="seguir">Seguir editando</button><button class="btn" data-t="volver">Volver a ${SECCION}</button>`);$('#toast [data-t="volver"]').focus()}
 const pintar=()=>{if(S.draft){vistaFicha();pintarPerfil()}else vistaLista()};
 
 /* ---------- Editor visual del perfil ---------- */
@@ -243,7 +260,7 @@ function leerGPX(texto){
   for(let i=0;i<N;i++){const k=tot*i/(N-1);while(j<pts.length-1&&ac[j+1]<k)j++;const a=pts[j],b=pts[Math.min(j+1,pts.length-1)],t=ac[j+1]>ac[j]?(k-ac[j])/(ac[j+1]-ac[j]):0;alt.push(Math.round(a.e+(b.e-a.e)*Math.min(1,t)))}
   return {altitudes:alt,distanciaKm:Math.round(tot*10)/10,desnivelM:Math.round(gan)};
 }
-function marcar(){S.dirty=true;S.msg="";const e=$("#estado");if(e){e.textContent="Cambios sin guardar";e.classList.add("dirty")}}
+function marcar(){if($("#toast").classList.contains("acciones"))cerrarAviso();S.dirty=true;S.msg="";const e=$("#estado");if(e){e.textContent="Cambios sin guardar";e.classList.add("dirty")}const g=$("#guardar");if(g)g.disabled=false}
 function validar(){
   const d=S.draft,e={};
   if(!d.titulo.trim())e.titulo="Escribe un título.";
@@ -253,13 +270,13 @@ function validar(){
   S.errors=e;return !Object.keys(e).length;
 }
 function norm(d){return {...d,titulo:d.titulo.trim(),precio:+d.precio,plazasMax:+d.plazasMax,distanciaKm:+d.distanciaKm||0,desnivelM:+d.desnivelM||0,salidas:d.salidas.map(s=>({inicio:s.inicio,fin:s.fin||"",plazasLibres:+s.plazasLibres||0}))}}
-async function guardar(){
-  if(!validar()){S.msg="";pintar();return}
+async function guardar(salir=false){
+  if(!validar()){S.msg="";pintar();aviso("Revisa los campos marcados antes de guardar.",true);$(".err")?.closest(".card")?.scrollIntoView({block:"center"});return false}
   const n=norm(S.draft);if(S.idx===null){S.rutas.unshift(n);S.idx=0}else S.rutas[S.idx]=n;
-  try{await Almacen.guardar(S.rutas);S.draft=JSON.parse(JSON.stringify(n));S.dirty=false;S.msg="Guardado";pintar()}
-  catch{S.errors={fotos:"No hay espacio en este navegador para más fotos. Quita alguna y vuelve a guardar."};pintar()}
+  try{await Almacen.guardar(S.rutas);S.draft=JSON.parse(JSON.stringify(n));S.dirty=false;S.msg="Guardado";pintar();if(salir)aviso("Cambios guardados");else exitoGuardado();return true}
+  catch{S.errors={fotos:"No hay espacio en este navegador para más fotos. Quita alguna y vuelve a guardar."};pintar();aviso("No se han podido guardar los cambios.",true);return false}
 }
-function abrir(i){S.urlDraft="";S.punto=null;S.idx=i;S.draft=i===null?NUEVA():JSON.parse(JSON.stringify(S.rutas[i]));S.dirty=i===null;S.confirm=null;S.errors={};S.msg="";pintar();scrollTo(0,0)}
+function abrir(i){if($("#toast").classList.contains("acciones"))cerrarAviso();S.urlDraft="";S.punto=null;S.idx=i;S.draft=i===null?NUEVA():JSON.parse(JSON.stringify(S.rutas[i]));S.dirty=i===null;S.confirm=null;S.errors={};S.msg="";pintar();scrollTo(0,0)}
 function cerrar(){S.draft=null;S.idx=null;S.dirty=false;S.confirm=null;S.errors={};S.msg="";pintar();scrollTo(0,0)}
 
 work.addEventListener("click",async e=>{
@@ -274,9 +291,9 @@ work.addEventListener("click",async e=>{
   if(a==="del-foto"){S.draft.fotos.splice(i,1);marcar();pintar()}
   if(a==="borrar"||a==="restaurar"){S.confirm=a;pintar()}
   if(a==="cancelar"){S.confirm=null;pintar()}
-  if(a==="borrar-ok"){S.rutas.splice(S.idx,1);await Almacen.guardar(S.rutas);S.draft=null;S.idx=null;S.dirty=false;S.confirm=null;S.msg="Ruta borrada";pintar()}
-  if(a==="duplicar"){const c=norm(S.draft);c.titulo+=" (copia)";c.publicada=false;S.rutas.unshift(c);await Almacen.guardar(S.rutas);S.msg="Copia creada como oculta";abrir(0);S.msg="Copia creada como oculta";pintar()}
-  if(a==="restaurar-ok"){await Almacen.restaurar();S.rutas=await Almacen.cargar();S.confirm=null;S.msg="Datos de ejemplo restaurados";pintar()}
+  if(a==="borrar-ok"){S.rutas.splice(S.idx,1);await Almacen.guardar(S.rutas);S.draft=null;S.idx=null;S.dirty=false;S.confirm=null;S.msg="";pintar();aviso("Ruta borrada")}
+  if(a==="duplicar"){const c=norm(S.draft);c.titulo+=" (copia)";c.publicada=false;S.rutas.unshift(c);await Almacen.guardar(S.rutas);abrir(0);aviso("Copia creada como oculta")}
+  if(a==="restaurar-ok"){await Almacen.restaurar();S.rutas=await Almacen.cargar();S.confirm=null;S.msg="";pintar();aviso("Datos de ejemplo restaurados")}
 });
 work.addEventListener("input",e=>{
   const t=e.target,d=S.draft;
@@ -308,11 +325,12 @@ work.addEventListener("change",async e=>{
 /* En modo demo la foto se reduce para caber en el navegador. Con Supabase se subirá al almacén de fotos. */
 function reducir(file){return new Promise((ok,ko)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{const k=Math.min(1,1000/im.width),c=document.createElement("canvas");c.width=im.width*k;c.height=im.height*k;c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL("image/jpeg",.7))};im.onerror=ko;im.src=u})}
 
-function salir(){if(!S.draft)return;if(S.dirty)$("#salir").showModal();else cerrar()}
+function salir(){if(!S.draft)return;cerrarAviso();if(S.dirty)$("#salir").showModal();else cerrar()}
 $("#logo").addEventListener("click",()=>{if(S.draft)salir();else{S.q="";S.confirm=null;S.msg="";pintar();scrollTo(0,0)}});
 $("#salir-seguir").addEventListener("click",()=>$("#salir").close());
 $("#salir-descartar").addEventListener("click",()=>{$("#salir").close();cerrar()});
-$("#salir-guardar").addEventListener("click",async()=>{$("#salir").close();await guardar();if(!S.dirty)cerrar()});
+$("#salir-guardar").addEventListener("click",async()=>{$("#salir").close();if(await guardar(true))cerrar()});
+$("#toast").addEventListener("click",e=>{const b=e.target.closest("[data-t]");if(!b)return;cerrarAviso();if(b.dataset.t==="volver")cerrar()});
 addEventListener("beforeunload",e=>{if(S.dirty)e.preventDefault()});
 
 (async()=>{try{S.rutas=await Almacen.cargar();pintar()}catch{work.innerHTML=`<p class="empty">No se han podido cargar las rutas. Recarga la página en unos segundos.</p>`}})();
