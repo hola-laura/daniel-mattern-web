@@ -1,0 +1,44 @@
+[
+  {
+    "titulo": "Rutas guiadas",
+    "descripcion": "Senderismo y trekking con lectura del terreno, historia de los lugares y el ritmo que pide el grupo.",
+    "precio": "desde 45 € / persona",
+    "enlace": "Ver rutas",
+    "destino": "Senderismo"
+  },
+  {
+    "titulo": "Paredes de roca",
+    "descripcion": "De tu primer contacto con la roca a grandes paredes clásicas de varios largos, con todo el material técnico.",
+    "precio": "desde 85 € / persona",
+    "enlace": "Ver escaladas",
+    "destino": "Escalada"
+  },
+  {
+    "titulo": "Trekkings",
+    "descripcion": "Varios días de refugio en refugio, en España y por las grandes cordilleras del mundo, con la logística resuelta.",
+    "precio": "desde 210 € / persona",
+    "enlace": "Ver trekkings",
+    "destino": "Trekking"
+  },
+  {
+    "titulo": "Raquetas de nieve",
+    "descripcion": "Bosques y collados nevados sin dificultad técnica, con decisiones basadas en la previsión y el boletín de aludes.",
+    "precio": "desde 65 € / persona",
+    "enlace": "Ver rutas",
+    "destino": "Raquetas"
+  },
+  {
+    "titulo": "Cursos",
+    "descripcion": "Iniciación a la escalada, nudos y maniobras, orientación y seguridad invernal para ganar autonomía.",
+    "precio": "desde 150 € / persona",
+    "enlace": "Ver cursos",
+    "destino": "Cursos"
+  },
+  {
+    "titulo": "Privados y a medida",
+    "descripcion": "Una cumbre pendiente, un viaje, una jornada para tu equipo o tu club. Lo diseñamos contigo.",
+    "precio": "desde 260 € / jornada",
+    "enlace": "Cuéntame tu idea",
+    "destino": "Contacto"
+  }
+]

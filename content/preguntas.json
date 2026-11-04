@@ -1,0 +1,26 @@
+[
+  {
+    "pregunta": "¿Necesito experiencia previa?",
+    "respuesta": "Depende de la actividad. Cada ficha indica el nivel, y las de iniciación están pensadas para quien empieza. Si dudas, escríbeme y lo vemos."
+  },
+  {
+    "pregunta": "¿Qué pasa si hace mal tiempo?",
+    "respuesta": "Reviso la previsión hasta el último momento. Si no hay condiciones seguras, cambio el objetivo o anulo la salida, y tú eliges entre otra fecha o la devolución completa."
+  },
+  {
+    "pregunta": "¿Qué material necesito?",
+    "respuesta": "Con la confirmación recibes una lista concreta. El material técnico colectivo está incluido, y arnés y casco se pueden prestar en las escaladas."
+  },
+  {
+    "pregunta": "¿Cuántas personas van en cada grupo?",
+    "respuesta": "Hasta 8 en senderismo, 6 en raquetas y cursos, y 2 por guía en paredes de varios largos."
+  },
+  {
+    "pregunta": "¿Está incluido el seguro?",
+    "respuesta": "Todas las actividades incluyen seguro de accidentes y responsabilidad civil. Si tienes licencia federativa, avísame al reservar."
+  },
+  {
+    "pregunta": "¿Cómo llego al punto de encuentro?",
+    "respuesta": "Cada actividad tiene su punto de encuentro en la zona. Dos días antes te pongo en contacto con el grupo por si queréis compartir coche."
+  }
+]

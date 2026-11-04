@@ -1,12 +1,15 @@
 # Web de Daniel Mattern: contexto del proyecto
 
 Prototipo de web para Daniel Mattern, guía de montaña y escalada (TD2 Montaña, TD2 Escalada, AEGM, UIMLA).
-Toda la web está en un solo archivo: `index.html`.
+La web es `index.html`, que lee su contenido de `content/*.json`. Se edita con Pages CMS, configurado en `.pages.yml`. Las fotos subidas van a `media/`.
 
 ## Cómo trabajar
 - Haz los cambios en el código, no en Figma, salvo que se pida lo contrario.
 - La interfaz y los textos están en español, tratando al visitante de tú.
-- Rutas, salidas y cordilleras se editan en los arrays `ROUTES`, `DEPS` y `RANGES`, al inicio del `<script>`.
+- No metas contenido en `index.html`: cada texto, precio, foto o ruta va en `content/` y debe tener su campo en `.pages.yml`.
+- Las salidas van dentro de cada ruta en `content/rutas.json`. Las pasadas se ocultan solas.
+- Si se añade una cordillera, hay que añadirla también a la lista de `cordillera` en `.pages.yml`.
+- `index.html` no funciona abierto como archivo local: hay que servirlo desde una dirección web.
 - Los colores y tipografías son variables CSS en `:root`, con su versión oscura debajo.
 
 ## Decisiones tomadas
@@ -28,7 +31,8 @@ Toda la web está en un solo archivo: `index.html`.
 - [ ] Añadir una foto de Daniel en «Sobre mí».
 - [ ] Añadir teléfono, correo y WhatsApp reales de Daniel. No uses los datos de Subalpino.
 - [ ] Conectar una pasarela de pago real. Ahora el pago es simulado y no se piden datos de tarjeta.
-- [ ] Hacer funcionar los formularios de reserva y contacto.
+- [ ] Hacer funcionar los formularios de reserva y contacto. Las plazas no bajan solas con reservas reales todavía.
+- [ ] Conectar Pages CMS e invitar a Daniel por correo.
 - [ ] Decidir si oscurecer `#8A9B6F` en «Quedan 2 de 6», porque tiene poco contraste sobre blanco.
 - [ ] Revisar textos legales, requisitos para viajes al extranjero y alcance de las titulaciones.
 - [ ] Quitar la banda de prototipo antes de publicar la versión final.

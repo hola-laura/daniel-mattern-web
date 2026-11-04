@@ -1,0 +1,47 @@
+{
+  "salidas": {
+    "antetitulo": "Con fecha cerrada",
+    "titulo": "Próximas salidas",
+    "entradilla": "Súmate a una salida abierta y comparte cuerda o sendero con otras personas de tu nivel. Las plazas son pocas a propósito.",
+    "notaFinal": "¿Ninguna fecha te encaja?",
+    "enlaceFinal": "Propón la tuya"
+  },
+  "servicios": {
+    "antetitulo": "Qué hacemos juntos",
+    "titulo": "Servicios",
+    "entradilla": "Cada salida se adapta a la meteo, al terreno y a las personas que vienen. El objetivo es volver con ganas de repetir.",
+    "foto": "https://images.pexels.com/photos/15784770/pexels-photo-15784770.jpeg?auto=compress&cs=tinysrgb&w=1920"
+  },
+  "destinos": {
+    "antetitulo": "Por cordilleras",
+    "titulo": "¿A qué montañas vamos?",
+    "entradilla": "Elige cordillera y te enseño lo que hacemos allí, en España y en el mundo."
+  },
+  "rutas": {
+    "antetitulo": "Catálogo",
+    "titulo": "Rutas y actividades",
+    "entradilla": "Mira la forma de la montaña antes de elegir: cada ficha muestra su perfil de altitud.",
+    "notaEscalas": "Las rutas de senderismo usan la escala MIDE: medio, itinerario, desplazamiento y esfuerzo, de 1 a 5. Las escaladas indican su grado de dificultad en roca."
+  },
+  "niveles": {
+    "iniciacion": "Sin experiencia previa. Buena forma básica y ganas de caminar.",
+    "medio": "Sales al monte con frecuencia y aguantas 6 u 8 horas de actividad.",
+    "exigente": "Jornadas largas, mucho desnivel y terreno expuesto en algunos tramos.",
+    "tecnico": "Escalada de varios largos con cuerda. Valoramos tu experiencia antes de confirmar."
+  },
+  "cita": {
+    "texto": "Persigo la felicidad y la montaña responde a mi búsqueda.",
+    "autora": "Chantal Mauduit",
+    "foto": "https://images.pexels.com/photos/30867724/pexels-photo-30867724.jpeg?auto=compress&cs=tinysrgb&w=1920"
+  },
+  "preguntas": {
+    "antetitulo": "Antes de venir",
+    "titulo": "Preguntas"
+  },
+  "contacto": {
+    "titulo": "Nos vemos en el monte",
+    "texto": "Cuéntame qué tienes en mente, cuál es tu experiencia y qué te gustaría vivir.",
+    "botonEnviar": "Enviar mensaje",
+    "foto": "https://images.pexels.com/photos/14742384/pexels-photo-14742384.jpeg?auto=compress&cs=tinysrgb&w=1920"
+  }
+}

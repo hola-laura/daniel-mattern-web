@@ -1,0 +1,66 @@
+[
+  {
+    "nombre": "Sistema Central",
+    "grupo": "España",
+    "zona": "Guadarrama, La Pedriza y Gredos",
+    "cumbre": "Almanzor",
+    "altitud": 2591,
+    "foto": "https://images.pexels.com/photos/14959742/pexels-photo-14959742.jpeg?auto=compress&cs=tinysrgb&w=800"
+  },
+  {
+    "nombre": "Pirineos",
+    "grupo": "España",
+    "zona": "Aigüestortes y Mallos de Riglos",
+    "cumbre": "Aneto",
+    "altitud": 3404,
+    "foto": "https://images.pexels.com/photos/31312698/pexels-photo-31312698.jpeg?auto=compress&cs=tinysrgb&w=800"
+  },
+  {
+    "nombre": "Picos de Europa",
+    "grupo": "España",
+    "zona": "Cordillera Cantábrica",
+    "cumbre": "Torre de Cerredo",
+    "altitud": 2648,
+    "foto": "https://images.pexels.com/photos/19819784/pexels-photo-19819784.jpeg?auto=compress&cs=tinysrgb&w=800"
+  },
+  {
+    "nombre": "Sierra Nevada",
+    "grupo": "España",
+    "zona": "Sistema Penibético",
+    "cumbre": "Mulhacén",
+    "altitud": 3479,
+    "foto": "https://images.pexels.com/photos/37209097/pexels-photo-37209097.jpeg?auto=compress&cs=tinysrgb&w=800"
+  },
+  {
+    "nombre": "Alpes",
+    "grupo": "El mundo",
+    "zona": "Mont Blanc y Dolomitas",
+    "cumbre": "Mont Blanc",
+    "altitud": 4806,
+    "foto": "https://images.pexels.com/photos/35224545/pexels-photo-35224545.jpeg?auto=compress&cs=tinysrgb&w=800"
+  },
+  {
+    "nombre": "Atlas",
+    "grupo": "El mundo",
+    "zona": "Marruecos",
+    "cumbre": "Toubkal",
+    "altitud": 4167,
+    "foto": "https://images.pexels.com/photos/33662300/pexels-photo-33662300.jpeg?auto=compress&cs=tinysrgb&w=800"
+  },
+  {
+    "nombre": "Andes",
+    "grupo": "El mundo",
+    "zona": "Cordillera Blanca, Perú",
+    "cumbre": "Aconcagua",
+    "altitud": 6961,
+    "foto": "https://images.pexels.com/photos/17044901/pexels-photo-17044901.jpeg?auto=compress&cs=tinysrgb&w=800"
+  },
+  {
+    "nombre": "Himalaya",
+    "grupo": "El mundo",
+    "zona": "Annapurna, Nepal",
+    "cumbre": "Everest",
+    "altitud": 8849,
+    "foto": "https://images.pexels.com/photos/20768442/pexels-photo-20768442.jpeg?auto=compress&cs=tinysrgb&w=800"
+  }
+]

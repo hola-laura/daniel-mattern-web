@@ -1,0 +1,57 @@
+{
+  "antetitulo": "Reserva y pago",
+  "titulo": "Así reservas tu plaza",
+  "entradilla": "En unos minutos tienes la plaza bloqueada. El resto lo cerramos hablando.",
+  "senalPorcentaje": 30,
+  "diasPagoResto": 7,
+  "pasos": [
+    {
+      "titulo": "Elige salida o propón fecha",
+      "texto": "Reserva una salida abierta, o pide una fecha para ti o tu grupo en cualquier ruta."
+    },
+    {
+      "titulo": "Cuéntame tu experiencia",
+      "texto": "Rellena tus datos y tu nivel. Si es una escalada de varios largos, te llamo antes de confirmar."
+    },
+    {
+      "titulo": "Paga la señal",
+      "texto": "Bloqueas la plaza con la señal, o pagas el total si lo prefieres. El resto se paga antes de la salida."
+    },
+    {
+      "titulo": "Recibe la hoja de salida",
+      "texto": "48 horas antes te llega la previsión, el punto de encuentro, el horario y la lista de material."
+    }
+  ],
+  "formasPago": [
+    {
+      "nombre": "Tarjeta",
+      "descripcion": "Visa o Mastercard en pasarela bancaria segura. Confirmación inmediata."
+    },
+    {
+      "nombre": "Bizum",
+      "descripcion": "Pago desde el móvil. Confirmación inmediata."
+    },
+    {
+      "nombre": "Transferencia",
+      "descripcion": "Plaza bloqueada 48 horas hasta recibir el pago."
+    }
+  ],
+  "cancelacion": [
+    {
+      "cuando": "Más de 14 días antes",
+      "devolucion": "100 %"
+    },
+    {
+      "cuando": "Entre 14 y 7 días antes",
+      "devolucion": "50 %"
+    },
+    {
+      "cuando": "Menos de 7 días antes",
+      "devolucion": "Sin devolución, cambio de plaza a otra persona"
+    },
+    {
+      "cuando": "Si anulo yo por meteo o seguridad",
+      "devolucion": "100 % o cambio de fecha, tú eliges"
+    }
+  ]
+}

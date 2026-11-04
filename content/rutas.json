@@ -1,0 +1,900 @@
+[
+  {
+    "titulo": "Peñalara y Cinco Lagunas",
+    "publicada": true,
+    "tipo": "Senderismo",
+    "cordillera": "Sistema Central",
+    "zona": "Sierra de Guadarrama",
+    "nivel": "Medio",
+    "grado": "MIDE 2·2·2·3",
+    "distanciaKm": 15,
+    "desnivelM": 820,
+    "duracion": "7 h",
+    "precio": 55,
+    "plazasMax": 8,
+    "descripcion": "El techo de Guadarrama por su cuerda, con bajada entre las lagunas glaciares del macizo y la historia de los primeros montañeros madrileños.",
+    "encuentro": "Puerto de Cotos, 8:30",
+    "incluye": [
+      "Guía titulado",
+      "Seguro de accidentes y RC",
+      "Botiquín y comunicación de emergencia"
+    ],
+    "material": [
+      "Botas de montaña",
+      "Mochila de 20 a 25 litros",
+      "Agua y comida para el día"
+    ],
+    "fotos": [],
+    "altitudes": [
+      1830,
+      1905,
+      2020,
+      2130,
+      2290,
+      2428,
+      2300,
+      2150,
+      2120,
+      2040,
+      1930,
+      1830
+    ],
+    "salidas": [
+      {
+        "inicio": "2026-11-15",
+        "fin": "",
+        "plazasLibres": 5
+      }
+    ]
+  },
+  {
+    "titulo": "Circular de La Pedriza",
+    "publicada": true,
+    "tipo": "Senderismo",
+    "cordillera": "Sistema Central",
+    "zona": "La Pedriza",
+    "nivel": "Medio",
+    "grado": "MIDE 2·3·2·3",
+    "distanciaKm": 13,
+    "desnivelM": 750,
+    "duracion": "7 h",
+    "precio": 50,
+    "plazasMax": 8,
+    "descripcion": "Un laberinto de granito entre canchos, gateras y rincones que no aparecen en los mapas. Una ruta para aprender a orientarse en terreno roto.",
+    "encuentro": "Canto Cochino, 8:30",
+    "incluye": [
+      "Guía titulado",
+      "Seguro de accidentes y RC"
+    ],
+    "material": [
+      "Botas con buena suela",
+      "Mochila de 20 litros",
+      "Agua y comida para el día"
+    ],
+    "fotos": [],
+    "altitudes": [
+      1100,
+      1240,
+      1380,
+      1530,
+      1680,
+      1790,
+      1720,
+      1610,
+      1450,
+      1350,
+      1210,
+      1100
+    ],
+    "salidas": [
+      {
+        "inicio": "2026-11-21",
+        "fin": "",
+        "plazasLibres": 8
+      }
+    ]
+  },
+  {
+    "titulo": "Cuerda Larga integral",
+    "publicada": true,
+    "tipo": "Senderismo",
+    "cordillera": "Sistema Central",
+    "zona": "Sierra de Guadarrama",
+    "nivel": "Exigente",
+    "grado": "MIDE 2·2·2·4",
+    "distanciaKm": 24,
+    "desnivelM": 1150,
+    "duracion": "9 h",
+    "precio": 60,
+    "plazasMax": 8,
+    "descripcion": "La gran cresta de Guadarrama de punta a punta: una jornada larga por encima de los 2.000 metros y con Madrid a un lado y Segovia al otro.",
+    "encuentro": "Puerto de Navacerrada, 8:00",
+    "incluye": [
+      "Guía titulado",
+      "Seguro de accidentes y RC",
+      "Coordinación del coche de vuelta"
+    ],
+    "material": [
+      "Botas de montaña",
+      "Dos litros de agua",
+      "Cortavientos y capas"
+    ],
+    "fotos": [],
+    "altitudes": [
+      1860,
+      2100,
+      2270,
+      2120,
+      2180,
+      2000,
+      2100,
+      2190,
+      2040,
+      1950,
+      1910,
+      1796
+    ],
+    "salidas": []
+  },
+  {
+    "titulo": "Bautismo de roca en La Cabrera",
+    "publicada": true,
+    "tipo": "Escalada",
+    "cordillera": "Sistema Central",
+    "zona": "Sierra de La Cabrera",
+    "nivel": "Iniciación",
+    "grado": "IV a V",
+    "distanciaKm": 3,
+    "desnivelM": 220,
+    "duracion": "5 h",
+    "precio": 85,
+    "plazasMax": 6,
+    "descripcion": "Tu primera jornada en roca real: encordarte, confiar en los pies y bajar en rápel sobre granito soleado.",
+    "encuentro": "Convento de San Antonio, 9:30",
+    "incluye": [
+      "Guía titulado",
+      "Casco, arnés y pies de gato",
+      "Cuerdas y material técnico",
+      "Seguro de accidentes y RC"
+    ],
+    "material": [
+      "Ropa cómoda",
+      "Mochila pequeña",
+      "Agua y comida"
+    ],
+    "fotos": [],
+    "altitudes": [
+      1040,
+      1090,
+      1150,
+      1210,
+      1260,
+      1210,
+      1140,
+      1040
+    ],
+    "salidas": [
+      {
+        "inicio": "2026-11-14",
+        "fin": "",
+        "plazasLibres": 2
+      }
+    ]
+  },
+  {
+    "titulo": "Vía clásica al Yelmo",
+    "publicada": true,
+    "tipo": "Escalada",
+    "cordillera": "Sistema Central",
+    "zona": "La Pedriza",
+    "nivel": "Técnico",
+    "grado": "V+ · varios largos",
+    "distanciaKm": 7,
+    "desnivelM": 600,
+    "duracion": "8 h",
+    "precio": 170,
+    "plazasMax": 2,
+    "descripcion": "Una vía de varios largos a la cumbre más reconocible de La Pedriza, con las maniobras explicadas para que aprendas mientras subes.",
+    "encuentro": "Canto Cochino, 8:00",
+    "incluye": [
+      "Guía titulado en proporción 1:2",
+      "Material técnico colectivo",
+      "Seguro de accidentes y RC"
+    ],
+    "material": [
+      "Pies de gato y arnés propios o prestados",
+      "Casco",
+      "Comida y agua"
+    ],
+    "fotos": [],
+    "altitudes": [
+      1120,
+      1260,
+      1420,
+      1580,
+      1717,
+      1570,
+      1400,
+      1240,
+      1120
+    ],
+    "salidas": [
+      {
+        "inicio": "2027-01-16",
+        "fin": "",
+        "plazasLibres": 2
+      }
+    ]
+  },
+  {
+    "titulo": "Almanzor por el Circo de Gredos",
+    "publicada": true,
+    "tipo": "Trekking",
+    "cordillera": "Sistema Central",
+    "zona": "Sierra de Gredos",
+    "nivel": "Exigente",
+    "grado": "MIDE 3·3·3·4",
+    "distanciaKm": 27,
+    "desnivelM": 1450,
+    "duracion": "2 días",
+    "precio": 240,
+    "plazasMax": 6,
+    "descripcion": "La cumbre del Sistema Central con noche junto a la Laguna Grande. Una travesía con pasos de trepada y uno de los circos glaciares más bonitos de la Península.",
+    "encuentro": "Plataforma de Gredos, sábado 9:00",
+    "incluye": [
+      "Guía titulado",
+      "Seguro de accidentes y RC"
+    ],
+    "material": [
+      "Saco de dormir",
+      "Botas de montaña",
+      "Mochila de 35 litros"
+    ],
+    "fotos": [],
+    "altitudes": [
+      1770,
+      1960,
+      2150,
+      2000,
+      1950,
+      2150,
+      2390,
+      2591,
+      2300,
+      1950,
+      2000,
+      2150,
+      1770
+    ],
+    "salidas": [
+      {
+        "inicio": "2027-06-12",
+        "fin": "2027-06-13",
+        "plazasLibres": 3
+      }
+    ]
+  },
+  {
+    "titulo": "Raquetas en el Valle de la Fuenfría",
+    "publicada": true,
+    "tipo": "Raquetas",
+    "cordillera": "Sistema Central",
+    "zona": "Sierra de Guadarrama",
+    "nivel": "Iniciación",
+    "grado": "MIDE 2·2·2·2",
+    "distanciaKm": 10,
+    "desnivelM": 480,
+    "duracion": "5 h",
+    "precio": 65,
+    "plazasMax": 6,
+    "descripcion": "La forma más sencilla de disfrutar la nieve: bosque de pinos, calzadas antiguas y una introducción a leer el manto y el boletín de aludes.",
+    "encuentro": "Cercedilla, Las Dehesas, 9:30",
+    "incluye": [
+      "Guía titulado",
+      "Raquetas y bastones",
+      "Seguro de accidentes y RC"
+    ],
+    "material": [
+      "Botas impermeables",
+      "Ropa de invierno por capas",
+      "Termo y comida"
+    ],
+    "fotos": [],
+    "altitudes": [
+      1320,
+      1460,
+      1600,
+      1750,
+      1796,
+      1700,
+      1540,
+      1420,
+      1320
+    ],
+    "salidas": [
+      {
+        "inicio": "2026-12-12",
+        "fin": "",
+        "plazasLibres": 4
+      }
+    ]
+  },
+  {
+    "titulo": "Curso de iniciación a la escalada",
+    "publicada": true,
+    "tipo": "Cursos",
+    "cordillera": "Sistema Central",
+    "zona": "La Cabrera y La Pedriza",
+    "nivel": "Iniciación",
+    "grado": "2 jornadas",
+    "distanciaKm": 4,
+    "desnivelM": 240,
+    "duracion": "2 días",
+    "precio": 150,
+    "plazasMax": 6,
+    "descripcion": "Dos jornadas para aprender a asegurar, moverte en roca, hacer los nudos básicos y rapelar con autonomía.",
+    "encuentro": "Convento de San Antonio, 9:30",
+    "incluye": [
+      "Guía titulado",
+      "Todo el material técnico",
+      "Manual del curso",
+      "Seguro de accidentes y RC"
+    ],
+    "material": [
+      "Ropa cómoda",
+      "Pies de gato, si tienes",
+      "Comida para los dos días"
+    ],
+    "fotos": [],
+    "altitudes": [
+      1040,
+      1110,
+      1200,
+      1270,
+      1200,
+      1130,
+      1040
+    ],
+    "salidas": [
+      {
+        "inicio": "2026-11-28",
+        "fin": "2026-11-29",
+        "plazasLibres": 0
+      }
+    ]
+  },
+  {
+    "titulo": "Ruta del Cares",
+    "publicada": true,
+    "tipo": "Senderismo",
+    "cordillera": "Picos de Europa",
+    "zona": "Picos de Europa",
+    "nivel": "Iniciación",
+    "grado": "MIDE 2·1·1·3",
+    "distanciaKm": 12,
+    "desnivelM": 300,
+    "duracion": "5 h",
+    "precio": 50,
+    "plazasMax": 8,
+    "descripcion": "La garganta divina: un sendero excavado en la roca sobre el río, entre Poncebos y Caín.",
+    "encuentro": "Poncebos, 9:00",
+    "incluye": [
+      "Guía titulado",
+      "Seguro de accidentes y RC"
+    ],
+    "material": [
+      "Calzado de montaña",
+      "Agua y comida",
+      "Cortavientos"
+    ],
+    "fotos": [],
+    "altitudes": [
+      220,
+      420,
+      520,
+      500,
+      480,
+      470,
+      460,
+      455
+    ],
+    "salidas": []
+  },
+  {
+    "titulo": "Mulhacén por la Hoya del Portillo",
+    "publicada": true,
+    "tipo": "Trekking",
+    "cordillera": "Sierra Nevada",
+    "zona": "Sierra Nevada",
+    "nivel": "Exigente",
+    "grado": "MIDE 2·2·2·4",
+    "distanciaKm": 28,
+    "desnivelM": 1400,
+    "duracion": "2 días",
+    "precio": 210,
+    "plazasMax": 8,
+    "descripcion": "La cumbre más alta de la Península, con noche en la montaña y vistas al Mediterráneo en los días claros.",
+    "encuentro": "Capileira, sábado 8:30",
+    "incluye": [
+      "Guía titulado",
+      "Seguro de accidentes y RC"
+    ],
+    "material": [
+      "Botas de montaña",
+      "Saco de dormir",
+      "Protección solar"
+    ],
+    "fotos": [],
+    "altitudes": [
+      2150,
+      2300,
+      2500,
+      2700,
+      2900,
+      3100,
+      3300,
+      3479,
+      3100,
+      2700,
+      2300,
+      2150
+    ],
+    "salidas": []
+  },
+  {
+    "titulo": "Campo base del Annapurna",
+    "publicada": true,
+    "tipo": "Trekking",
+    "cordillera": "Himalaya",
+    "zona": "Himalaya, Nepal",
+    "nivel": "Exigente",
+    "grado": "Trekking · 14 días",
+    "distanciaKm": 115,
+    "desnivelM": 4500,
+    "duracion": "14 días",
+    "precio": 2400,
+    "plazasMax": 8,
+    "descripcion": "Un trekking clásico entre pueblos gurung, bosques de rododendros y un anfiteatro de ochomiles y sietemiles.",
+    "encuentro": "Katmandú, primer día",
+    "incluye": [
+      "Guía titulado",
+      "Lodges y traslados",
+      "Permisos de trekking"
+    ],
+    "material": [
+      "Botas de trekking",
+      "Saco de dormir",
+      "Vuelos no incluidos"
+    ],
+    "fotos": [],
+    "altitudes": [
+      1070,
+      1800,
+      2800,
+      2200,
+      2900,
+      3200,
+      3700,
+      4130,
+      3200,
+      2300,
+      1800,
+      1070
+    ],
+    "salidas": []
+  },
+  {
+    "titulo": "Pared de los Galayos",
+    "publicada": true,
+    "tipo": "Escalada",
+    "cordillera": "Sistema Central",
+    "zona": "Sierra de Gredos",
+    "nivel": "Técnico",
+    "grado": "V · varios largos",
+    "distanciaKm": 12,
+    "desnivelM": 950,
+    "duracion": "2 días",
+    "precio": 340,
+    "plazasMax": 2,
+    "descripcion": "Agujas y paredes de granito en el lugar con más historia de la escalada del centro peninsular, con noche en el refugio Victory.",
+    "encuentro": "El Arenal, sábado 8:00",
+    "incluye": [
+      "Guía titulado en proporción 1:2",
+      "Material técnico colectivo",
+      "Seguro de accidentes y RC"
+    ],
+    "material": [
+      "Pies de gato y arnés",
+      "Casco",
+      "Saco sábana"
+    ],
+    "fotos": [],
+    "altitudes": [
+      1250,
+      1450,
+      1680,
+      1900,
+      2020,
+      2200,
+      2020,
+      1800,
+      1500,
+      1250
+    ],
+    "salidas": []
+  },
+  {
+    "titulo": "Mallos de Riglos",
+    "publicada": true,
+    "tipo": "Escalada",
+    "cordillera": "Pirineos",
+    "zona": "Prepirineo, Huesca",
+    "nivel": "Técnico",
+    "grado": "V+ · varios largos",
+    "distanciaKm": 3,
+    "desnivelM": 360,
+    "duracion": "2 días",
+    "precio": 360,
+    "plazasMax": 2,
+    "descripcion": "Conglomerado vertical y mucho aire bajo los pies: una de las paredes más impresionantes de España, escalada con calma y buen ritmo.",
+    "encuentro": "Riglos, sábado 8:30",
+    "incluye": [
+      "Guía titulado en proporción 1:2",
+      "Material técnico colectivo",
+      "Seguro de accidentes y RC"
+    ],
+    "material": [
+      "Pies de gato y arnés",
+      "Casco",
+      "Agua y comida"
+    ],
+    "fotos": [],
+    "altitudes": [
+      680,
+      740,
+      810,
+      880,
+      960,
+      1040,
+      900,
+      760,
+      680
+    ],
+    "salidas": [
+      {
+        "inicio": "2027-03-13",
+        "fin": "2027-03-14",
+        "plazasLibres": 1
+      }
+    ]
+  },
+  {
+    "titulo": "Carros de Foc",
+    "publicada": true,
+    "tipo": "Trekking",
+    "cordillera": "Pirineos",
+    "zona": "Aigüestortes, Pirineo catalán",
+    "nivel": "Exigente",
+    "grado": "Trekking · 5 días",
+    "distanciaKm": 55,
+    "desnivelM": 4100,
+    "duracion": "5 días",
+    "precio": 690,
+    "plazasMax": 8,
+    "descripcion": "Vuelta de refugio en refugio por el parque de Aigüestortes, entre más de cien lagos y collados de alta ruta pirenaica.",
+    "encuentro": "Espot, primer día 9:00",
+    "incluye": [
+      "Guía titulado",
+      "Reservas de refugios",
+      "Seguro de accidentes y RC"
+    ],
+    "material": [
+      "Botas de montaña",
+      "Mochila de 35 litros",
+      "Saco sábana"
+    ],
+    "fotos": [],
+    "altitudes": [
+      1900,
+      2400,
+      2250,
+      2600,
+      2300,
+      2650,
+      2200,
+      2500,
+      2350,
+      2700,
+      2150,
+      1900
+    ],
+    "salidas": []
+  },
+  {
+    "titulo": "Naranjo de Bulnes, cara sur",
+    "publicada": true,
+    "tipo": "Escalada",
+    "cordillera": "Picos de Europa",
+    "zona": "Picos de Europa",
+    "nivel": "Técnico",
+    "grado": "V · varios largos",
+    "distanciaKm": 14,
+    "desnivelM": 1300,
+    "duracion": "2 días",
+    "precio": 380,
+    "plazasMax": 2,
+    "descripcion": "La pared más famosa de España por su cara más amable, con noche al pie en el refugio de Urriellu.",
+    "encuentro": "Pandébano, sábado 8:30",
+    "incluye": [
+      "Guía titulado en proporción 1:2",
+      "Material técnico colectivo",
+      "Seguro de accidentes y RC"
+    ],
+    "material": [
+      "Pies de gato y arnés",
+      "Casco",
+      "Saco sábana"
+    ],
+    "fotos": [],
+    "altitudes": [
+      1224,
+      1450,
+      1700,
+      1953,
+      2150,
+      2519,
+      2150,
+      1953,
+      1600,
+      1224
+    ],
+    "salidas": []
+  },
+  {
+    "titulo": "Anillo de Picos",
+    "publicada": true,
+    "tipo": "Trekking",
+    "cordillera": "Picos de Europa",
+    "zona": "Picos de Europa",
+    "nivel": "Exigente",
+    "grado": "Trekking · 5 días",
+    "distanciaKm": 62,
+    "desnivelM": 4300,
+    "duracion": "5 días",
+    "precio": 640,
+    "plazasMax": 8,
+    "descripcion": "Cinco días enlazando refugios por los tres macizos de Picos, con caliza, jous y vistas al Cantábrico.",
+    "encuentro": "Sotres, primer día 9:00",
+    "incluye": [
+      "Guía titulado",
+      "Reservas de refugios",
+      "Seguro de accidentes y RC"
+    ],
+    "material": [
+      "Botas de montaña",
+      "Mochila de 35 litros",
+      "Saco sábana"
+    ],
+    "fotos": [],
+    "altitudes": [
+      1000,
+      1500,
+      1950,
+      1700,
+      2050,
+      1500,
+      1250,
+      1900,
+      2100,
+      1600,
+      1000
+    ],
+    "salidas": []
+  },
+  {
+    "titulo": "Tour del Mont Blanc",
+    "publicada": true,
+    "tipo": "Trekking",
+    "cordillera": "Alpes",
+    "zona": "Francia, Italia y Suiza",
+    "nivel": "Exigente",
+    "grado": "Trekking · 7 días",
+    "distanciaKm": 110,
+    "desnivelM": 6800,
+    "duracion": "7 días",
+    "precio": 1290,
+    "plazasMax": 8,
+    "descripcion": "El gran trekking de los Alpes: una vuelta entera al macizo a través de tres países, siempre por senderos y collados.",
+    "encuentro": "Chamonix, primer día 9:00",
+    "incluye": [
+      "Guía titulado",
+      "Refugios y media pensión",
+      "Seguro de accidentes y RC"
+    ],
+    "material": [
+      "Botas de montaña",
+      "Mochila de 35 litros",
+      "Vuelos no incluidos"
+    ],
+    "fotos": [],
+    "altitudes": [
+      1040,
+      2100,
+      1500,
+      2516,
+      1600,
+      2537,
+      1300,
+      2200,
+      1500,
+      2100,
+      1040
+    ],
+    "salidas": []
+  },
+  {
+    "titulo": "Paredes de Cinque Torri",
+    "publicada": true,
+    "tipo": "Escalada",
+    "cordillera": "Alpes",
+    "zona": "Dolomitas, Italia",
+    "nivel": "Técnico",
+    "grado": "V · 4 días",
+    "distanciaKm": 8,
+    "desnivelM": 400,
+    "duracion": "4 días",
+    "precio": 890,
+    "plazasMax": 2,
+    "descripcion": "Vías clásicas sobre roca dolomítica, con mucha historia y aproximaciones cortas. Cuatro días para escalar y disfrutar de los valles.",
+    "encuentro": "Cortina d'Ampezzo, primer día",
+    "incluye": [
+      "Guía titulado en proporción 1:2",
+      "Material técnico colectivo",
+      "Seguro de accidentes y RC"
+    ],
+    "material": [
+      "Pies de gato y arnés",
+      "Casco",
+      "Vuelos no incluidos"
+    ],
+    "fotos": [],
+    "altitudes": [
+      2150,
+      2200,
+      2240,
+      2300,
+      2361,
+      2290,
+      2220,
+      2150
+    ],
+    "salidas": []
+  },
+  {
+    "titulo": "Toubkal y valles bereberes",
+    "publicada": true,
+    "tipo": "Trekking",
+    "cordillera": "Atlas",
+    "zona": "Alto Atlas, Marruecos",
+    "nivel": "Exigente",
+    "grado": "Trekking · 6 días",
+    "distanciaKm": 48,
+    "desnivelM": 3100,
+    "duracion": "6 días",
+    "precio": 690,
+    "plazasMax": 8,
+    "descripcion": "Una semana entre pueblos bereberes para subir, ya sin nieve, a la cumbre más alta del norte de África.",
+    "encuentro": "Marrakech, primer día",
+    "incluye": [
+      "Guía titulado",
+      "Refugio y media pensión",
+      "Traslados desde Marrakech"
+    ],
+    "material": [
+      "Botas de montaña",
+      "Saco de dormir",
+      "Vuelos no incluidos"
+    ],
+    "fotos": [],
+    "altitudes": [
+      1740,
+      2100,
+      2500,
+      2200,
+      2700,
+      3207,
+      3500,
+      4167,
+      3500,
+      3207,
+      2300,
+      1740
+    ],
+    "salidas": [
+      {
+        "inicio": "2027-09-13",
+        "fin": "2027-09-18",
+        "plazasLibres": 5
+      }
+    ]
+  },
+  {
+    "titulo": "Paredes de las Gargantas del Todra",
+    "publicada": true,
+    "tipo": "Escalada",
+    "cordillera": "Atlas",
+    "zona": "Alto Atlas, Marruecos",
+    "nivel": "Técnico",
+    "grado": "V · 5 días",
+    "distanciaKm": 6,
+    "desnivelM": 350,
+    "duracion": "5 días",
+    "precio": 790,
+    "plazasMax": 2,
+    "descripcion": "Caliza roja y vertical en uno de los cañones más espectaculares de Marruecos, con el otoño como mejor temporada.",
+    "encuentro": "Tinghir, primer día",
+    "incluye": [
+      "Guía titulado en proporción 1:2",
+      "Alojamiento y traslados",
+      "Material técnico colectivo"
+    ],
+    "material": [
+      "Pies de gato y arnés",
+      "Casco",
+      "Vuelos no incluidos"
+    ],
+    "fotos": [],
+    "altitudes": [
+      1450,
+      1520,
+      1600,
+      1700,
+      1800,
+      1680,
+      1550,
+      1450
+    ],
+    "salidas": []
+  },
+  {
+    "titulo": "Trekking de Santa Cruz",
+    "publicada": true,
+    "tipo": "Trekking",
+    "cordillera": "Andes",
+    "zona": "Cordillera Blanca, Perú",
+    "nivel": "Exigente",
+    "grado": "Trekking · 10 días",
+    "distanciaKm": 52,
+    "desnivelM": 2900,
+    "duracion": "10 días",
+    "precio": 1950,
+    "plazasMax": 8,
+    "descripcion": "Diez días en Perú para aclimatar y cruzar el collado de Punta Unión, a los pies de los grandes nevados de la Cordillera Blanca.",
+    "encuentro": "Huaraz, primer día",
+    "incluye": [
+      "Guía titulado",
+      "Alojamiento y logística de trekking",
+      "Permisos de parque"
+    ],
+    "material": [
+      "Botas de trekking",
+      "Saco de dormir",
+      "Vuelos no incluidos"
+    ],
+    "fotos": [],
+    "altitudes": [
+      2900,
+      3200,
+      3500,
+      3750,
+      4000,
+      4300,
+      4750,
+      4200,
+      3800,
+      3400,
+      2900
+    ],
+    "salidas": []
+  }
+]
