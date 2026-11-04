@@ -283,6 +283,9 @@ dialog::backdrop{background:rgba(18,32,24,.66)}
   *,*::before,*::after{animation:none!important;transition:none!important}
 }
 
+.trampa{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.acepta{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;font-size:.92rem;color:var(--on-deep)}
+.acepta input{width:18px;height:18px;margin-top:3px;accent-color:var(--accent)}
 .estado{padding:96px 20px;text-align:center;color:var(--muted)}
 .lnk.nota-lnk{background:none;border:0;padding:0;color:var(--link);text-decoration:underline;cursor:pointer;font-weight:600}
 .route-foto{width:100%;aspect-ratio:16/9;object-fit:cover}
@@ -403,11 +406,20 @@ function renderPagina(){
   <div class="about-txt"><p class="eyebrow">${esc(M.antetitulo)}</p><h2>${esc(M.nombre)}</h2>${M.parrafos.map(p=>`<p>${br(p)}</p>`).join("")}<ul class="tags">${(M.titulaciones||[]).map(t=>`<li>${esc(t)}</li>`).join("")}</ul></div></div></section>
 <section class="faq" id="preguntas"><div class="wrap faq-grid">${head(S.preguntas,' style="margin:0"')}<div>${C.preguntas.map((q,i)=>`<details${i?"":" open"}><summary>${esc(q.pregunta)}</summary><p>${br(q.respuesta)}</p></details>`).join("")}</div></div></section>
 <section class="contact has-photo on-deep" id="contacto">${bg(S.contacto.foto,"center 40%")}<div class="wrap contact-grid"><div><h2>${esc(S.contacto.titulo)}</h2><p>${esc(S.contacto.texto)}</p><ul class="contact-list">${contacto}</ul></div>
-  <form id="contact-form" novalidate><div class="field"><label for="c-name">Nombre</label><input id="c-name" autocomplete="name" required></div><div class="field"><label for="c-email">Correo electrónico</label><input id="c-email" type="email" autocomplete="email" required></div><div class="field"><label for="c-msg">Qué te gustaría hacer</label><textarea id="c-msg" rows="4" required></textarea></div><div><button class="btn" type="submit">${esc(S.contacto.botonEnviar)}</button></div><p class="note" id="c-note" role="status"></p></form></div></section>`;
+  <form id="contact-form" novalidate><div class="field"><label for="c-name">Nombre</label><input id="c-name" autocomplete="name" required></div><div class="field"><label for="c-email">Correo electrónico</label><input id="c-email" type="email" autocomplete="email" required></div><div class="field"><label for="c-msg">Qué te gustaría hacer</label><textarea id="c-msg" rows="4" required></textarea></div><input class="trampa" id="c-web" name="web" tabindex="-1" autocomplete="off" aria-hidden="true"><label class="acepta"><input type="checkbox" id="c-acepta" required><span>Acepto que Daniel guarde estos datos para responder a mi mensaje.</span></label><div><button class="btn" type="submit" id="c-enviar">${esc(S.contacto.botonEnviar)}</button></div><p class="note" id="c-note" role="status"></p></form></div></section>`;
   renderBoard();renderRanges();renderChips();renderRoutes();drawMaps();
   $("#f-level").addEventListener("change",e=>{F.level=e.target.value;renderRoutes()});
   $("#f-range").addEventListener("change",e=>{F.range=e.target.value;renderRoutes()});
-  $("#contact-form").addEventListener("submit",e=>{e.preventDefault();const ok=$("#c-name").value.trim()&&/^\S+@\S+\.\S+$/.test($("#c-email").value)&&$("#c-msg").value.trim();$("#c-note").textContent=ok?"Mensaje de prueba registrado. En la web real llegará al correo de Daniel.":"Escribe tu nombre, un correo válido y tu mensaje."});
+  $("#contact-form").addEventListener("submit",async e=>{e.preventDefault();
+    const nota=$("#c-note"),b=$("#c-enviar"),API=window.CONFIG?.API_URL,d={nombre:$("#c-name").value.trim(),correo:$("#c-email").value.trim(),mensaje:$("#c-msg").value.trim(),acepta:$("#c-acepta").checked,web:$("#c-web").value};
+    if(!d.nombre||!/^\S+@\S+\.\S+$/.test(d.correo)||!d.mensaje){nota.textContent="Escribe tu nombre, un correo válido y tu mensaje.";return}
+    if(!d.acepta){nota.textContent="Marca la casilla para poder enviar el mensaje.";return}
+    if(!API){nota.textContent="Mensaje de prueba registrado. En la web real llegará al correo de Daniel.";return}
+    const t=b.textContent;b.disabled=true;b.textContent="Enviando…";nota.textContent="";
+    try{const r=await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({accion:"contacto",...d})}).then(x=>x.json());if(!r.ok)throw new Error(r.error);e.target.reset();nota.textContent="Mensaje enviado. Te responderé lo antes posible."}
+    catch(x){nota.textContent=x.message==="limite"?"Ahora mismo hay muchos mensajes. Inténtalo de nuevo más tarde.":"No se ha podido enviar el mensaje. Inténtalo de nuevo en unos minutos."}
+    finally{b.disabled=false;b.textContent=t}
+  });
   if(location.hash){const t=$(location.hash);if(t)t.scrollIntoView()}
 }
 
