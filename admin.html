@@ -151,7 +151,7 @@ body.conectado .solo-demo{display:none}
   </aside>
   <div class="main">
     <p class="demo" id="modo"></p>
-    <main class="work" id="work" aria-live="polite"><p class="empty">Cargando…</p></main>
+    <main class="work" id="work" aria-live="polite"><div class="esq" aria-label="Cargando contenido"><i class="t"></i><i></i><i></i><i></i></div></main>
   </div>
 </div>
 
@@ -176,7 +176,7 @@ const escribirCache=d=>{try{localStorage.setItem(CACHE,JSON.stringify(d))}catch{
 const Almacen={
   clave:a=>"dm-demo-"+a,
   async base(a){if(!API)try{const g=localStorage.getItem(this.clave(a));if(g)return JSON.parse(g)}catch{}
-    const r=await fetch(`content/${a}.json`,{cache:"no-cache"});if(!r.ok)throw new Error(a);return r.json()},
+    const r=await fetch(`content/${a}.json`);if(!r.ok)throw new Error(a);return r.json()},
   async cargar(a){return this.base(a)},
   remoto(){return fetch(API).then(r=>{if(!r.ok)throw new Error("red");return r.json()})},
   async guardar(a,datos){if(API){await llamar({accion:"guardar",clave:a,datos});const c=leerCache()||{};c[a]=datos;escribirCache(c)}else localStorage.setItem(this.clave(a),JSON.stringify(datos))},
@@ -484,7 +484,8 @@ async function arrancar(){
   try{
     pintarMenu();
     if(API&&!leerCache())work.innerHTML=`<div class="esq" aria-label="Cargando contenido"><i class="t"></i><i></i><i></i><i></i></div>`;
-    const d=await Promise.all(ARCHIVOS.map(a=>Almacen.cargar(a)));ARCHIVOS.forEach((a,i)=>DATOS[a]=d[i]);S.rutas=DATOS.rutas;
+    const previa=API?leerCache():null;
+    const d=await Promise.all(ARCHIVOS.map(a=>previa&&previa[a]!==undefined?previa[a]:Almacen.cargar(a)));ARCHIVOS.forEach((a,i)=>DATOS[a]=d[i]);S.rutas=DATOS.rutas;
     if(!API){S.listo=true;pintar();return}
     const guardada=leerCache(),peticion=Almacen.remoto();
     if(guardada){aplicar(guardada);S.listo=true;pintar();
@@ -503,6 +504,7 @@ function vistaLogin(error=""){
 }
 $("#modo").textContent=API?"Versión de prueba: los cambios guardados se verán en la web para todo el mundo.":"Modo demostración: los cambios se guardan solo en este navegador y nadie más los ve.";
 document.body.classList.toggle("conectado",!!API);
+pintarMenu();
 if(API&&!Sesion.get()){vistaLogin()}else{arrancar()}
 </script>
 </body>

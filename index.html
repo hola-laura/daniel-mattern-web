@@ -289,6 +289,9 @@ dialog::backdrop{background:rgba(18,32,24,.66)}
 .acepta{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;font-size:.92rem;color:var(--on-deep)}
 .acepta input{width:18px;height:18px;margin-top:3px;accent-color:var(--accent)}
 :root{--sk:var(--line)}
+.previo i{display:block;border-radius:3px;background:var(--deep-2);animation:latido 1.2s ease-in-out infinite}
+.previo .p1{width:min(620px,100%);height:clamp(190px,44vh,400px)}.previo .p2{width:min(500px,100%);height:64px}.previo .p3{width:min(360px,100%);height:48px}
+.hero.previo{background:var(--deep)}
 .on-deep{--sk:var(--deep-2)}
 .sync #titulo,.sync .lead,.sync .acts .btn,.sync .creds li,.sync .sec-head>*,.sync .date,.sync .name,.sync .meta,.sync .seat-txt,.sync .price,.sync .svc h3,.sync .svc p,.sync .svc .foot>*,.sync .rn,.sync .rs,.sync .range .mono,.sync .rc,.sync .tt,.sync .zone,.sync .stats,.sync .prof .mono,.sync .route .foot b,.sync .lv,.sync .steps h3,.sync .steps p,.sync .methods li>*,.sync .pago-nota,.sync td,.sync blockquote,.sync .about-txt>*,.sync summary,.sync .contact h2,.sync .contact p{color:transparent!important;background:var(--sk)!important;border-color:transparent!important;border-radius:3px;animation:latido 1.2s ease-in-out infinite;-webkit-text-fill-color:transparent}
 .sync .lv i,.sync .seats,.sync .prof svg,.sync .acts .btn{visibility:visible}
@@ -308,7 +311,7 @@ dialog::backdrop{background:rgba(18,32,24,.66)}
 </head>
 <body>
 <div class="demo" id="aviso" hidden></div>
-<header class="top on-deep" id="cabecera">
+<header class="top on-deep" id="cabecera" style="min-height:67px">
   <div class="wrap">
     <a class="brand" href="#inicio"><b id="marca-nombre"></b><span id="marca-descriptor"></span></a>
     <nav aria-label="Principal">
@@ -318,7 +321,7 @@ dialog::backdrop{background:rgba(18,32,24,.66)}
     <button class="btn" data-book="" id="boton-reservar"></button>
   </div>
 </header>
-<main id="inicio"><p class="estado" id="estado" role="status">Cargando…</p></main>
+<main id="inicio"><section class="hero on-deep previo" aria-label="Cargando"><div class="wrap"><div class="hero-copy"><i class="p1"></i><i class="p2"></i><i class="p3"></i></div></div></section><p class="estado" id="estado" role="status"></p></main>
 <footer class="on-deep" id="pie" hidden><div class="wrap"><span id="pie-texto"></span><span id="pie-legal"></span></div></footer>
 <dialog id="dlg-route" aria-labelledby="r-title"></dialog>
 <dialog id="dlg-book" aria-labelledby="b-title"></dialog>
@@ -602,7 +605,8 @@ function repintarSiSePuede(){
 (async()=>{
   try{
     const API=window.CONFIG?.API_URL;
-    const datos=await Promise.all(ARCHIVOS.map(a=>fetch(`content/${a}.json`,{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error(a);return r.json()})));
+    const previa=API?leerCache():null;
+    const datos=await Promise.all(ARCHIVOS.map(a=>previa&&previa[a]!==undefined?previa[a]:fetch(`content/${a}.json`).then(r=>{if(!r.ok)throw new Error(a);return r.json()})));
     ARCHIVOS.forEach((a,i)=>C[a]=datos[i]);
     if(!API){ARCHIVOS.forEach(a=>{try{const d=localStorage.getItem("dm-demo-"+a);if(d)C[a]=JSON.parse(d)}catch{}});preparar();renderPagina();return}
     const guardada=leerCache();
