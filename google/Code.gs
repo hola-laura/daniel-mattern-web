@@ -6,8 +6,6 @@ const CLAVES = ['rutas', 'portada', 'servicios', 'cordilleras', 'reservas', 'sob
 const MAX_BYTES = 2000000;
 const HOJA = 'Contactos web';
 const MAX_POR_HORA = 20;
-// Copia publicada de las rutas. Solo se usa si aún no se han guardado rutas desde el panel. Cambiar al tener dominio propio.
-const RUTAS_WEB = 'https://hola-laura.github.io/daniel-mattern-web/content/rutas.json';
 
 function archivo_() {
   const carpeta = DriveApp.getFolderById(CARPETA_ID);
@@ -93,7 +91,7 @@ function descontar_(r) {
   if (!(n >= 1 && n <= 20)) return 'datos';
   const f = archivo_();
   const datos = JSON.parse(f.getBlob().getDataAsString('UTF-8') || '{}');
-  if (!Array.isArray(datos.rutas)) datos.rutas = JSON.parse(UrlFetchApp.fetch(RUTAS_WEB).getContentText('UTF-8'));
+  if (!Array.isArray(datos.rutas)) return ''; // Sin rutas guardadas: se envía la solicitud sin restar.
   const ruta = datos.rutas.find(function (x) { return x.titulo === String(r.titulo); });
   const salida = ruta && (ruta.salidas || []).find(function (s) { return s.inicio === String(r.inicio); });
   if (!salida) return 'salida';
