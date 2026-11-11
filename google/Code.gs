@@ -6,6 +6,8 @@ const CLAVES = ['rutas', 'portada', 'servicios', 'cordilleras', 'reservas', 'sob
 const MAX_BYTES = 2000000;
 const HOJA = 'Contactos web';
 const MAX_POR_HORA = 20;
+// Copia publicada de las rutas. Solo se usa si aún no se han guardado rutas desde el panel. Cambiar al tener dominio propio.
+const RUTAS_WEB = 'https://hola-laura.github.io/daniel-mattern-web/content/rutas.json';
 
 function archivo_() {
   const carpeta = DriveApp.getFolderById(CARPETA_ID);
@@ -72,11 +74,32 @@ function contacto_(p) {
   const cerrojo = LockService.getScriptLock();
   cerrojo.waitLock(15000);
   try {
-    hoja_().appendRow([new Date(), nombre, correo, mensaje, 'Nuevo']);
+    if (p.reserva && p.reserva.inicio) {
+      const r = descontar_(p.reserva);
+      if (r) return json_({ ok: false, error: r });
+    }
+    hoja_().appendRow([new Date(), nombre, correo, mensaje, p.reserva ? 'Reserva nueva' : 'Nuevo']);
   } finally {
     cerrojo.releaseLock();
   }
   const para = PropertiesService.getScriptProperties().getProperty('AVISO_EMAIL') || Session.getEffectiveUser().getEmail();
-  MailApp.sendEmail({ to: para, replyTo: correo, subject: 'Nuevo contacto en la web: ' + nombre, body: 'Nombre: ' + nombre + '\nCorreo: ' + correo + '\n\nMensaje:\n' + mensaje + '\n\nResponde a este correo para contestarle directamente.' });
+  MailApp.sendEmail({ to: para, replyTo: correo, subject: (p.reserva ? 'Nueva solicitud de reserva: ' : 'Nuevo contacto en la web: ') + nombre, body: 'Nombre: ' + nombre + '\nCorreo: ' + correo + '\n\nMensaje:\n' + mensaje + '\n\nResponde a este correo para contestarle directamente.' });
   return json_({ ok: true });
+}
+
+// Resta las plazas de la salida reservada. Devuelve un error si no quedan suficientes.
+function descontar_(r) {
+  const n = Math.floor(Number(r.personas));
+  if (!(n >= 1 && n <= 20)) return 'datos';
+  const f = archivo_();
+  const datos = JSON.parse(f.getBlob().getDataAsString('UTF-8') || '{}');
+  if (!Array.isArray(datos.rutas)) datos.rutas = JSON.parse(UrlFetchApp.fetch(RUTAS_WEB).getContentText('UTF-8'));
+  const ruta = datos.rutas.find(function (x) { return x.titulo === String(r.titulo); });
+  const salida = ruta && (ruta.salidas || []).find(function (s) { return s.inicio === String(r.inicio); });
+  if (!salida) return 'salida';
+  const libres = Number(salida.plazasLibres) || 0;
+  if (libres < n) return 'completa';
+  salida.plazasLibres = libres - n;
+  f.setContent(JSON.stringify(datos));
+  return '';
 }

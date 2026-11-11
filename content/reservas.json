@@ -25,11 +25,11 @@
   "formasPago": [
     {
       "nombre": "Tarjeta",
-      "descripcion": "Visa o Mastercard en pasarela bancaria segura. Confirmación inmediata."
+      "descripcion": "Visa o Mastercard en pasarela bancaria segura. Te confirmo la plaza por email."
     },
     {
       "nombre": "Bizum",
-      "descripcion": "Pago desde el móvil. Confirmación inmediata."
+      "descripcion": "Pago desde el móvil. Te confirmo la plaza por email."
     },
     {
       "nombre": "Transferencia",

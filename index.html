@@ -545,9 +545,9 @@ async function next(){
       const r=route(B.route),d=curDep(),when=d?depLabel(d):(B.customDate?`Propuesta: ${day(B.customDate)}`:"Fecha por acordar");
       const mensaje=["Solicitud de reserva",`Actividad: ${r.titulo}`,`Fecha: ${when}`,`Personas: ${B.n}`,`Total: ${eur(total())}`,`Quiere pagar: ${B.plan==="deposit"?"señal de "+eur(senal()):"el total"} por ${C.reservas.formasPago[B.method]?.nombre||""}`,`Teléfono: ${B.phone}`,`Experiencia: ${B.exp}`,B.notes?`Notas: ${B.notes}`:""].filter(Boolean).join("\n");
       B.enviando=true;B.err="";renderBook();
-      try{const x=await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({accion:"contacto",nombre:B.name,correo:B.email,mensaje,acepta:B.terms,web:""})}).then(x=>x.json());if(!x.ok)throw new Error(x.error)}
-      catch(x){B.enviando=false;B.err=x.message==="limite"?"Ahora mismo hay muchas solicitudes. Inténtalo de nuevo más tarde.":"No se ha podido enviar la solicitud. Inténtalo de nuevo en unos minutos.";renderBook();return}
-      B.enviando=false;
+      try{const x=await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({accion:"contacto",nombre:B.name,correo:B.email,mensaje,acepta:B.terms,web:"",reserva:d?{titulo:r.titulo,inicio:d.from,personas:B.n}:null})}).then(x=>x.json());if(!x.ok)throw new Error(x.error)}
+      catch(x){B.enviando=false;B.err=x.message==="completa"?"Ya no quedan plazas suficientes en esta salida. Elige otra fecha o menos personas.":x.message==="salida"?"Esta salida ha cambiado. Recarga la página y vuelve a elegirla.":x.message==="limite"?"Ahora mismo hay muchas solicitudes. Inténtalo de nuevo más tarde.":"No se ha podido enviar la solicitud. Inténtalo de nuevo en unos minutos.";renderBook();return}
+      B.enviando=false;if(d){d.left=Math.max(0,d.left-B.n);renderBoard()}
     }
   }
   B.step++;renderBook();$(".dlg-body",dlgB).scrollIntoView({block:"start"});
