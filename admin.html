@@ -502,7 +502,7 @@ function vistaLogin(error=""){
   $("#login").addEventListener("submit",async e=>{e.preventDefault();Sesion.set($("#clave").value);const b=$("#login button");b.disabled=true;b.textContent="Comprobando…";
     try{await llamar({accion:"comprobar"});arrancar()}catch(x){const mal=x.codigo==="password";Sesion.borrar();vistaLogin(mal?"La contraseña no es correcta.":"No se ha podido conectar. Inténtalo de nuevo.")}});
 }
-$("#modo").textContent=API?"Versión de prueba: los cambios guardados se verán en la web para todo el mundo.":"Modo demostración: los cambios se guardan solo en este navegador y nadie más los ve.";
+$("#modo").textContent=API?"Los cambios que guardes se verán en la web para todo el mundo.":"Modo demostración: los cambios se guardan solo en este navegador y nadie más los ve.";
 document.body.classList.toggle("conectado",!!API);
 pintarMenu();
 if(API&&!Sesion.get()){vistaLogin()}else{arrancar()}

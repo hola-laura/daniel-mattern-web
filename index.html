@@ -482,7 +482,7 @@ function openRoute(id){
   dlgR.showModal();
 }
 
-/* ---------- Reserva (de demostración) ---------- */
+/* ---------- Reserva: se envía como solicitud a Daniel, que confirma y cobra ---------- */
 const dlgB=$("#dlg-book");let B;
 function openBook(routeId,depId){
   const rid=routeId||ROUTES[0].id,open=DEPS.filter(d=>d.r===rid&&d.left);
@@ -520,25 +520,36 @@ function renderBook(){
     body=`<h2 class="dlg-title" id="b-title">Pago</h2><div class="sum"><div class="t"><span>${esc(r.titulo)}</span></div><div><span>${when}</span><span>${B.n} ${B.n>1?"personas":"persona"}</span></div><div><span>Total de la reserva</span><span>${eur(total())}</span></div></div>
     <div class="opt-list" role="radiogroup" aria-label="Cuánto pagar"><label class="opt"><input type="radio" name="b-plan" id="b-plan-d" value="deposit" ${B.plan==="deposit"?"checked":""}><span>Señal del ${R.senalPorcentaje} %<small>Pagas ${eur(total()-senal())} hasta ${R.diasPagoResto} días antes.</small></span><b>${eur(senal())}</b></label><label class="opt"><input type="radio" name="b-plan" id="b-plan-f" value="full" ${B.plan==="full"?"checked":""}><span>Pago completo<small>Te olvidas hasta el día de la salida.</small></span><b>${eur(total())}</b></label></div>
     <div class="opt-list" role="radiogroup" aria-label="Forma de pago">${R.formasPago.map((m,i)=>`<label class="opt"><input type="radio" name="b-method" id="b-m-${i}" value="${i}" ${B.method===i?"checked":""}><span>${esc(m.nombre)}<small>${esc(m.descripcion)}</small></span><span></span></label>`).join("")}</div>
-    <p class="mono">En la web real, el pago ocurre en la pasarela. Esta demo no pide datos de tarjeta.</p>`;
-    foot=`<button class="btn ghost" data-back>Atrás</button><button class="btn" data-next>Simular pago de ${eur(toPay())}</button>`;
+    <p class="pago-nota">Ahora no se cobra nada. Te confirmo la plaza y te envío el pago.</p>${B.err?`<p class="err" role="alert">${esc(B.err)}</p>`:""}`;
+    foot=`<button class="btn ghost" data-back>Atrás</button><button class="btn" data-next ${B.enviando?"disabled":""}>${B.enviando?"Enviando…":"Enviar solicitud"}</button>`;
   }
   if(B.step===4){
     const d=curDep(),when=d?depLabel(d):"la fecha que me has propuesto";
-    body=`<div class="done"><h2 class="dlg-title" id="b-title">Plaza reservada, ${esc(B.name.split(" ")[0])}</h2><p class="ref">${B.ref}</p><p>${esc(r.titulo)}, ${when}, ${B.n} ${B.n>1?"personas":"persona"}. Forma de pago: ${esc(R.formasPago[B.method]?.nombre)} (simulado).</p>
-    <ul class="detail-list"><li>Te enviaremos la confirmación a ${esc(B.email)}.</li>${r.nivel==="Técnico"?"<li>Te llamaré para valorar tu experiencia antes de la salida.</li>":""}<li>48 horas antes recibirás la previsión, el horario y la lista de material.</li></ul></div>`;
-    foot=`<span class="mono">Reserva de demostración</span><button class="btn" data-close>Cerrar</button>`;
+    body=`<div class="done"><h2 class="dlg-title" id="b-title">Solicitud enviada, ${esc(B.name.split(" ")[0])}</h2><p>${esc(r.titulo)}, ${when}, ${B.n} ${B.n>1?"personas":"persona"}. Forma de pago: ${esc(R.formasPago[B.method]?.nombre)}.</p>
+    <ul class="detail-list"><li>Te escribiré a ${esc(B.email)} para confirmar la plaza y enviarte el pago.</li>${r.nivel==="Técnico"?"<li>Te llamaré para valorar tu experiencia antes de la salida.</li>":""}<li>48 horas antes recibirás la previsión, el horario y la lista de material.</li></ul></div>`;
+    foot=`<span></span><button class="btn" data-close>Cerrar</button>`;
   }
   dlgB.innerHTML=`<div class="dlg-head">${progress()}<button class="x" data-close aria-label="Cerrar">×</button></div><div class="dlg-body">${body}</div><div class="dlg-foot">${foot}</div>`;
 }
 function saveStep2(){B.name=$("#b-name").value.trim();B.phone=$("#b-phone").value.trim();B.email=$("#b-email").value.trim();B.exp=$("#b-exp").value;B.notes=$("#b-notes").value;B.terms=$("#b-terms").checked}
-function next(){
+async function next(){
   if(B.step===2){saveStep2();
     if(!B.name||!B.phone||!B.exp)return B.err="Completa tu nombre, teléfono y experiencia para continuar.",renderBook();
     if(!/^\S+@\S+\.\S+$/.test(B.email))return B.err="Escribe un correo válido, por ejemplo nombre@correo.es.",renderBook();
     if(!B.terms)return B.err="Acepta las condiciones para continuar.",renderBook();
     B.err=""}
-  if(B.step===3){B.ref="DEMO-"+Math.random().toString(36).slice(2,8).toUpperCase();const d=curDep();if(d){d.left=Math.max(0,d.left-B.n);renderBoard()}}
+  if(B.step===3){
+    if(B.enviando)return;
+    const API=window.CONFIG?.API_URL;
+    if(API){
+      const r=route(B.route),d=curDep(),when=d?depLabel(d):(B.customDate?`Propuesta: ${day(B.customDate)}`:"Fecha por acordar");
+      const mensaje=["Solicitud de reserva",`Actividad: ${r.titulo}`,`Fecha: ${when}`,`Personas: ${B.n}`,`Total: ${eur(total())}`,`Quiere pagar: ${B.plan==="deposit"?"señal de "+eur(senal()):"el total"} por ${C.reservas.formasPago[B.method]?.nombre||""}`,`Teléfono: ${B.phone}`,`Experiencia: ${B.exp}`,B.notes?`Notas: ${B.notes}`:""].filter(Boolean).join("\n");
+      B.enviando=true;B.err="";renderBook();
+      try{const x=await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({accion:"contacto",nombre:B.name,correo:B.email,mensaje,acepta:B.terms,web:""})}).then(x=>x.json());if(!x.ok)throw new Error(x.error)}
+      catch(x){B.enviando=false;B.err=x.message==="limite"?"Ahora mismo hay muchas solicitudes. Inténtalo de nuevo más tarde.":"No se ha podido enviar la solicitud. Inténtalo de nuevo en unos minutos.";renderBook();return}
+      B.enviando=false;
+    }
+  }
   B.step++;renderBook();$(".dlg-body",dlgB).scrollIntoView({block:"start"});
 }
 
