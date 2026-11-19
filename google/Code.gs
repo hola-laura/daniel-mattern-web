@@ -1,5 +1,5 @@
 // Almacén de pruebas en Google Drive. Se sustituirá por Supabase.
-// La contraseña NO va aquí: se guarda en Propiedades del script como PASSWORD.
+// El panel no pide contraseña: cualquiera con el enlace puede guardar cambios.
 const CARPETA_ID = '1Fmt0BmA_dmVXNpWG14WSB2zndSEOQ6WU';
 const NOMBRE = 'contenido-web.json';
 const CLAVES = ['rutas', 'portada', 'servicios', 'cordilleras', 'reservas', 'sobre-mi', 'preguntas', 'secciones', 'general'];
@@ -22,11 +22,6 @@ function doPost(e) {
   let p;
   try { p = JSON.parse(e.postData.contents); } catch (err) { return json_({ ok: false, error: 'peticion' }); }
   if (p.accion === 'contacto') return contacto_(p);
-  const clave = PropertiesService.getScriptProperties().getProperty('PASSWORD');
-  if (!clave || clave.length < 12 || p.password !== clave) {
-    Utilities.sleep(1000);
-    return json_({ ok: false, error: 'password' });
-  }
   if (p.accion === 'comprobar') return json_({ ok: true });
   if (p.accion !== 'guardar' || CLAVES.indexOf(p.clave) < 0) return json_({ ok: false, error: 'peticion' });
   const cerrojo = LockService.getScriptLock();

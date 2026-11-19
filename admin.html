@@ -505,7 +505,7 @@ function vistaLogin(error=""){
 $("#modo").textContent=API?"Los cambios que guardes se verán en la web para todo el mundo.":"Modo demostración: los cambios se guardan solo en este navegador y nadie más los ve.";
 document.body.classList.toggle("conectado",!!API);
 pintarMenu();
-if(API&&!Sesion.get()){vistaLogin()}else{arrancar()}
+arrancar()
 </script>
 </body>
 </html>
